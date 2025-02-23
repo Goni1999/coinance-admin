@@ -1,0 +1,17 @@
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <g clip-path="url(#clip0)">
+    <!-- Background red parts -->
+    <path d="M0 0H12V32H0V0Z" fill="#D80027"/>
+    <path d="M20 0H32V32H20V0Z" fill="#D80027"/>
+    
+    <!-- Maple Leaf Icon in the middle -->
+    <path d="M16 7L17 10H19L17.5 12L18 15L16 13L14 15L14.5 12L13 10H15L16 7Z" fill="#F0F0F0"/>
+  </g>
+  
+  <!-- Clip path to make sure the circle is within the square -->
+  <defs>
+    <clipPath id="clip0">
+      <rect width="32" height="32" fill="white"/>
+    </clipPath>
+  </defs>
+</svg>
