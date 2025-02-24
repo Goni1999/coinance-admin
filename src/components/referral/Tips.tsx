@@ -19,21 +19,21 @@ const Tips = () => {
       </div>
 
       {/* Referral Steps */}
-      <div className="flex justify-between gap-x-6 mb-10">
+      <div className="flex flex-col llg:flex-row justify-between gap-x-6 mb-10">
         {/* Step 1 */}
-        <div className="w-1/3 sm:w-full p-5 border border-gray-300 rounded-lg mb-8">
+        <div className=" p-5 border border-gray-300 rounded-lg mb-8">
           <div className="text-2xl text-gray-500 dark:text-gray-400 font-semibold mb-3 text-left">Step 1</div>
           <div className="text-lg text-gray-500 dark:text-gray-400 text-left">Share your referral link with friends</div>
         </div>
 
         {/* Step 2 */}
-        <div className="w-1/3 sm:w-full p-5 border border-gray-300 rounded-lg mb-6">
+        <div className=" p-5 border border-gray-300 rounded-lg mb-6">
           <div className="text-2xl text-gray-500 dark:text-gray-400 font-semibold mb-3 text-left">Step 2</div>
           <div className="text-lg text-gray-500 dark:text-gray-400 text-left">Invite friends to sign up and accumulatively deposit more than $50</div>
         </div>
 
         {/* Step 3 */}
-        <div className="w-1/3 sm:w-full p-5 border border-gray-300 rounded-lg mb-6">
+        <div className=" p-5 border border-gray-300 rounded-lg mb-6">
           <div className="text-2xl text-gray-500 dark:text-gray-400 font-semibold mb-3 text-left">Step 3</div>
           <div className="text-lg text-gray-500 dark:text-gray-400 text-left">Receive 100 USD cashback voucher each</div>
         </div>
