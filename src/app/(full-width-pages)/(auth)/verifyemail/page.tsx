@@ -1,4 +1,4 @@
-import EmailVerify from "@/components/auth/EmailVerify";
+import VerifyEmail from "@/components/auth/VerifyEmail";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
   };
 
 export default function TwoStepVerification1() {
-  return <EmailVerify />;
+  return <VerifyEmail />;
 }

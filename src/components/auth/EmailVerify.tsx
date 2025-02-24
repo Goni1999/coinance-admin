@@ -29,7 +29,7 @@ const EmailVerify = () => {
         if (response.data.success) {
           setMessage("Your email has been successfully verified!");
           setTimeout(() => {
-            router.push("/kyc-verification"); // Redirect after 3 seconds
+            router.push("/twostepverification"); // Redirect after 3 seconds
           }, 3000);
         } else {
           setError("Email verification failed. Please try again.");
