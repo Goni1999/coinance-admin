@@ -17,19 +17,18 @@ const Referral = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row justify-between p-5 gap-5 lg:gap-10">
+    <div className="flex flex-col lg:flex lg:flex-row justify-between p-5 gap-5 lg:gap-10">
       {/* Left Side */}
-      <div className="w-full lg:w-2/3">
+      <div className="w-full lg:w-[2/3]">
         <h2 className="text-4xl text-gray-500 dark:text-gray-400 font-semibold leading-snug md:text-5xl lg:text-6xl">
           Refer Friends.
-        </h2>
-        <h3 className="text-4xl text-gray-500 dark:text-gray-400 font-semibold leading-snug md:text-5xl lg:text-6xl">
+        <br/>
           Get 100 USD Equivalent Trading Fee Credit Each.
-        </h3>
+        </h2>
       </div>
 
       {/* Right Side (Form) */}
-      <div className="w-full lg:w-1/3 border border-gray-300 rounded-lg p-5">
+      <div className="w-full lg:w-[1/3] border border-gray-300 rounded-lg p-5">
         <div className="mb-5">
           {/* Referral ID */}
           <div className="font-bold text-gray-500 dark:text-gray-400 text-lg mb-2">Referral ID</div>
