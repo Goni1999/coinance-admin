@@ -36,8 +36,7 @@ export default function InputStates() {
             error={error}
             onChange={handleEmailChange}
             placeholder="Enter your email"
-            hint={error ? "This is an invalid email address." : ""}
-          />
+            hint={error ? "This is an invalid email address." : ""} value={""}          />
         </div>
 
         {/* Success Input */}
@@ -49,8 +48,7 @@ export default function InputStates() {
             success={!error}
             onChange={handleEmailChange}
             placeholder="Enter your email"
-            hint={!error ? "Valid email!" : ""}
-          />
+            hint={!error ? "Valid email!" : ""} value={""}          />
         </div>
 
         {/* Disabled Input */}
@@ -61,8 +59,7 @@ export default function InputStates() {
             defaultValue="disabled@example.com"
             disabled={true}
             placeholder="Disabled email"
-            hint="This field is disabled."
-          />
+            hint="This field is disabled." value={""}          />
         </div>
       </div>
     </ComponentCard>

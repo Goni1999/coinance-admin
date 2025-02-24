@@ -21,11 +21,11 @@ export default function DefaultInputs() {
       <div className="space-y-6">
         <div>
           <Label>Input</Label>
-          <Input type="text" />
+          <Input type="text" value={""} />
         </div>
         <div>
           <Label>Input with Placeholder</Label>
-          <Input type="text" placeholder="info@gmail.com" />
+          <Input type="text" placeholder="info@gmail.com" value={""} />
         </div>
         <div>
           <Label>Select Input</Label>
@@ -41,8 +41,7 @@ export default function DefaultInputs() {
           <div className="relative">
             <Input
               type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
-            />
+              placeholder="Enter your password" value={""}            />
             <button
               onClick={() => setShowPassword(!showPassword)}
               className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
@@ -62,8 +61,7 @@ export default function DefaultInputs() {
               type="date"
               id="datePicker"
               name="datePicker"
-              onChange={(e) => console.log(e.target.value)}
-            />
+              onChange={(e) => console.log(e.target.value)} value={""}            />
             <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-gray-400">
               <CalenderIcon />
             </span>
@@ -76,8 +74,7 @@ export default function DefaultInputs() {
               type="time"
               id="tm"
               name="tm"
-              onChange={(e) => console.log(e.target.value)}
-            />
+              onChange={(e) => console.log(e.target.value)} value={""}            />
             <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-gray-400">
               <TimeIcon />
             </span>
@@ -89,8 +86,7 @@ export default function DefaultInputs() {
             <Input
               type="text"
               placeholder="Card number"
-              className="pl-[62px]"
-            />
+              className="pl-[62px]" value={""}            />
             <span className="absolute left-0 top-1/2 flex h-11 w-[46px] -translate-y-1/2 items-center justify-center border-r border-gray-200 dark:border-gray-800">
               <svg
                 width="20"
