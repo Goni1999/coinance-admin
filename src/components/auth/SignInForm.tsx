@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation"; // ✅ For redirecting after login
+import { useRouter } from "next/navigation"; // ✅ For redirection
 import Checkbox from "@/components/form/input/Checkbox";
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
@@ -10,8 +10,7 @@ import Link from "next/link";
 import Cookies from "js-cookie"; // ✅ Store JWT token in cookies
 
 export default function SignInForm() {
-  const router = useRouter(); // ✅ Use router for redirection
-
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -29,36 +28,32 @@ export default function SignInForm() {
     setLoading(true);
 
     try {
+      // ✅ Step 1: Send Login Request
       const response = await fetch("https://server.capital-trust.eu/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || "Login failed");
+      if (!response.ok) throw new Error(data.error || "Login failed");
+
+      // ✅ Step 2: Store JWT token in cookies
+      Cookies.set("auth-token", data.token, { expires: isChecked ? 7 : 1 });
+
+      // ✅ Step 3: Redirect based on backend response
+      if (data.redirect) {
+        router.push(data.redirect); // Redirect to verifyemail or twostepverification
+      } else {
+        throw new Error("Unexpected response from server.");
       }
-
-      // ✅ Store JWT token in cookies
-      Cookies.set("auth-token", data.token, { expires: isChecked ? 7 : 1 }); // 7 days if "Keep me logged in" is checked
-
-      // ✅ Redirect to dashboard
-      router.push("/dashboard");
 
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("An unexpected error occurred.");
-      }
+      setError(err instanceof Error ? err.message : "An unexpected error occurred.");
     } finally {
       setLoading(false);
     }
-    
   };
 
   return (
@@ -72,6 +67,7 @@ export default function SignInForm() {
           Back
         </Link>
       </div>
+
       <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
         <div>
           <div className="mb-5 sm:mb-8">
@@ -82,6 +78,7 @@ export default function SignInForm() {
               Enter your email and password to sign in!
             </p>
           </div>
+
           <form onSubmit={handleSubmit}>
             <div className="space-y-6">
               <div>
@@ -91,9 +88,9 @@ export default function SignInForm() {
                   type="email" 
                   value={email} 
                   onChange={(e) => setEmail(e.target.value)} 
-                   
                 />
               </div>
+
               <div>
                 <Label>Password <span className="text-error-500">*</span></Label>
                 <div className="relative">
@@ -102,7 +99,6 @@ export default function SignInForm() {
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    
                   />
                   <span
                     onClick={() => setShowPassword(!showPassword)}
@@ -116,6 +112,7 @@ export default function SignInForm() {
                   </span>
                 </div>
               </div>
+
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <Checkbox
@@ -134,18 +131,20 @@ export default function SignInForm() {
                   Forgot password?
                 </Link>
               </div>
+
               {error && <p className="text-error-500 text-sm">{error}</p>}
+
               <div>
-               
                 <button
-                type="submit" disabled={loading}
-                className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
-              >
+                  type="submit" disabled={loading}
+                  className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
+                >
                   {loading ? "Signing in..." : "Sign in"}
-                  </button>
+                </button>
               </div>
             </div>
           </form>
+
           <div className="mt-5">
             <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
               Don&apos;t have an account?{" "}
