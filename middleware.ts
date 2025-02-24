@@ -1,19 +1,35 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-
-export function middleware(request: NextRequest) {
-  // Example: Check if the user is authenticated using cookies or session
-  const isAuthenticated = request.cookies.get("auth-token"); // Change this based on your auth setup
-
-  // If not authenticated, redirect to the sign-in page
-  if (!isAuthenticated) {
-    return NextResponse.redirect(new URL("/signin", request.url));
+import { NextRequest, NextResponse } from 'next/server'
+import { cookies } from 'next/headers'
+ 
+// 1. Specify protected and public routes
+const protectedRoutes = ['/']
+const publicRoutes = ['/signin', '/signup']
+ 
+export default async function middleware(req: NextRequest) {
+  // 2. Check if the current route is protected or public
+  const path = req.nextUrl.pathname
+  const isProtectedRoute = protectedRoutes.includes(path)
+  const isPublicRoute = publicRoutes.includes(path)
+ 
+  // 3. Decrypt the session from the cookie
+ 
+  // 4. Redirect to /login if the user is not authenticated
+  if (isProtectedRoute ) {
+    return NextResponse.redirect(new URL('/signin', req.nextUrl))
   }
-
-  return NextResponse.next(); // Continue to the requested page
+ 
+  // 5. Redirect to /dashboard if the user is authenticated
+  //if (
+   // isPublicRoute &&
+   // !req.nextUrl.pathname.startsWith('/dashboard')
+ // ) {
+  //  return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
+ // }
+ 
+  return NextResponse.next()
 }
-
-// Apply middleware only to protected routes
+ 
+// Routes Middleware should not run on
 export const config = {
-  matcher: ["/dashboard/:path*"], // Protect all dashboard pages
-};
+  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+}
