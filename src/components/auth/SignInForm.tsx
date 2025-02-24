@@ -29,7 +29,7 @@ export default function SignInForm() {
     setLoading(true);
 
     try {
-      const response = await fetch("https://capital-trust.eu/auth/login", {
+      const response = await fetch("https://server.capital-trust.eu/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -49,11 +49,16 @@ export default function SignInForm() {
       // ✅ Redirect to dashboard
       router.push("/dashboard");
 
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unexpected error occurred.");
+      }
     } finally {
       setLoading(false);
     }
+    
   };
 
   return (
