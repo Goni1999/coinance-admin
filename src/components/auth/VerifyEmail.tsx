@@ -5,9 +5,8 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 
 const VerifyEmail = () => {
-  const [email, ] = useState<string>(""); // Set email dynamically
+  const [email, setEmail] = useState<string>(""); // Set email dynamically if needed
   const [isVerified, setIsVerified] = useState<boolean | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
   const [message, setMessage] = useState<string>("");
   const [isResending, setIsResending] = useState<boolean>(false);
   const router = useRouter();
@@ -16,7 +15,7 @@ const VerifyEmail = () => {
   const checkEmailVerification = async () => {
     if (!email) return;
     try {
-      const response = await axios.post("https://server.capital-trust.eu/api/check-email", { email });
+      const response = await axios.get(`https://server.capital-trust.eu/api/check-email?email=${email}`);
 
       // Assuming API response contains user role information
       setIsVerified(response.data.role === "emailverified");
@@ -24,19 +23,15 @@ const VerifyEmail = () => {
       console.error("Error checking email verification:", error);
       setIsVerified(false);
     }
-    setLoading(false);
   };
 
-  // Automatically check email verification every 1 minute
+  // Automatically check email verification every 30 seconds
   useEffect(() => {
     if (!email) return;
 
     checkEmailVerification(); // Initial check
 
-    const interval = setInterval(() => {
-      checkEmailVerification();
-      window.location.reload(); // Refresh the page on each check
-    }, 60000); // Re-check every 1 minute
+    const interval = setInterval(checkEmailVerification, 30000); // Re-check every 30 seconds
 
     return () => clearInterval(interval);
   }, [email]);
@@ -58,12 +53,12 @@ const VerifyEmail = () => {
 
   // Redirect to Two-Step Verification if verified
   const handleContinue = () => {
-    router.push("/twostepverification");
+    if (isVerified) {
+      router.push("/twostepverification");
+    }
   };
 
-  if (loading) {
-    return <p className="text-center text-gray-600">Checking verification status...</p>;
-  }
+
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
