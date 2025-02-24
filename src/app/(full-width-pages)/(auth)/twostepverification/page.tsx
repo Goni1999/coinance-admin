@@ -6,6 +6,6 @@ export const metadata: Metadata = {
     description: "This is  Two Step Authentication Page ",
   };
 
-export default function TFA() {
+export default function TwoStepVerification1() {
   return <TwoStepVerification />;
 }

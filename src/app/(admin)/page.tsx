@@ -9,11 +9,11 @@ import TransactionsHistory from "@/components/transactions/TransactionsHistory";
 import Watchlist from "@/components/trade/Watchlist";
 export const metadata: Metadata = {
   title:
-    "Next.js E-commerce Dashboard |  - Next.js Dashboard Template",
-  description: "This is Next.js Home for  Dashboard Template",
+    "Capital Trust Dashboard",
+  description: "Capital Trust Dashboard",
 };
 
-export default function Ecommerce() {
+export default function AdminDashboard() {
   return (
     <div className="grid grid-cols-12 gap-4 md:gap-6">
       <div className="col-span-12 space-y-6 xl:col-span-7">
