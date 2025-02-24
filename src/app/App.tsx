@@ -21,13 +21,13 @@ const App = () => {
         <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* Protected Admin Route - Only Admins Allowed */}
-        <Route element={<ProtectedRoute user={currentUser} allowedRoles={["admin"]} />}>
-          <Route path="/dashboard/*" element={<AdminDashboard />} />
+        <Route element={<ProtectedRoute user={currentUser} allowedRoles={["user"]} />}>
+          <Route path="/dashboard" element={<AdminDashboard />} />
         </Route>
 
         {/* Protected Route for 2FA (Users and Admins Allowed) */}
         <Route element={<ProtectedRoute user={currentUser} allowedRoles={["admin"]} />}>
-          <Route path="/2fa" element={<TwoStepVerification1 />} />
+          <Route path="/twostepverification" element={<TwoStepVerification1 />} />
         </Route>
 
       </Routes>
