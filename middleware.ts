@@ -1,35 +1,28 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
- 
-// 1. Specify protected and public routes
-const protectedRoutes = ['/']
-const publicRoutes = ['/signin', '/signup']
- 
-export default async function middleware(req: NextRequest) {
-  // 2. Check if the current route is protected or public
-  const path = req.nextUrl.pathname
-  const isProtectedRoute = protectedRoutes.includes(path)
-  const isPublicRoute = publicRoutes.includes(path)
- 
-  // 3. Decrypt the session from the cookie
- 
-  // 4. Redirect to /login if the user is not authenticated
-  if (isProtectedRoute ) {
-    return NextResponse.redirect(new URL('/signin', req.nextUrl))
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+
+export function middleware(request: NextRequest) {
+  console.log("Middleware triggered! Path:", request.nextUrl.pathname);
+
+  const authToken = request.cookies.get("auth-token")?.value; // Check if user has a token
+
+  // If the user is NOT authenticated and visiting "/" (root), redirect to /signin
+  if (!authToken && request.nextUrl.pathname === "/") {
+    console.log("🚨 User not signed in! Redirecting to /signin");
+    return NextResponse.redirect(new URL("/signin", request.url));
   }
- 
-  // 5. Redirect to /dashboard if the user is authenticated
-  //if (
-   // isPublicRoute &&
-   // !req.nextUrl.pathname.startsWith('/dashboard')
- // ) {
-  //  return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
- // }
- 
-  return NextResponse.next()
+
+  // If the user is NOT authenticated and visiting "/dashboard/*", redirect to /signin
+  if (!authToken && request.nextUrl.pathname.startsWith("/dashboard")) {
+    console.log("🚨 User not signed in! Redirecting to /signin");
+    return NextResponse.redirect(new URL("/signin", request.url));
+  }
+
+  console.log("✅ User is authenticated, allowing access.");
+  return NextResponse.next();
 }
- 
-// Routes Middleware should not run on
+
+// Apply middleware to both "/" and "/dashboard/*"
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
-}
+  matcher: ["/", "/dashboard/:path*"],
+};
