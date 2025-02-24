@@ -5,8 +5,10 @@ import SignIn from "./(full-width-pages)/(auth)/signin/page";
 import SignUp from "./(full-width-pages)/(auth)/signup/page";
 import ResetPassword from "./(full-width-pages)/(auth)/reset-password/page";
 import TwoStepVerification1 from "./(full-width-pages)/(auth)/twostepverification/page";
+
+// Mock authentication state (replace with API call or context)
 const currentUser = {
-  role: "admin", // Example role, fetch from API or Context
+  role: "user", // Change to "admin" to test admin access
 };
 
 const App = () => {
@@ -17,13 +19,15 @@ const App = () => {
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/2fa" element={<TwoStepVerification1 />} />
 
-        {/* Protected Admin Route */}
-        <Route element={<ProtectedRoute user={currentUser} allowedRoles={["user"]} />}>
+        {/* Protected Admin Route - Only Admins Allowed */}
+        <Route element={<ProtectedRoute user={currentUser} allowedRoles={["admin"]} />}>
           <Route path="/dashboard/*" element={<AdminDashboard />} />
-          <Route path="/2fa" element={<TwoStepVerification1 />} />
+        </Route>
 
+        {/* Protected Route for 2FA (Users and Admins Allowed) */}
+        <Route element={<ProtectedRoute user={currentUser} allowedRoles={["admin"]} />}>
+          <Route path="/2fa" element={<TwoStepVerification1 />} />
         </Route>
 
       </Routes>
