@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 
 const VerifyEmail = () => {
-  const [email, setEmail] = useState<string>(""); // Set email dynamically if needed
+  const [email, ] = useState<string>(""); // Set email dynamically if needed
   const [isVerified, setIsVerified] = useState<boolean | null>(null);
   const [message, setMessage] = useState<string>("");
   const [isResending, setIsResending] = useState<boolean>(false);
