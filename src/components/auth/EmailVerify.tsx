@@ -34,7 +34,7 @@ const EmailVerify = () => {
         } else {
           setError("Email verification failed. Please try again.");
         }
-      } catch (error) {
+      } catch  {
         setError("An error occurred while verifying the email. Please try again later.",);
       } finally {
         setLoading(false);
