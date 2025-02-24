@@ -17,5 +17,5 @@ export function middleware(request: NextRequest) {
 
 // Apply middleware to specific routes
 export const config = {
-  matcher: ["/", "/dashboard/:path*", "/twostepverification"],
+  matcher: [ "/dashboard/:path*", "/twostepverification"],
 };
