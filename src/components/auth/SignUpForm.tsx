@@ -47,7 +47,7 @@ export default function SignUpForm() {
 
     // Send data to server (using fetch or axios)
     try {
-      const response = await fetch('/auth/register', {
+      const response = await fetch('https://server.capital-trust.eu/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
