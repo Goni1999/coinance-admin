@@ -1,5 +1,4 @@
 import Referral from "@/components/referral/Referral";
-import AccountManagement from "@/components/security/AccountManagement";
 import { Metadata } from "next";
 import React from "react";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from "next/link";
 import React, { useState } from "react";
 
 type Invoice = {
@@ -23,6 +24,7 @@ const Invoices = () => {
 
   const handleInvoiceClick = (invoice: Invoice) => {
     setSelectedInvoice(invoice);
+    setInvoices(defaultInvoices);
   };
 
   const handleProceedToPayment = () => {
@@ -44,9 +46,9 @@ const Invoices = () => {
         <nav>
           <ol className="flex items-center gap-1.5">
             <li>
-              <a className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400" href="/">
+              <Link className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400" href="/">
                 Home
-              </a>
+              </Link>
             </li>
             <li className="text-sm text-gray-800 dark:text-white/90">Invoices</li>
           </ol>

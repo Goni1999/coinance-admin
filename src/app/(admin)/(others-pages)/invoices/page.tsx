@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from "react";
+import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
 
 // Your component code here
 type Invoice = {
@@ -11,8 +12,18 @@ type Invoice = {
 };
 
 const Invoices = () => {
-  const [invoices, setInvoices] = useState<Invoice[]>([]); // or other state logic
+  const [invoices, setInvoices] = useState<Invoice[]>([]); // Use setInvoices here to populate invoices
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+
+  // Simulate fetching invoices data (replace with your actual data fetching logic)
+  useEffect(() => {
+    const fetchedInvoices: Invoice[] = [
+      { id: 1, status: 'Pending', amount: 100 },
+      { id: 2, status: 'Paid', amount: 200 },
+      { id: 3, status: 'Overdue', amount: 150 },
+    ];
+    setInvoices(fetchedInvoices); // Set invoices using setInvoices
+  }, []);
 
   const handleInvoiceClick = (invoice: Invoice) => {
     setSelectedInvoice(invoice);
@@ -37,9 +48,12 @@ const Invoices = () => {
         <nav>
           <ol className="flex items-center gap-1.5">
             <li>
-              <a className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400" href="/">
+              <Link
+                className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400"
+                href="/"
+              >
                 Home
-              </a>
+              </Link>
             </li>
             <li className="text-sm text-gray-800 dark:text-white/90">Invoices</li>
           </ol>
@@ -63,7 +77,9 @@ const Invoices = () => {
                   <span className="mb-0.5 block text-sm font-medium text-gray-800 dark:text-white/90">
                     Invoice #{invoice.id}
                   </span>
-                  <span className="block text-gray-500 text-theme-xs dark:text-gray-400">{invoice.status}</span>
+                  <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
+                    {invoice.status}
+                  </span>
                 </div>
               </div>
             ))}
@@ -75,22 +91,32 @@ const Invoices = () => {
           <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] xl:w-4/5">
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800">
               <h3 className="font-medium text-gray-800 text-theme-xl dark:text-white/90">Invoice</h3>
-              <h4 className="text-base font-medium text-gray-700 dark:text-gray-400">ID : #{selectedInvoice.id}</h4>
+              <h4 className="text-base font-medium text-gray-700 dark:text-gray-400">
+                ID : #{selectedInvoice.id}
+              </h4>
             </div>
             <div className="p-5 xl:p-8">
               <div className="flex flex-col gap-6 mb-9 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <span className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-400">From</span>
-                  <h5 className="mb-2 text-base font-semibold text-gray-800 dark:text-white/90">Sender Name</h5>
+                  <span className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-400">
+                    From
+                  </span>
+                  <h5 className="mb-2 text-base font-semibold text-gray-800 dark:text-white/90">
+                    Sender Name
+                  </h5>
                   <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
                     Address Details here...
                   </p>
-                  <span className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Issued On:</span>
+                  <span className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                    Issued On:
+                  </span>
                   <span className="block text-sm text-gray-500 dark:text-gray-400">Issued Date</span>
                 </div>
               </div>
               <div className="pb-6 my-6 text-right border-b border-gray-100 dark:border-gray-800">
-                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">Sub Total amount: $ {selectedInvoice.amount}</p>
+                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                  Sub Total amount: $ {selectedInvoice.amount}
+                </p>
                 <p className="mb-3 text-sm text-gray-500 dark:text-gray-400">Vat (10%): $ 312</p>
                 <p className="text-lg font-semibold text-gray-800 dark:text-white/90">
                   Total : $ {selectedInvoice.amount + 312}

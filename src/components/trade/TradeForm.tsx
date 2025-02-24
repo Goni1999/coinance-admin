@@ -1,15 +1,27 @@
 'use client';
 import React, { useState, useEffect } from "react";
 import axios from "axios"; // Import axios for making API requests
-
+type Coin = {
+  id: string; // e.g. 'bitcoin'
+  symbol: string; // e.g. 'btc'
+  name: string; // e.g. 'Bitcoin'
+  image: string; // URL to the coin's image
+  current_price: number; // e.g. 45000 (the current price in USD)
+  market_cap: number; // e.g. 800000000000 (market cap in USD)
+  total_volume: number; // e.g. 32000000000 (24h trading volume in USD)
+  price_change_percentage_24h: number; // e.g. -1.5 (24h price change in percentage)
+};
+type Balances = {
+  [key: string]: number; // The key is a coin ID or symbol, and the value is the balance amount
+};
 const TradeForm: React.FC = () => {
   const [orderType, setOrderType] = useState<string>("buy");
   const [quantity, setQuantity] = useState<number>(0);
   const [selectedCoin, setSelectedCoin] = useState<string>("bitcoin");
   const [livePrice, setLivePrice] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
-  const [coins, setCoins] = useState<any[]>([]); // State for storing the top 20 coins
-  const [balances, setBalances] = useState<any>({}); // User's coin balances
+  const [coins, setCoins] = useState<Coin[]>([]); // State for storing the top 20 coins
+  const [balances, setBalances] = useState<Balances>({}); // User's coin balances
 
   // Fetch top 20 coins from CoinGecko API
   const fetchTopCoins = async () => {

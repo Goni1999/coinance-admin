@@ -20,9 +20,17 @@ const Watchlist = () => {
     const fetchCoins = async () => {
       try {
         const response = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1');
-        const data = await response.json();
+        const data: { // Define the shape of the fetched data here
+          id: string;
+          symbol: string;
+          name: string;
+          image: string;
+          current_price: number;
+          price_change_percentage_24h: number;
+        }[] = await response.json();
+    
         // Map the fetched data to match the Coin type
-        const formattedCoins = data.map((coin: any) => ({
+        const formattedCoins: Coin[] = data.map((coin) => ({
           id: coin.id,
           symbol: coin.symbol.toUpperCase(),
           name: coin.name,
@@ -31,11 +39,13 @@ const Watchlist = () => {
           price_change_percentage_24h: coin.price_change_percentage_24h,
           changeType: coin.price_change_percentage_24h >= 0 ? 'success' : 'error',
         }));
+    
         setCoins(formattedCoins);
       } catch (error) {
         console.error('Error fetching coins:', error);
       }
     };
+    
 
     fetchCoins();
 
@@ -75,7 +85,7 @@ const Watchlist = () => {
       </div>
       <div className="flex h-[372px] flex-col">
         <div className="flex flex-col h-auto pr-3 overflow-y-auto custom-scrollbar" onScroll={handleScroll}>
-          {coins.slice(0, visibleCount).map((coin, index) => (
+          {coins.slice(0, visibleCount).map((coin) => (
             <div
               key={coin.id}  // Use 'id' as the key for better performance and stability
               className="flex items-center justify-between pt-4 pb-4 border-b border-gray-200 first:pt-0 last:border-b-0 last:pb-0 dark:border-gray-800"

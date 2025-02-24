@@ -1,21 +1,9 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 
 const Tips = () => {
   // State to handle copying the referral link
-  const [copied, setCopied] = useState(false);
-
-  // Function to copy the referral link to clipboard
-  const copyToClipboard = () => {
-    const referralLink = "https://ww...Q8NZ"; // Your actual referral link here
-    navigator.clipboard.writeText(referralLink)
-      .then(() => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000); // Reset copied status after 2 seconds
-      })
-      .catch((err) => console.error("Failed to copy text: ", err));
-  };
-
+ 
   return (
     <div className="p-5">
       {/* Title and Icon - Full width, above the steps */}

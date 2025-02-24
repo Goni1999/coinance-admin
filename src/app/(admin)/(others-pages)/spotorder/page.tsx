@@ -2,7 +2,6 @@ import BestCoins from "@/components/trade/BestCoins";
 import TradeForm from "@/components/trade/TradeForm";
 import { Metadata } from "next";
 import React from "react";
-import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import TradingApp from "@/components/trade/TradingApp";
 import Watchlist from "@/components/trade/Watchlist";
 import TransactionsHistory from "@/components/transactions/TransactionsHistory";
@@ -15,6 +14,8 @@ export const metadata: Metadata = {
 export default function Spotorder() {
   return (
     <div className="grid grid-cols-12 gap-4 md:gap-6">
+          
+
       <div className="col-span-12">
         <BestCoins />
       </div>

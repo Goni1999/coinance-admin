@@ -1,21 +1,6 @@
 "use client";
 import React from "react";
-import Badge from "../ui/badge/Badge";
-import { ArrowDownIcon, ArrowUpIcon, BoxIconLine, GroupIcon } from "@/icons";
-import {
-  BoxCubeIcon,
-  CalenderIcon,
-  ChevronDownIcon,
-  GridIcon,
-  HorizontaLDots,
-  ListIcon,
-  PageIcon,
-  PieChartIcon,
-  PlugInIcon,
-  TableIcon,
-  UserCircleIcon,
-} from "../../icons/index";
-import CoinDropdown from "../ecommerce/coinDropdows";
+
 export const BuyCrypto = () => {
   return (
     <div className="flex flex-col gap-4 sm:grid-cols-2 md:gap-6">

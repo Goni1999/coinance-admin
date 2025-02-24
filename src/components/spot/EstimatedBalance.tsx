@@ -4,11 +4,10 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../ui/table"; // Your custom Table components
 import Badge from "../ui/badge/Badge";
-import Image from "next/image";  // Ensure you're using Next.js's Image component for optimized image loading
-import Button from "../ui/button/Button";
+
 
 // Define the TypeScript interface for the table rows
-interface Coin {
+interface Coins {
   id: string;
   name: string;
   amount: number; // Amount of coins from DB or a static value
@@ -16,10 +15,16 @@ interface Coin {
   status: "Frozen"; // Status will be frozen for all coins
   image: string;
 }
+type Coin = {
+  id: string;
+  name: string;
+  current_price: number; // The live price of the coin in USD
+  image: string; // URL to the coin's image
+};
 
 export default function StatisticsChart() {
-  const [coins, setCoins] = useState<Coin[]>([]); // State to hold coin data
-  const [filteredCoins, setFilteredCoins] = useState<Coin[]>([]); // State for filtered coins
+  const [, setCoins] = useState<Coins[]>([]); // State to hold coin data
+  const [filteredCoins, setFilteredCoins] = useState<Coins[]>([]); // State for filtered coins
   const [filterApplied, setFilterApplied] = useState(false); // State to toggle filter
 
   useEffect(() => {
@@ -36,7 +41,7 @@ export default function StatisticsChart() {
         });
 
         // Process the fetched coin data and add some static values like the amount
-        const coinsWithAmounts = response.data.map((coin: any) => ({
+        const coinsWithAmounts = response.data.map((coin: Coin) => ({
           id: coin.id,
           name: coin.name,
           amount: Math.floor(Math.random() * 1000), // Random amount for demo, replace with actual DB value
@@ -48,7 +53,7 @@ export default function StatisticsChart() {
         setCoins(coinsWithAmounts);
         // Initially apply the filter if filter is already set
         if (filterApplied) {
-          const filtered = coinsWithAmounts.filter((coin: Coin) => coin.amount * coin.price > 1);
+          const filtered = coinsWithAmounts.filter((coin: Coins) => coin.amount * coin.price > 1);
           setFilteredCoins(filtered);
         } else {
           setFilteredCoins(coinsWithAmounts); // Set all coins if no filter is applied
@@ -128,7 +133,7 @@ export default function StatisticsChart() {
 
           {/* Table Body */}
           <TableBody className="divide-y divide-gray-100 dark:divide-gray-800">
-            {filteredCoins.map((coin: Coin) => {
+            {filteredCoins.map((coin: Coins) => {
               const totalValue = coin.amount * coin.price;
               return (
                 <TableRow key={coin.id}>

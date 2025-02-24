@@ -76,10 +76,11 @@ export default function StatisticsChart() {
               },
             }
           );
+          type PriceData = [number, number]; // A tuple representing each item with two numbers
 
-          const formattedData = response.data.prices.map((item: any) => ({
+          const formattedData = response.data.prices.map((item: PriceData) => ({
             x: item[0],
-            y: item.slice(1, 2),
+            y: item.slice(1, 2)[0], // To extract the second value, we access it as the first element of the array
           }));
 
           setPriceData(formattedData);

@@ -1,20 +1,8 @@
 "use client";
 import React from "react";
 import Badge from "../ui/badge/Badge";
-import { ArrowDownIcon, ArrowUpIcon, BoxIconLine, GroupIcon } from "@/icons";
-import {
-  BoxCubeIcon,
-  CalenderIcon,
-  ChevronDownIcon,
-  GridIcon,
-  HorizontaLDots,
-  ListIcon,
-  PageIcon,
-  PieChartIcon,
-  PlugInIcon,
-  TableIcon,
-  UserCircleIcon,
-} from "../../icons/index";
+import {  ArrowUpIcon } from "@/icons";
+
 import CoinDropdown from "./coinDropdows";
 export const EcommerceMetrics = () => {
   return (

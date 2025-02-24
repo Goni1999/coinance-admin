@@ -23,25 +23,31 @@ type Coin = {
   total_volumes: number;
 };
 
-type PriceData = {
-  x: number;
-  y: number[];
+type PriceData = [number, number]; // [timestamp, price]
+
+type FormattedData = {
+  x: number; // Timestamp
+  y: number; // Price
 };
+
+type SeriesData = {
+  name: string;
+  data: FormattedData[];
+};
+
 
 export default function TradingApp() {
   const [cryptoCoins, setCryptoCoins] = useState<Coin[]>([]);
   const [selectedCoin, setSelectedCoin] = useState<Coin | null>(null);
-  const [priceData, setPriceData] = useState<PriceData[]>([]);
+  const [priceData, setPriceData] = useState<FormattedData[]>([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [balance, setBalance] = useState({
+  const [balance] = useState({
     btc: 0,
     usdt: 1000.0,
   });
-  const [amount, setAmount] = useState(0);
-  const [transactionType, setTransactionType] = useState<"buy" | "sell">("buy");
 
   const [previousPrice, setPreviousPrice] = useState<number | null>(null); // Store previous price for comparison
-  const [priceChangeColor, setPriceChangeColor] = useState<string>(""); // For changing color of price
+  const [, setPriceChangeColor] = useState<string>(""); // For changing color of price
 
   // Fetch coin list from API
   useEffect(() => {
@@ -74,16 +80,21 @@ export default function TradingApp() {
             {
               params: {
                 vs_currency: "usd",
-                from: Math.floor(Date.now() / 1000) - 86400,
-                to: Math.floor(Date.now() / 1000),
+                from: Math.floor(Date.now() / 1000) - 86400, // 24 hours ago in seconds
+                to: Math.floor(Date.now() / 1000), // Current time in seconds
               },
             }
           );
-          const formattedData = response.data.prices.map((item: any) => ({
-            x: item[0],
-            y: item.slice(1, 2),
+      
+          // Specify the type of `response.data.prices` as an array of `PriceData`
+          const formattedData: FormattedData[] = response.data.prices.map((item: PriceData) => ({
+            x: item[0], // Timestamp
+            y: item[1], // Price
           }));
-          setPriceData(formattedData);
+      
+          setPriceData(formattedData); // Assuming setPriceData expects an array of FormattedData
+       
+      
 
           const currentPrice = response.data.prices[response.data.prices.length - 1][1];
           if (previousPrice !== null) {
@@ -115,32 +126,7 @@ export default function TradingApp() {
     setIsOpen(false);
   };
 
-  // Handle transaction (buy/sell)
-  const handleTransaction = () => {
-    const coinPrice = selectedCoin?.current_price ?? 0; // Use 0 as a fallback if current_price is undefined
-    
-    if (transactionType === "buy") {
-      if (balance.usdt >= amount * coinPrice) {
-        setBalance((prevBalance) => ({
-          ...prevBalance,
-          btc: prevBalance.btc + amount,
-          usdt: prevBalance.usdt - amount * coinPrice,
-        }));
-      } else {
-        alert("Insufficient USDT balance.");
-      }
-    } else if (transactionType === "sell") {
-      if (balance.btc >= amount) {
-        setBalance((prevBalance) => ({
-          ...prevBalance,
-          btc: prevBalance.btc - amount,
-          usdt: prevBalance.usdt + amount * coinPrice,
-        }));
-      } else {
-        alert("Insufficient BTC balance.");
-      }
-    }
-  };
+
 
   // ApexCharts options
   const options: ApexOptions = {
@@ -214,15 +200,16 @@ export default function TradingApp() {
     },
   };
 
-  const series = [
+  const series: SeriesData[] = [
     {
-      name: selectedCoin?.name || "Price",
-      data: priceData.map((price: PriceData) => ({
+      name: selectedCoin?.name || "Price", // Fallback if selectedCoin is not available
+      data: priceData.map((price: FormattedData) => ({
         x: price.x,
         y: price.y,
       })),
     },
   ];
+  
 
   return (
     <div className="relative p-6">
@@ -328,23 +315,55 @@ export default function TradingApp() {
                 <td className="px-4 py-2">${selectedCoin?.current_price.toFixed(2)}</td>
               </tr>
               <tr className="border-b">
-                <td className="px-4 py-2">24h Change</td>
-                <td className={`px-4 py-2 ${selectedCoin?.price_change_percentage_24h > 0 ? 'text-green-500' : 'text-red-500'}`}>
-                  {selectedCoin?.price_change_percentage_24h.toFixed(2)}%
-                </td>
-              </tr>
-              <tr className="border-b">
-                <td className="px-4 py-2">24h High</td>
-                <td className={`px-4 py-2 ${selectedCoin?.high_24h > selectedCoin?.current_price ? 'text-green-500' : 'text-red-500'}`}>
-                  ${selectedCoin?.high_24h.toFixed(2)}
-                </td>
-              </tr>
-              <tr className="border-b">
-                <td className="px-4 py-2">24h Low</td>
-                <td className={`px-4 py-2 ${selectedCoin?.low_24h < selectedCoin?.current_price ? 'text-red-500' : 'text-green-500'}`}>
-                  ${selectedCoin?.low_24h.toFixed(2)}
-                </td>
-              </tr>
+  <td className="px-4 py-2">24h Change</td>
+  <td className="px-4 py-2">
+    {selectedCoin ? (
+      <span
+        className={`${
+          selectedCoin.price_change_percentage_24h > 0 ? 'text-green-500' : 'text-red-500'
+        }`}
+      >
+        {selectedCoin.price_change_percentage_24h.toFixed(2)}%
+      </span>
+    ) : (
+      <span className="text-gray-500">N/A</span>
+    )}
+  </td>
+</tr>
+<tr className="border-b">
+  <td className="px-4 py-2">24h High</td>
+  <td className="px-4 py-2">
+    {selectedCoin ? (
+      <span
+        className={`${
+          selectedCoin.high_24h > selectedCoin.current_price ? 'text-green-500' : 'text-red-500'
+        }`}
+      >
+        ${selectedCoin.high_24h.toFixed(2)}
+      </span>
+    ) : (
+      <span className="text-gray-500">N/A</span>
+    )}
+  </td>
+</tr>
+
+<tr className="border-b">
+  <td className="px-4 py-2">24h Low</td>
+  <td className="px-4 py-2">
+    {selectedCoin ? (
+      <span
+        className={`${
+          selectedCoin.low_24h < selectedCoin.current_price ? 'text-red-500' : 'text-green-500'
+        }`}
+      >
+        ${selectedCoin.low_24h.toFixed(2)}
+      </span>
+    ) : (
+      <span className="text-gray-500">N/A</span>
+    )}
+  </td>
+</tr>
+
               <tr>
                 <td className="px-4 py-2">24h Volume</td>
                 <td className="px-4 py-2 text-gray-500">N/A {selectedCoin?.name}</td>
