@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from "react";
+import React, { useState, ChangeEvent } from "react";
 import Checkbox from "@/components/form/input/Checkbox";
 import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
@@ -9,6 +9,55 @@ import Link from "next/link";
 export default function SignUpForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [formData, setFormData] = useState({
+    first_name: '',
+    last_name: '',
+    email: '',
+    password: '',
+    birthday: '',
+    address: '',
+    city: '',
+    state: '',
+    zip_code: '',
+    identification_documents_type: '',
+    phone: '',
+    position: '',
+    card_id: '',
+  });
+
+  // Handle change for each input field
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  // Handle checkbox change
+  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setIsChecked(e.target.checked);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Prepare the form data for submission (e.g., send to your backend)
+    console.log(formData);
+
+    // Send data to server (using fetch or axios)
+    try {
+      const response = await fetch('/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const result = await response.json();
+      console.log(result); // handle success
+    } catch (error) {
+      console.error('Error submitting form:', error); // handle error
+    }
+  };
 
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full overflow-y-auto no-scrollbar">
@@ -31,7 +80,7 @@ export default function SignUpForm() {
           </p>
         </div>
 
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="space-y-5">
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               {/* First Name */}
@@ -44,6 +93,8 @@ export default function SignUpForm() {
                   id="first_name"
                   name="first_name"
                   placeholder="Enter your first name"
+                  value={formData.first_name}
+                  onChange={handleChange}
                 />
               </div>
 
@@ -57,6 +108,8 @@ export default function SignUpForm() {
                   id="last_name"
                   name="last_name"
                   placeholder="Enter your last name"
+                  value={formData.last_name}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -71,6 +124,8 @@ export default function SignUpForm() {
                 id="email"
                 name="email"
                 placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleChange}
               />
             </div>
 
@@ -83,6 +138,9 @@ export default function SignUpForm() {
                 <Input
                   placeholder="Enter your password"
                   type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
                 />
                 <span
                   onClick={() => setShowPassword(!showPassword)}
@@ -106,7 +164,8 @@ export default function SignUpForm() {
                 type="date"
                 id="birthday"
                 name="birthday"
-                placeholder="Enter your birthday"
+                value={formData.birthday}
+                onChange={handleChange}
               />
             </div>
 
@@ -120,6 +179,8 @@ export default function SignUpForm() {
                 id="address"
                 name="address"
                 placeholder="Enter your address"
+                value={formData.address}
+                onChange={handleChange}
               />
             </div>
 
@@ -133,6 +194,8 @@ export default function SignUpForm() {
                 id="city"
                 name="city"
                 placeholder="Enter your city"
+                value={formData.city}
+                onChange={handleChange}
               />
             </div>
 
@@ -146,6 +209,8 @@ export default function SignUpForm() {
                 id="state"
                 name="state"
                 placeholder="Enter your state"
+                value={formData.state}
+                onChange={handleChange}
               />
             </div>
 
@@ -159,10 +224,12 @@ export default function SignUpForm() {
                 id="zip_code"
                 name="zip_code"
                 placeholder="Enter your zip code"
+                value={formData.zip_code}
+                onChange={handleChange}
               />
             </div>
 
-            {/* Identification Document Type */}
+            {/* ID Document Type */}
             <div>
               <Label>
                 ID Document Type<span className="text-red-500">*</span>
@@ -172,6 +239,8 @@ export default function SignUpForm() {
                 id="identification_documents_type"
                 name="identification_documents_type"
                 placeholder="Enter your identification document type"
+                value={formData.identification_documents_type}
+                onChange={handleChange}
               />
             </div>
 
@@ -185,6 +254,8 @@ export default function SignUpForm() {
                 id="phone"
                 name="phone"
                 placeholder="Enter your phone number"
+                value={formData.phone}
+                onChange={handleChange}
               />
             </div>
 
@@ -198,6 +269,8 @@ export default function SignUpForm() {
                 id="position"
                 name="position"
                 placeholder="Enter your position"
+                value={formData.position}
+                onChange={handleChange}
               />
             </div>
 
@@ -211,6 +284,8 @@ export default function SignUpForm() {
                 id="card_id"
                 name="card_id"
                 placeholder="Enter your card ID"
+                value={formData.card_id}
+                onChange={handleChange}
               />
             </div>
 
@@ -219,7 +294,7 @@ export default function SignUpForm() {
               <Checkbox
                 className="w-5 h-5"
                 checked={isChecked}
-                onChange={setIsChecked}
+                onChange={handleCheckboxChange}
               />
               <p className="inline-block font-normal text-gray-500 dark:text-gray-400">
                 By creating an account, you agree to the{" "}
@@ -235,7 +310,10 @@ export default function SignUpForm() {
 
             {/* Submit Button */}
             <div>
-              <button className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600">
+              <button
+                type="submit"
+                className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
+              >
                 Sign Up
               </button>
             </div>

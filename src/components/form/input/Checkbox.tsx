@@ -1,12 +1,12 @@
-import React from "react";
+import React, { ChangeEvent } from 'react';
 
 interface CheckboxProps {
   label?: string; // Optional label for the checkbox
   checked: boolean; // Checked state
   className?: string;
   id?: string; // Unique ID for the checkbox
-  onChange: (checked: boolean) => void; // Change handler
-  disabled?: boolean; // Disabled state
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+    disabled?: boolean; // Disabled state
 }
 
 const Checkbox: React.FC<CheckboxProps> = ({
@@ -28,7 +28,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
         type="checkbox"
         className={`w-4 h-4 ${className} dark:bg-gray-800 dark:border-gray-700 border-gray-300 dark:focus:outline-none rounded text-brand-500 dark:focus:ring-0 focus:ring-0 dark:focus:ring-transparent focus:ring-transparent focus:outline-none dark:focus:bg-outline-none focus:ring-offset-0`}
         checked={checked}
-        onChange={(e) => onChange(e.target.checked)}
+        onChange={onChange}
         disabled={disabled}
       />
       {label && (
