@@ -12,16 +12,39 @@ const TwoStepVerification = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const userEmail = localStorage.getItem("userEmail"); // Check if user is logged in
-    const hasCompletedVerification = sessionStorage.getItem("twoStepVerified"); // Check if verification is already done
+    const checkOtpStatus = async () => {
+      const userEmail = localStorage.getItem("userEmail");
 
-    if (!userEmail) {
-      router.push("/login"); // Redirect to login if no email
-    } else if (hasCompletedVerification) {
-      router.push("/"); // Redirect to main page if already verified
-    } else {
-      sendOTP(); // Send OTP when user first arrives
-    }
+      if (!userEmail) {
+        router.push("/login"); // Redirect to login if no email
+        return;
+      }
+
+      const hasCompletedVerification = sessionStorage.getItem("twoStepVerified");
+
+      if (hasCompletedVerification) {
+        router.push("/"); // Redirect to main page if already verified
+        return;
+      }
+
+      try {
+        // Check OTP verification status
+        const { data } = await axios.get("https://server.capital-trust.eu/api/check-otp-status", {
+          params: { email: userEmail },
+        });
+
+        if (data.verified) {
+          sessionStorage.setItem("twoStepVerified", "true");
+          router.push("/");
+        } else {
+          sendOTP();
+        }
+      } catch (error) {
+        console.error("Error checking OTP status:", error);
+      }
+    };
+
+    checkOtpStatus();
   }, []);
 
   // ✅ Send OTP API Call
@@ -45,8 +68,7 @@ const TwoStepVerification = () => {
     setOtp(otpCopy);
 
     if (value !== "" && index < otp.length - 1) {
-      const nextInput = document.getElementById(`otp-input-${index + 1}`) as HTMLInputElement;
-      nextInput?.focus();
+      document.getElementById(`otp-input-${index + 1}`)?.focus();
     }
   };
 
@@ -69,7 +91,10 @@ const TwoStepVerification = () => {
 
       if (response.data.message === "OTP verified successfully") {
         sessionStorage.setItem("twoStepVerified", "true"); // Prevents re-accessing the page
-        router.push("/"); // Redirect to main page after verification
+
+        setTimeout(() => {
+          router.push("/"); // Redirect to main page after verification
+        }, 500);
       } else {
         setError(response.data.message);
       }
