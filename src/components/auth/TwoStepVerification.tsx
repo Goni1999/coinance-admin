@@ -13,7 +13,7 @@ const TwoStepVerification = () => {
 
   useEffect(() => {
     const checkAuthStatus = async () => {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("auth-token");
       if (!token) {
         router.push("/signin");
         return;
@@ -48,7 +48,7 @@ const TwoStepVerification = () => {
   // ✅ Send OTP API Call
   const sendOTP = async () => {
     try {
-      const token = localStorage.getItem("authToken");
+      const token = localStorage.getItem("auth-token");
       if (!token) return console.error("No auth token found");
   
       const response = await axios.post(
