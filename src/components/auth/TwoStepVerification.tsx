@@ -84,7 +84,7 @@ const verifyOtp = async (e: React.FormEvent) => {
   setLoading(true);
   setError(null);
 
-  const token = localStorage.getItem("authToken");
+  const token = localStorage.getItem("auth-token");
   if (!token) return;
 
   const enteredOtp = otp.join("");
