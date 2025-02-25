@@ -6,6 +6,6 @@ export const metadata: Metadata = {
     description: "This is  EmailVerify Page ",
   };
 
-export default function TwoStepVerification1() {
+export default function VerifyEmail1() {
   return <VerifyEmail />;
 }

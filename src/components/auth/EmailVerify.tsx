@@ -45,11 +45,14 @@ const EmailVerify = () => {
   }, [router]);
 
   return (
+    <div className="flex flex-col flex-1 lg:w-1/2 w-full">
+
     <div className="flex flex-col items-center justify-center h-screen text-center">
       {loading && <p className="text-lg text-gray-700">Verifying email, please wait...</p>}
 
       {error && <p className="text-lg text-red-500">{error}</p>}
       {message && <p className="text-lg text-green-500">{message}</p>}
+    </div>
     </div>
   );
 };
