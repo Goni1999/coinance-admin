@@ -16,7 +16,7 @@ const TwoStepVerification = () => {
       const userEmail = localStorage.getItem("userEmail");
 
       if (!userEmail) {
-        router.push("/login"); // Redirect to login if no email
+        router.push("/signin"); // Redirect to login if no email
         return;
       }
 
