@@ -5,19 +5,28 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 
 const VerifyEmail = () => {
-  const [email, ] = useState<string>(""); // Set email dynamically if needed
+  const [email, setEmail] = useState<string | null>(null);
   const [isVerified, setIsVerified] = useState<boolean | null>(null);
   const [message, setMessage] = useState<string>("");
   const [isResending, setIsResending] = useState<boolean>(false);
   const router = useRouter();
 
+  // Load email from localStorage or session (adjust based on your app)
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("userEmail"); // Adjust key based on storage method
+    if (storedEmail) {
+      setEmail(storedEmail);
+    }
+  }, []);
+
   // Function to check email verification from the database
   const checkEmailVerification = async () => {
     if (!email) return;
     try {
-      const response = await axios.get(`https://server.capital-trust.eu/api/check-email?email=${email}`);
+      const response = await axios.get(
+        `https://server.capital-trust.eu/api/check-email?email=${email}`
+      );
 
-      // Assuming API response contains user role information
       setIsVerified(response.data.role === "emailverified");
     } catch (error) {
       console.error("Error checking email verification:", error);
@@ -57,8 +66,6 @@ const VerifyEmail = () => {
       router.push("/twostepverification");
     }
   };
-
-
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">

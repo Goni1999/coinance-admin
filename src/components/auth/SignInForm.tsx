@@ -1,6 +1,6 @@
-"use client";
+"use client"; // ✅ Ensures this file runs on the client-side
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; // ✅ For redirection
 import Checkbox from "@/components/form/input/Checkbox";
 import Input from "@/components/form/input/InputField";
@@ -17,6 +17,13 @@ export default function SignInForm() {
   const [isChecked, setIsChecked] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // ✅ Store email in localStorage
+  useEffect(() => {
+    if (email) {
+      localStorage.setItem("userEmail", email);
+    }
+  }, [email]);
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsChecked(e.target.checked);
@@ -36,7 +43,6 @@ export default function SignInForm() {
       });
 
       const data = await response.json();
-
       if (!response.ok) throw new Error(data.error || "Login failed");
 
       // ✅ Step 2: Store JWT token in cookies
@@ -48,7 +54,6 @@ export default function SignInForm() {
       } else {
         throw new Error("Unexpected response from server.");
       }
-
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "An unexpected error occurred.");
     } finally {
