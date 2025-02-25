@@ -90,10 +90,10 @@ const TwoStepVerification = () => {
       });
 
       if (response.data.message === "OTP verified successfully") {
-        sessionStorage.setItem("twoStepVerified", "true"); // Prevents re-accessing the page
+        sessionStorage.setItem("twoStepVerified", "true"); 
 
         setTimeout(() => {
-          router.push("/"); // Redirect to main page after verification
+          router.push("/"); 
         }, 500);
       } else {
         setError(response.data.message);
