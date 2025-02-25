@@ -14,106 +14,102 @@ const TwoStepVerification = () => {
 
   useEffect(() => {
     const checkAuthStatus = async () => {
-      // ✅ Check if user has auth-token
-      const authToken = Cookies.get("auth-token");
-      if (!authToken) {
-        router.push("/signin"); // Redirect to login if no token
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        router.push("/signin");
         return;
       }
-
-      const userEmail = localStorage.getItem("userEmail");
-      if (!userEmail) {
-        router.push("/signin"); // Redirect if email not found
-        return;
-      }
-
+  
       const hasCompletedVerification = sessionStorage.getItem("twoStepVerified");
       if (hasCompletedVerification) {
-        router.push("/"); // Redirect to main page if already verified
+        router.push("/");
         return;
       }
-
+  
       try {
-        // ✅ Check OTP verification status from server
         const { data } = await axios.get("https://server.capital-trust.eu/api/check-otp-status", {
-          params: { email: userEmail },
-          withCredentials: true, // ✅ Include auth-token cookie in request
+          headers: { Authorization: `Bearer ${token}` },
         });
-
+  
         if (data.verified) {
           sessionStorage.setItem("twoStepVerified", "true");
           router.push("/");
         } else {
-          sendOTP(); // If not verified, send OTP
+          sendOTP(); // ✅ No need for `await` inside `useEffect`
         }
       } catch (error) {
         console.error("Error checking OTP status:", error);
       }
     };
-
+  
     checkAuthStatus();
   }, []);
+  
 
   // ✅ Send OTP API Call
   const sendOTP = async () => {
     try {
-      const userEmail = localStorage.getItem("userEmail");
-      if (!userEmail) return;
-
-      await axios.post(
+      const token = localStorage.getItem("authToken");
+      if (!token) return console.error("No auth token found");
+  
+      const response = await axios.post(
         "https://server.capital-trust.eu/api/send-otp",
-        { email: userEmail },
-        { withCredentials: true } // ✅ Ensure request includes cookies
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
       );
+  
+      console.log("OTP sent response:", response.data);
     } catch (error) {
       console.error("Error sending OTP:", error);
       setError("Failed to send OTP. Please try again.");
     }
   };
+  
+ // ✅ Handle OTP input
+ const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+  const value = e.target.value;
+  if (!/^\d*$/.test(value)) return; // Only allow numbers
 
-  // ✅ Handle OTP input
-  const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const value = e.target.value;
-    const otpCopy = [...otp];
-    otpCopy[index] = value;
-    setOtp(otpCopy);
+  const otpCopy = [...otp];
+  otpCopy[index] = value;
+  setOtp(otpCopy);
 
-    if (value !== "" && index < otp.length - 1) {
-      document.getElementById(`otp-input-${index + 1}`)?.focus();
+  if (value !== "" && index < otp.length - 1) {
+    document.getElementById(`otp-input-${index + 1}`)?.focus();
+  }
+};
+
+// ✅ Verify OTP API Call
+const verifyOtp = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setLoading(true);
+  setError(null);
+
+  const token = localStorage.getItem("authToken");
+  if (!token) return;
+
+  const enteredOtp = otp.join("");
+
+  try {
+    const response = await axios.post(
+      "https://server.capital-trust.eu/api/verify-otp",
+      { otp: enteredOtp }, // No email needed, backend extracts from token
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    if (response.data.message === "OTP verified successfully") {
+      sessionStorage.setItem("twoStepVerified", "true");
+      router.push("/");
+    } else {
+      setError(response.data.message);
     }
-  };
-
-  // ✅ Verify OTP API Call
-  const verifyOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-
-    const userEmail = localStorage.getItem("userEmail");
-    if (!userEmail) return;
-
-    const enteredOtp = otp.join("");
-
-    try {
-      const response = await axios.post(
-        "https://server.capital-trust.eu/api/verify-otp",
-        { email: userEmail, otp: enteredOtp },
-        { withCredentials: true } // ✅ Ensure request includes cookies
-      );
-
-      if (response.data.message === "OTP verified successfully") {
-        sessionStorage.setItem("twoStepVerified", "true");
-        router.push("/"); // Redirect to dashboard
-      } else {
-        setError(response.data.message);
-      }
-    } catch (error) {
-      console.error("Error verifying OTP:", error);
-      setError("Invalid OTP. Try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  } catch (error) {
+    console.error("Error verifying OTP:", error);
+    setError("Invalid OTP. Try again.");
+  } finally {
+    setLoading(false);
+  }
+};
 
 
   return (

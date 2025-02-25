@@ -33,24 +33,28 @@ export default function SignInForm() {
     e.preventDefault();
     setError(null);
     setLoading(true);
-
+  
     try {
-      // ✅ Step 1: Send Login Request
       const response = await fetch("https://server.capital-trust.eu/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, rememberMe: isChecked }),
       });
-
+  
       const data = await response.json();
+      console.log("🚀 Login response:", data); // ✅ Debugging
+  
       if (!response.ok) throw new Error(data.error || "Login failed");
-
-      // ✅ Step 2: Store JWT token in cookies
-      Cookies.set("auth-token", data.token, { expires: isChecked ? 7 : 1 });
-
-      // ✅ Step 3: Redirect based on backend response
+  
+      localStorage.setItem("auth-token", data.token);
+  
       if (data.redirect) {
-        router.push(data.redirect); // Redirect to verifyemail or twostepverification
+        console.log("🔄 Redirecting to:", data.redirect); // ✅ Debugging
+  
+        // ✅ Add timeout for stability
+        setTimeout(() => {
+          router.replace(data.redirect);
+        }, 200);
       } else {
         throw new Error("Unexpected response from server.");
       }
@@ -60,6 +64,7 @@ export default function SignInForm() {
       setLoading(false);
     }
   };
+  
 
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full">
