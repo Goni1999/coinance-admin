@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import Cookies from "js-cookie";
 import Link from "next/link";
 
 const TwoStepVerification = () => {

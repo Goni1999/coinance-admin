@@ -7,7 +7,6 @@ import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
-import Cookies from "js-cookie"; // ✅ Store JWT token in cookies
 
 export default function SignInForm() {
   const router = useRouter();
