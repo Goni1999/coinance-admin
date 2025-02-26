@@ -15,7 +15,7 @@ export default function UserDropdown() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const token = localStorage.getItem("token"); // Get JWT token from localStorage
+        const token = localStorage.getItem("auth-token"); // Get JWT token from localStorage
 
         if (!token) {
           console.error("No token found, user not authenticated.");
