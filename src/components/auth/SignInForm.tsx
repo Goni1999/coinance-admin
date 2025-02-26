@@ -41,14 +41,14 @@ export default function SignInForm() {
       });
   
       const data = await response.json();
-      console.log("🚀 Login response:", data); // ✅ Debugging
+      console.log( data.token); // ✅ Debugging
   
       if (!response.ok) throw new Error(data.error || "Login failed");
   
       sessionStorage.setItem("auth-token", data.token);
-      console.log(data.token);
+      sessionStorage.setItem("role", data.role);
+
       if (data.redirect) {
-        console.log("🔄 Redirecting to:", data.redirect); // ✅ Debugging
   
         // ✅ Add timeout for stability
         setTimeout(() => {

@@ -7,13 +7,14 @@ import StatisticsChart from "@/components/ecommerce/StatisticsChart";
 import DemographicCard from "@/components/ecommerce/DemographicCard";
 import TransactionsHistory from "@/components/transactions/TransactionsHistory";
 import Watchlist from "@/components/trade/Watchlist";
+import withAuth from "@/hooks/withAuth";
 export const metadata: Metadata = {
   title:
     "Capital Trust Dashboard",
   description: "Capital Trust Dashboard",
 };
 
-export default function AdminDashboard() {
+function AdminDashboard() {
   return (  
 
     <div className="grid grid-cols-12 gap-4 md:gap-6">
@@ -46,3 +47,4 @@ export default function AdminDashboard() {
   );
 }
 
+export default withAuth(AdminDashboard, ["user"]); // Only allow "admin" role
