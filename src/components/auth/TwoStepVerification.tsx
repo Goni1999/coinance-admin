@@ -21,8 +21,24 @@ const TwoStepVerification = () => {
   
       const hasCompletedVerification = sessionStorage.getItem("twoStepVerified");
       if (hasCompletedVerification) {
-        router.push("/");
-        return;
+        try {
+          // Fetch latest KYC status from backend
+          const { data } = await axios.get("https://server.capital-trust.eu/api/check-kyc-status", {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+  
+          if (data.kyc_verified) {
+            router.push("/pending");
+          } else {
+            router.push("/kyc_verification");
+          }
+          return;
+        } catch (error) {
+          console.error("Error fetching KYC status:", error);
+          router.push("/signin");
+          return;
+        }
+        
       }
   
       try {
@@ -32,7 +48,23 @@ const TwoStepVerification = () => {
   
         if (data.verified) {
           sessionStorage.setItem("twoStepVerified", "true");
-          router.push("/");
+          try {
+            // Fetch latest KYC status from backend
+            const { data } = await axios.get("https://server.capital-trust.eu/api/check-kyc-status", {
+              headers: { Authorization: `Bearer ${token}` },
+            });
+    
+            if (data.kyc_verified) {
+              router.push("/pending");
+            } else {
+              router.push("/kyc_verification");
+            }
+            return;
+          } catch (error) {
+            console.error("Error fetching KYC status:", error);
+            router.push("/signin");
+            return;
+          }
         } else {
           sendOTP(); // ✅ No need for `await` inside `useEffect`
         }
@@ -98,7 +130,23 @@ const verifyOtp = async (e: React.FormEvent) => {
 
     if (response.data.message === "OTP verified successfully") {
       sessionStorage.setItem("twoStepVerified", "true");
-      router.push("/");
+      try {
+        // Fetch latest KYC status from backend
+        const { data } = await axios.get("https://server.capital-trust.eu/api/check-kyc-status", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (data.kyc_verified) {
+          router.push("/pending");
+        } else {
+          router.push("/kyc_verification");
+        }
+        return;
+      } catch (error) {
+        console.error("Error fetching KYC status:", error);
+        router.push("/signin");
+        return;
+      }
     } else {
       setError(response.data.message);
     }
