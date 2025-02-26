@@ -26,7 +26,7 @@ const Pending = () => {
         if (data.role === "user") {
           localStorage.removeItem("kycSubmitted"); // Clean kycSubmitted
           router.push("/");
-        } else if (data.role === "emailverified") {
+        } else if (data.role !== "unverified") {
           localStorage.removeItem("kycSubmitted"); // Clean kycSubmitted
           router.push("/kyc_verification");
         }
