@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+"use client"; // ✅ Ensure this is a Client Component
+
 import { EcommerceMetrics } from "@/components/ecommerce/EcommerceMetrics";
 import React from "react";
 import MonthlyTarget from "@/components/ecommerce/MonthlyTarget";
@@ -8,19 +9,14 @@ import DemographicCard from "@/components/ecommerce/DemographicCard";
 import TransactionsHistory from "@/components/transactions/TransactionsHistory";
 import Watchlist from "@/components/trade/Watchlist";
 import withAuth from "@/hooks/withAuth";
-export const metadata: Metadata = {
-  title:
-    "Capital Trust Dashboard",
-  description: "Capital Trust Dashboard",
-};
+
+
 
 function AdminDashboard() {
   return (  
-
     <div className="grid grid-cols-12 gap-4 md:gap-6">
       <div className="col-span-12 space-y-6 xl:col-span-7">
         <EcommerceMetrics />
-
         <MonthlySalesChart />
       </div>
 
@@ -35,7 +31,6 @@ function AdminDashboard() {
       <div className="col-span-12 xl:col-span-5">
         <Watchlist/>
         <br/>
-      
         <DemographicCard />
       </div>
 
@@ -43,8 +38,7 @@ function AdminDashboard() {
         <TransactionsHistory />
       </div>
     </div>
-
   );
 }
 
-export default withAuth(AdminDashboard, ["user"]); // Only allow "admin" role
+export default withAuth(AdminDashboard, ["user"]); 
