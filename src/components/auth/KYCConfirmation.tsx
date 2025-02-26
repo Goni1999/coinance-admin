@@ -17,8 +17,8 @@ const KYCConfirmation = () => {
   });
   const [loading, setLoading] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
-
-  useEffect(() => {
+// ✅ Run fetchUserData when the component mounts
+useEffect(() => {
     const token = sessionStorage.getItem("auth-token");
 
     if (!token) {
@@ -26,31 +26,40 @@ const KYCConfirmation = () => {
       router.push("/signin");
       return;
     }
-
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch("https://server.capital-trust.eu/api/get-user-data", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status} - ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        setKyc(data.kyc_verification); // Set KYC state
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
     fetchUserData();
-  }, [router]);
+  }, []);
+    
 
+  const fetchUserData = async () => {
+    const token = sessionStorage.getItem("auth-token");
+  
+    if (!token) {
+      setIsAuthenticated(false);
+      router.push("/signin");
+      return;
+    }
+  
+    try {
+      const response = await fetch("https://server.capital-trust.eu/api/get-user-data", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} - ${response.statusText}`);
+      }
+  
+      const data = await response.json();
+      setKyc(data.kyc_verification); // ✅ Update KYC state
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+  
+  
   // ✅ Run role check ONLY after KYC state is updated
   useEffect(() => {
     const token = sessionStorage.getItem("auth-token");
@@ -112,16 +121,15 @@ const KYCConfirmation = () => {
       return null;
     }
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedIdType) {
       alert("Please select an ID type before submitting.");
       return;
     }
-
+  
     setLoading(true);
-
+  
     try {
       const uploadedUrls: string[] = [];
       for (const key in files) {
@@ -130,24 +138,28 @@ const KYCConfirmation = () => {
           if (url) uploadedUrls.push(url);
         }
       }
-
+  
       const token = sessionStorage.getItem("auth-token");
       if (!token) {
         alert("User not authenticated.");
         return;
       }
-
+  
       const headers = { Authorization: `Bearer ${token}` };
-
+  
       await axios.post(
         "https://server.capital-trust.eu/auth/save-kyc",
         { urls: uploadedUrls, idType: selectedIdType },
         { headers }
       );
-
+  
       alert("KYC Verification Submitted Successfully!");
-
-      checkUserRole(token); // Check user role and redirect accordingly
+  
+      // ✅ Refresh user data to get the latest KYC and role state
+      await fetchUserData(); // This updates the `kyc` state
+  
+      // ✅ Run role check AFTER KYC is updated
+      checkUserRole(token);
     } catch (error) {
       console.error("Error during file upload:", error);
       alert("Upload failed. Please try again.");
@@ -155,6 +167,7 @@ const KYCConfirmation = () => {
       setLoading(false);
     }
   };
+  
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full">
       <div className="w-full max-w-md pt-10 mx-auto">
