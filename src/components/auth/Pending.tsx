@@ -28,7 +28,7 @@ const Pending = () => {
           router.push("/");
         } else if (data.role === "emailverified") {
           localStorage.removeItem("kycSubmitted"); // Clean kycSubmitted
-          router.push("/kyc_confirmation");
+          router.push("/kyc_verification");
         }
       } catch (error) {
         console.error("Error checking user role:", error);
