@@ -46,7 +46,7 @@ export default function SignInForm() {
       if (!response.ok) throw new Error(data.error || "Login failed");
   
       sessionStorage.setItem("auth-token", data.token);
-  
+      console.log(data.token);
       if (data.redirect) {
         console.log("🔄 Redirecting to:", data.redirect); // ✅ Debugging
   
