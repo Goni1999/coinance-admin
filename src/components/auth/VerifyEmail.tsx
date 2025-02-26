@@ -11,16 +11,12 @@ const VerifyEmail = () => {
   const [isResending, setIsResending] = useState<boolean>(false);
   const router = useRouter();
 
-  // Load email from localStorage
+  // Load email from sessionStorage
   useEffect(() => {
-    const storedEmail = localStorage.getItem("userEmail");
+    const storedEmail = sessionStorage.getItem("userEmail");
     if (storedEmail) setEmail(storedEmail);
   }, []);
-  const token = localStorage.getItem("auth-token");
-  if (!token) {
-    router.push("/signin");
-    return;
-  }
+ 
   // Check email verification
   const checkEmailVerification = async () => {
     if (!email) return;

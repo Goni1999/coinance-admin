@@ -17,10 +17,10 @@ export default function SignInForm() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // ✅ Store email in localStorage
+  // ✅ Store email in sessionStorage
   useEffect(() => {
     if (email) {
-      localStorage.setItem("userEmail", email);
+      sessionStorage.setItem("userEmail", email);
     }
   }, [email]);
 
@@ -45,7 +45,7 @@ export default function SignInForm() {
   
       if (!response.ok) throw new Error(data.error || "Login failed");
   
-      localStorage.setItem("auth-token", data.token);
+      sessionStorage.setItem("auth-token", data.token);
   
       if (data.redirect) {
         console.log("🔄 Redirecting to:", data.redirect); // ✅ Debugging

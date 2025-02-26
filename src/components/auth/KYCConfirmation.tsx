@@ -6,6 +6,14 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 
 const KYCConfirmation = () => {
+    const router = useRouter();
+
+    const token = sessionStorage.getItem("auth-token");
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
+    
   const [selectedIdType, setSelectedIdType] = useState<string>("");
   const [files, setFiles] = useState<{ [key: string]: File | null }>({
     frontId: null,
@@ -14,7 +22,6 @@ const KYCConfirmation = () => {
     driversLicenseId: null,
   });
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, files } = e.target;
@@ -146,13 +153,13 @@ const KYCConfirmation = () => {
                     <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                       Upload Front of ID
                     </label>
-                    <input type="file" name="frontId" onChange={handleFileChange} required />
+                    <input className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400" type="file" name="frontId" onChange={handleFileChange} required />
                   </div>
                   <div>
                     <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                       Upload Back of ID
                     </label>
-                    <input type="file" name="backId" onChange={handleFileChange} required />
+                    <input className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400" type="file" name="backId" onChange={handleFileChange} required />
                   </div>
                 </>
               )}
@@ -162,7 +169,7 @@ const KYCConfirmation = () => {
                   <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                     Upload Passport
                   </label>
-                  <input type="file" name="passportId" onChange={handleFileChange} required />
+                  <input className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400" type="file" name="passportId" onChange={handleFileChange} required />
                 </div>
               )}
 
@@ -171,7 +178,7 @@ const KYCConfirmation = () => {
                   <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                     Upload Driver's License
                   </label>
-                  <input type="file" name="driversLicenseId" onChange={handleFileChange} required />
+                  <input className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400" type="file" name="driversLicenseId" onChange={handleFileChange} required />
                 </div>
               )}
 

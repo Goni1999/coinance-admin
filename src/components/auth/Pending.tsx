@@ -4,6 +4,7 @@ import Link from "next/link";
 import React from "react";
 
 const Pending = () => {
+   
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full">
       <div className="w-full max-w-md pt-10 mx-auto">
