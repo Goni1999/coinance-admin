@@ -30,7 +30,7 @@ const VerifyEmail = () => {
       const response = await axios.get(
         `https://server.capital-trust.eu/api/check-email?email=${email}`
       );
-      setIsVerified(response.data.role === "emailverified");
+      setIsVerified(response.data.role !== "unverified");
     } catch (error) {
       console.error("Error checking email verification:", error);
       setIsVerified(false);

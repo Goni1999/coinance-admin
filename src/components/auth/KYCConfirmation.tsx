@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 const KYCConfirmation = () => {
     const router = useRouter();
     const [selectedIdType, setSelectedIdType] = useState<string>("");
+    const [kyc, setKyc] = useState<{ kyc: boolean;} | null>(null);
     const [files, setFiles] = useState<{ [key: string]: File | null }>({
       frontId: null,
       backId: null,
@@ -25,9 +26,39 @@ const KYCConfirmation = () => {
         return;
       }
   
+      const fetchUserData = async () => {
+        try {
+          const token = sessionStorage.getItem("auth-token"); // Get JWT token from localStorage
+          if (!token) {
+            console.error("No token found, user not authenticated.");
+            return;
+          }
+  
+          const response = await fetch("https://server.capital-trust.eu/api/get-user-data", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`, // Attach JWT token
+              "Content-Type": "application/json",
+            },
+          });
+  
+          if (!response.ok) {
+            throw new Error(`Error: ${response.status} - ${response.statusText}`);
+          }
+          const data = await response.json();
+  
+          setKyc({
+            kyc: data.kyc_verification || false,
+           
+          });
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        } 
+      };
+  
+      fetchUserData();
       // Check if KYC was already submitted (to prevent re-submission)
-      const kycSubmitted = localStorage.getItem("kycSubmitted");
-      if (kycSubmitted === "true") {
+      if (kyc ) {
         checkUserRole(token);
       }
     }, [router]);
