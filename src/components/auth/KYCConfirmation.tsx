@@ -1,19 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
 const KYCConfirmation = () => {
-    const router = useRouter();
+  const router = useRouter();
 
-    const token = sessionStorage.getItem("auth-token");
-    if (!token) {
-      router.push("/signin");
-      return;
-    }
-    
+  // Ensure hooks are called at the top level
   const [selectedIdType, setSelectedIdType] = useState<string>("");
   const [files, setFiles] = useState<{ [key: string]: File | null }>({
     frontId: null,
@@ -22,6 +17,19 @@ const KYCConfirmation = () => {
     driversLicenseId: null,
   });
   const [loading, setLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+
+  useEffect(() => {
+    const token = sessionStorage.getItem("auth-token");
+    if (!token) {
+      setIsAuthenticated(false);
+      router.push("/signin");
+    }
+  }, [router]);
+
+  if (!isAuthenticated) {
+    return null; // Prevent rendering when redirecting
+  }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, files } = e.target;
@@ -37,7 +45,7 @@ const KYCConfirmation = () => {
   const uploadToCloudinary = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", "uploads"); // Replace with your Cloudinary upload preset
+    formData.append("upload_preset", "uploads");
 
     const response = await axios.post(
       "https://api.cloudinary.com/v1_1/dqysonzsh/upload",
@@ -52,7 +60,6 @@ const KYCConfirmation = () => {
 
     try {
       const uploadedUrls: string[] = [];
-
       for (const key in files) {
         if (files[key]) {
           const url = await uploadToCloudinary(files[key] as File);
@@ -60,7 +67,6 @@ const KYCConfirmation = () => {
         }
       }
 
-      // Fetch the token from localStorage or sessionStorage
       const token =
         typeof window !== "undefined"
           ? localStorage.getItem("token") || sessionStorage.getItem("token")
@@ -72,7 +78,6 @@ const KYCConfirmation = () => {
 
       const headers = { Authorization: `Bearer ${token}` };
 
-      // Send the uploaded file URLs to the backend
       await axios.post(
         "https://server.capital-trust.eu/auth/save-kyc",
         { urls: uploadedUrls },
@@ -127,85 +132,71 @@ const KYCConfirmation = () => {
           </p>
         </div>
 
-        <div>
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-5">
+        <form onSubmit={handleSubmit}>
+          <div className="space-y-5">
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                Select ID Type<span className="text-error-500">*</span>
+              </label>
+              <select
+                className="h-11 w-full rounded-lg border px-4 py-2.5 text-sm shadow-theme-xs focus:outline-none focus:ring bg-transparent text-gray-800 border-gray-300 focus:border-brand-300 focus:ring-brand-500/20 dark:bg-gray-900 dark:text-white/90 dark:border-gray-700 dark:focus:border-brand-800"
+                value={selectedIdType}
+                onChange={handleIdTypeChange}
+                required
+              >
+                <option value="">Choose an ID Type</option>
+                <option value="idCard">ID Card</option>
+                <option value="passport">Passport</option>
+                <option value="driversLicense">Driver&apos;s License</option>
+              </select>
+            </div>
+
+            {selectedIdType === "idCard" && (
+              <>
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                    Upload Front of ID
+                  </label>
+                  <input type="file" name="frontId" onChange={handleFileChange} required />
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                    Upload Back of ID
+                  </label>
+                  <input type="file" name="backId" onChange={handleFileChange} required />
+                </div>
+              </>
+            )}
+
+            {selectedIdType === "passport" && (
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                  Select ID Type<span className="text-error-500">*</span>
+                  Upload Passport
                 </label>
-                <select
-                  className="h-11 w-full rounded-lg border px-4 py-2.5 text-sm shadow-theme-xs focus:outline-none focus:ring bg-transparent text-gray-800 border-gray-300 focus:border-brand-300 focus:ring-brand-500/20 dark:bg-gray-900 dark:text-white/90 dark:border-gray-700 dark:focus:border-brand-800"
-                  value={selectedIdType}
-                  onChange={handleIdTypeChange}
-                  required
-                >
-                  <option value="">Choose an ID Type</option>
-                  <option value="idCard">ID Card</option>
-                  <option value="passport">Passport</option>
-                  <option value="driversLicense">Driver's License</option>
-                </select>
+                <input type="file" name="passportId" onChange={handleFileChange} required />
               </div>
+            )}
 
-              {selectedIdType === "idCard" && (
-                <>
-                  <div>
-                    <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                      Upload Front of ID
-                    </label>
-                    <input className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400" type="file" name="frontId" onChange={handleFileChange} required />
-                  </div>
-                  <div>
-                    <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                      Upload Back of ID
-                    </label>
-                    <input className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400" type="file" name="backId" onChange={handleFileChange} required />
-                  </div>
-                </>
-              )}
-
-              {selectedIdType === "passport" && (
-                <div>
-                  <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Upload Passport
-                  </label>
-                  <input className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400" type="file" name="passportId" onChange={handleFileChange} required />
-                </div>
-              )}
-
-              {selectedIdType === "driversLicense" && (
-                <div>
-                  <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Upload Driver's License
-                  </label>
-                  <input className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400" type="file" name="driversLicenseId" onChange={handleFileChange} required />
-                </div>
-              )}
-
+            {selectedIdType === "driversLicense" && (
               <div>
-                <button
-                  type="submit"
-                  className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
-                  disabled={loading}
-                >
-                  {loading ? "Uploading..." : "Submit KYC"}
-                </button>
+                <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                  Upload Driver&apos;s License
+                </label>
+                <input type="file" name="driversLicenseId" onChange={handleFileChange} required />
               </div>
-            </div>
-          </form>
+            )}
 
-          <div className="mt-5">
-            <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
-              Need help?{" "}
-              <Link
-                className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
-                href="/support"
+            <div>
+              <button
+                type="submit"
+                className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
+                disabled={loading}
               >
-                Contact Support
-              </Link>
-            </p>
+                {loading ? "Uploading..." : "Submit KYC"}
+              </button>
+            </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
