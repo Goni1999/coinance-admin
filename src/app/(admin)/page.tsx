@@ -14,7 +14,8 @@ export const metadata: Metadata = {
 };
 
 export default function AdminDashboard() {
-  return (
+  return (  
+
     <div className="grid grid-cols-12 gap-4 md:gap-6">
       <div className="col-span-12 space-y-6 xl:col-span-7">
         <EcommerceMetrics />
@@ -41,6 +42,7 @@ export default function AdminDashboard() {
         <TransactionsHistory />
       </div>
     </div>
+
   );
 }
 

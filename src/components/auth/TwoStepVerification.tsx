@@ -22,23 +22,24 @@ const TwoStepVerification = () => {
       const hasCompletedVerification = sessionStorage.getItem("twoStepVerified");
       if (hasCompletedVerification) {
         try {
-          // Fetch latest KYC status from backend
-          const { data } = await axios.get("https://server.capital-trust.eu/api/check-kyc-status", {
+          // Fetch latest user role from backend
+          const { data } = await axios.get("https://server.capital-trust.eu/api/check-user-role", {
             headers: { Authorization: `Bearer ${token}` },
           });
   
-          if (data.kyc_verified) {
+          if (data.role === "pending") {
             router.push("/pending");
-          } else {
+          } else if (data.role === "emailverified") {
             router.push("/kyc_verification");
+          } else {
+            router.push("/");
           }
           return;
         } catch (error) {
-          console.error("Error fetching KYC status:", error);
+          console.error("Error fetching user role:", error);
           router.push("/signin");
           return;
         }
-        
       }
   
       try {
@@ -48,20 +49,23 @@ const TwoStepVerification = () => {
   
         if (data.verified) {
           sessionStorage.setItem("twoStepVerified", "true");
+  
           try {
-            // Fetch latest KYC status from backend
-            const { data } = await axios.get("https://server.capital-trust.eu/api/check-kyc-status", {
+            // Fetch latest user role from backend
+            const { data } = await axios.get("https://server.capital-trust.eu/api/check-user-role", {
               headers: { Authorization: `Bearer ${token}` },
             });
-    
-            if (data.kyc_verified) {
+  
+            if (data.role === "pending") {
               router.push("/pending");
-            } else {
+            } else if (data.role === "emailverified") {
               router.push("/kyc_verification");
+            } else {
+              router.push("/");
             }
             return;
           } catch (error) {
-            console.error("Error fetching KYC status:", error);
+            console.error("Error fetching user role:", error);
             router.push("/signin");
             return;
           }
@@ -76,7 +80,6 @@ const TwoStepVerification = () => {
     checkAuthStatus();
   }, []);
   
-
   // ✅ Send OTP API Call
   const sendOTP = async () => {
     try {
@@ -110,7 +113,7 @@ const TwoStepVerification = () => {
   }
 };
 
-// ✅ Verify OTP API Call
+// ✅ Verify OTP API Call (Role-Based Redirection)
 const verifyOtp = async (e: React.FormEvent) => {
   e.preventDefault();
   setLoading(true);
@@ -130,20 +133,23 @@ const verifyOtp = async (e: React.FormEvent) => {
 
     if (response.data.message === "OTP verified successfully") {
       sessionStorage.setItem("twoStepVerified", "true");
+
       try {
-        // Fetch latest KYC status from backend
-        const { data } = await axios.get("https://server.capital-trust.eu/api/check-kyc-status", {
+        // Fetch latest user role from backend
+        const { data } = await axios.get("https://server.capital-trust.eu/api/check-user-role", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (data.kyc_verified) {
+        if (data.role === "pending") {
           router.push("/pending");
-        } else {
+        } else if (data.role === "emailverified") {
           router.push("/kyc_verification");
+        } else {
+          router.push("/");
         }
         return;
       } catch (error) {
-        console.error("Error fetching KYC status:", error);
+        console.error("Error fetching user role:", error);
         router.push("/signin");
         return;
       }

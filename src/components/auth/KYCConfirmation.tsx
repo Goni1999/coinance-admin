@@ -6,96 +6,118 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 
 const KYCConfirmation = () => {
-  const router = useRouter();
-
-  // Ensure hooks are called at the top level
-  const [selectedIdType, setSelectedIdType] = useState<string>("");
-  const [files, setFiles] = useState<{ [key: string]: File | null }>({
-    frontId: null,
-    backId: null,
-    passportId: null,
-    driversLicenseId: null,
-  });
-  const [loading, setLoading] = useState(false);
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
-
-  useEffect(() => {
-    const token = sessionStorage.getItem("auth-token");
-    if (!token) {
-      setIsAuthenticated(false);
-      router.push("/signin");
-    }
-  }, [router]);
-
-  if (!isAuthenticated) {
-    return null; // Prevent rendering when redirecting
-  }
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, files } = e.target;
-    if (files && files[0]) {
-      setFiles((prev) => ({ ...prev, [name]: files[0] }));
-    }
-  };
-
-  const handleIdTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedIdType(e.target.value);
-  };
-
-  const uploadToCloudinary = async (file: File) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "uploads");
-
-    const response = await axios.post(
-      "https://api.cloudinary.com/v1_1/dqysonzsh/upload",
-      formData
-    );
-    return response.data.secure_url;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      const uploadedUrls: string[] = [];
-      for (const key in files) {
-        if (files[key]) {
-          const url = await uploadToCloudinary(files[key] as File);
-          uploadedUrls.push(url);
-        }
-      }
-
-      const token =
-        typeof window !== "undefined"
-          ? localStorage.getItem("token") || sessionStorage.getItem("token")
-          : null;
+    const router = useRouter();
+    const [selectedIdType, setSelectedIdType] = useState<string>("");
+    const [files, setFiles] = useState<{ [key: string]: File | null }>({
+      frontId: null,
+      backId: null,
+      passportId: null,
+      driversLicenseId: null,
+    });
+    const [loading, setLoading] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(true);
+  
+    useEffect(() => {
+      const token = sessionStorage.getItem("auth-token");
       if (!token) {
-        alert("User not authenticated.");
+        setIsAuthenticated(false);
+        router.push("/signin");
         return;
       }
-
-      const headers = { Authorization: `Bearer ${token}` };
-
-      await axios.post(
-        "https://server.capital-trust.eu/auth/save-kyc",
-        { urls: uploadedUrls },
-        { headers }
-      );
-
-      alert("KYC Verification Submitted Successfully!");
-      setTimeout(() => {
-        router.push("/pending");
-      }, 3000);
-    } catch (error) {
-      console.error("Error during file upload:", error);
-      alert("Upload failed. Please try again.");
-    } finally {
-      setLoading(false);
+  
+      // Check if KYC was already submitted (to prevent re-submission)
+      const kycSubmitted = localStorage.getItem("kycSubmitted");
+      if (kycSubmitted === "true") {
+        checkUserRole(token);
+      }
+    }, [router]);
+  
+    const checkUserRole = async (token: string) => {
+      try {
+        const { data } = await axios.get("https://server.capital-trust.eu/api/check-user-role", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+  
+        if (data.role === "pending") {
+          router.push("/pending");
+        } else if (data.role === "user") {
+          router.push("/");
+        }
+      } catch (error) {
+        console.error("Error fetching user role:", error);
+        router.push("/signin");
+      }
+    };
+  
+    if (!isAuthenticated) {
+      return null; // Prevent rendering if redirecting
     }
-  };
-
+  
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, files } = e.target;
+      if (files && files[0]) {
+        setFiles((prev) => ({ ...prev, [name]: files[0] }));
+      }
+    };
+  
+    const handleIdTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+      setSelectedIdType(e.target.value);
+    };
+  
+    const uploadToCloudinary = async (file: File) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "uploads");
+  
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/dqysonzsh/upload",
+        formData
+      );
+      return response.data.secure_url;
+    };
+  
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setLoading(true);
+  
+      try {
+        const uploadedUrls: string[] = [];
+        for (const key in files) {
+          if (files[key]) {
+            const url = await uploadToCloudinary(files[key] as File);
+            uploadedUrls.push(url);
+          }
+        }
+  
+        const token =
+          typeof window !== "undefined"
+            ? localStorage.getItem("token") || sessionStorage.getItem("auth-token")
+            : null;
+        if (!token) {
+          alert("User not authenticated.");
+          return;
+        }
+  
+        const headers = { Authorization: `Bearer ${token}` };
+  
+        await axios.post(
+          "https://server.capital-trust.eu/auth/save-kyc",
+          { urls: uploadedUrls },
+          { headers }
+        );
+  
+        alert("KYC Verification Submitted Successfully!");
+        localStorage.setItem("kycSubmitted", "true"); // Store KYC submission status
+  
+        checkUserRole(token); // Check user role and redirect accordingly
+      } catch (error) {
+        console.error("Error during file upload:", error);
+        alert("Upload failed. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+  
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full">
       <div className="w-full max-w-md pt-10 mx-auto">

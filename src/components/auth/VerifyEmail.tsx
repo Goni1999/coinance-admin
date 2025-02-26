@@ -13,6 +13,12 @@ const VerifyEmail = () => {
 
   // Load email from sessionStorage
   useEffect(() => {
+    const token = sessionStorage.getItem("auth-token");
+      if (!token) {
+        router.push("/signin");
+        return;
+      }
+      
     const storedEmail = sessionStorage.getItem("userEmail");
     if (storedEmail) setEmail(storedEmail);
   }, []);
