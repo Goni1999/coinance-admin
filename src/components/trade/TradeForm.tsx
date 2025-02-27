@@ -180,7 +180,7 @@ const TradeForm: React.FC = () => {
               <div className="mt-4 text-gray-300">
                 {quantity > 0 && !loading && livePrice > 0 && (
                   <span>
-                    {calculateEquivalent()} {selectedCoin === "bitcoin" ? "BTC" : "ETH"}
+                    {calculateEquivalent()} {selectedCoin.toUpperCase()}
                   </span>
                 )}
                 {loading && <span>Loading price...</span>}
