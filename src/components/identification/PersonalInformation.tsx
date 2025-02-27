@@ -13,8 +13,8 @@ export default function PersonalInformation() {
     idnumber: string;
     email: string;
   } | null>(null);
-    const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+    const [, setLoading] = useState(true);
+  const [, setError] = useState(false);
   
 
   useEffect(() => {
