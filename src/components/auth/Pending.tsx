@@ -40,7 +40,7 @@ const Pending = () => {
 
     const interval = setInterval(() => {
       checkUserRole();
-    }, 120000); // Check role every 2 minutes
+    }, 10000); // Check role every 2 minutes
 
     return () => clearInterval(interval); // Cleanup interval on unmount
   }, [router]);

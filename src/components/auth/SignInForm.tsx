@@ -7,7 +7,7 @@ import Input from "@/components/form/input/InputField";
 import Label from "@/components/form/Label";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
-
+import Alert from "../ui/alert/Alert";
 export default function SignInForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -17,6 +17,17 @@ export default function SignInForm() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const [alert, setAlert] = useState<{
+      variant: "success" | "error" | "warning" | "info";
+      title: string;
+      message: string;
+      show: boolean;
+    }>({
+      variant: "success",
+      title: "",
+      message: "",
+      show: false,
+    }); 
   // ✅ Store email in sessionStorage
   useEffect(() => {
     if (email) {
@@ -41,15 +52,19 @@ export default function SignInForm() {
       });
   
       const data = await response.json();
-      console.log( data.token); // ✅ Debugging
   
       if (!response.ok) throw new Error(data.error || "Login failed");
-  
+        
       sessionStorage.setItem("auth-token", data.token);
       sessionStorage.setItem("role", data.role);
 
       if (data.redirect) {
-  
+        setAlert({
+          variant: "success",
+          title: "Login successful",
+          message: "",
+          show: true
+        });
         // ✅ Add timeout for stability
         setTimeout(() => {
           router.replace(data.redirect);
@@ -67,6 +82,14 @@ export default function SignInForm() {
 
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full">
+       {alert.show && (
+        <Alert
+          variant={alert.variant}
+          title={alert.title}
+          message={alert.message}
+          showLink={false} 
+        />
+      )}
       <div className="w-full max-w-md sm:pt-10 mx-auto mb-5">
         <Link
           href="/"
@@ -79,6 +102,7 @@ export default function SignInForm() {
 
       <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
         <div>
+       
           <div className="mb-5 sm:mb-8">
             <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
               Sign In
