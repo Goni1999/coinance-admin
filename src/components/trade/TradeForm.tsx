@@ -143,7 +143,7 @@ const TradeForm: React.FC = () => {
           {orderType === "buy" ? (
             <div className="space-y-4">
               <div>
-                <label htmlFor="quantity" className="block text-sm text-gray-300">
+                <label htmlFor="quantity" className="block text-sm text-gray-800 dark:text-white/90">
                   Amount (USD)
                 </label>
                 <input
@@ -151,23 +151,23 @@ const TradeForm: React.FC = () => {
                   id="quantity"
                   name="quantity"
                   value={quantity}
-                  onChange={handleQuantityChange}
+                  onChange={handleQuantityChange} text-gray-800 
                   step="any"
                   min="0"
                   placeholder="0.00"
-                  className="w-full p-3 mt-2 rounded-lg bg-gray-800 text-white focus:outline-none"
+                  className="w-full p-3 mt-2 rounded-lg bg-white dark:bg-gray-800 text-gray-800 dark:text-white/90 focus:outline-none"
                 />
               </div>
 
               <div>
-                <label htmlFor="coin-select" className="block text-sm text-gray-300">
+                <label htmlFor="coin-select" className="block text-sm text-gray-800 dark:text-white/90">
                   Select Coin
                 </label>
                 <select
                   id="coin-select"
                   onChange={handleCoinChange}
                   value={selectedCoin}
-                  className="w-full p-3 mt-2 rounded-lg bg-gray-800 text-white focus:outline-none"
+                  className="w-full p-3 mt-2 rounded-lg  text-gray-800 dark:text-white/90 bg-white dark:bg-gray-800  focus:outline-none"
                 >
                   {coins.map((coin) => (
                     <option key={coin.id} value={coin.id}>
@@ -177,7 +177,7 @@ const TradeForm: React.FC = () => {
                 </select>
               </div>
 
-              <div className="mt-4 text-gray-300">
+              <div className="mt-4 text-gray-800 dark:text-white/90">
                 {quantity > 0 && !loading && livePrice > 0 && (
                   <span>
                     {calculateEquivalent()} {selectedCoin.toUpperCase()}
@@ -190,7 +190,7 @@ const TradeForm: React.FC = () => {
           ) : (
             <div className="space-y-4">
               <div>
-                <label htmlFor="quantity" className="block text-sm text-gray-300">
+                <label htmlFor="quantity" className="block text-sm  text-gray-800 dark:text-white/90">
                   Amount ({selectedCoin === "bitcoin" ? "BTC" : "ETH"})
                 </label>
                 <input
@@ -202,19 +202,19 @@ const TradeForm: React.FC = () => {
                   step="any"
                   min="0"
                   placeholder="0.00"
-                  className="w-full p-3 mt-2 rounded-lg bg-gray-800 text-white focus:outline-none"
+                  className="w-full p-3 mt-2 rounded-lg text-gray-800 dark:text-white/90 bg-white dark:bg-gray-800  focus:outline-none"
                 />
               </div>
 
               <div>
-                <label htmlFor="coin-select" className="block text-sm text-gray-300">
+                <label htmlFor="coin-select" className="block text-sm text-gray-800 dark:text-white/90">
                   Select Coin
                 </label>
                 <select
                   id="coin-select"
                   onChange={handleCoinChange}
                   value={selectedCoin}
-                  className="w-full p-3 mt-2 rounded-lg bg-gray-800 text-white focus:outline-none"
+                  className="w-full p-3 mt-2 rounded-lg bg-white text-gray-800 dark:text-white/90 dark:bg-gray-800  focus:outline-none"
                 >
                   {getAvailableCoinsForSell().map((coin) => (
                     <option key={coin.id} value={coin.id}>
@@ -224,7 +224,7 @@ const TradeForm: React.FC = () => {
                 </select>
               </div>
 
-              <div className="mt-4 text-gray-300">
+              <div className="mt-4 text-gray-800 dark:text-white/90">
                 {quantity > 0 && !loading && livePrice > 0 && (
                   <span>
                     {calculateEquivalent()} USD
