@@ -68,7 +68,7 @@ export default function SignInForm() {
         // ✅ Add timeout for stability
         setTimeout(() => {
           router.replace(data.redirect);
-        }, 200);
+        }, 400);
       } else {
         throw new Error("Unexpected response from server.");
       }

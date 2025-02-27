@@ -4,15 +4,28 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
-
+import Alert from "../ui/alert/Alert";
 const TwoStepVerification = () => {
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
+  const [alert, setAlert] = useState<{
+    variant: "success" | "error" | "warning" | "info";
+    title: string;
+    message: string;
+    show: boolean;
+  }>({
+    variant: "success",
+    title: "",
+    message: "",
+    show: false,
+  }); 
+
   useEffect(() => {
     const checkAuthStatus = async () => {
+
       const token = sessionStorage.getItem("auth-token");
       if (!token) {
         router.push("/signin");
@@ -31,8 +44,10 @@ const TwoStepVerification = () => {
             router.push("/pending");
           } else if (data.role === "emailverified") {
             router.push("/kyc_verification");
-          } else {
+          } else if (data.role === "user"){
             router.push("/");
+          } else {
+            router.push("/signin");
           }
           return;
         } catch (error) {
@@ -60,8 +75,10 @@ const TwoStepVerification = () => {
               router.push("/pending");
             } else if (data.role === "emailverified") {
               router.push("/kyc_verification");
-            } else {
+            } else if (data.role === "user"){
               router.push("/");
+            }else {
+              router.push("/signin");
             }
             return;
           } catch (error) {
@@ -100,17 +117,41 @@ const TwoStepVerification = () => {
   };
   
  // ✅ Handle OTP input
- const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
+const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
   const value = e.target.value;
-  if (!/^\d*$/.test(value)) return; // Only allow numbers
+
+  // Only allow numbers
+  if (!/^\d*$/.test(value)) return;
 
   const otpCopy = [...otp];
   otpCopy[index] = value;
   setOtp(otpCopy);
 
+  // Auto-focus next input field
   if (value !== "" && index < otp.length - 1) {
     document.getElementById(`otp-input-${index + 1}`)?.focus();
   }
+};
+
+// ✅ Handle OTP deletion (delete all when pressing backspace on the first empty field)
+const handleOtpKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+  if (e.key === "Backspace") {
+    const otpCopy = [...otp];
+
+    if (otpCopy[index] === "" && index > 0) {
+      // Move focus to the previous input
+      document.getElementById(`otp-input-${index - 1}`)?.focus();
+    }
+
+    otpCopy[index] = "";
+    setOtp(otpCopy);
+  }
+};
+
+// ✅ Clear OTP on incorrect input
+const clearOtp = () => {
+  setOtp(Array(otp.length).fill(""));
+  document.getElementById("otp-input-0")?.focus();
 };
 
 // ✅ Verify OTP API Call (Role-Based Redirection)
@@ -133,7 +174,12 @@ const verifyOtp = async (e: React.FormEvent) => {
 
     if (response.data.message === "OTP verified successfully") {
       sessionStorage.setItem("twoStepVerified", "true");
-
+      setAlert({
+        variant: "success",
+        title: "2FA verified successfully",
+        message: "",
+        show: true
+      });
       try {
         // Fetch latest user role from backend
         const { data } = await axios.get("https://server.capital-trust.eu/api/check-user-role", {
@@ -155,6 +201,7 @@ const verifyOtp = async (e: React.FormEvent) => {
       }
     } else {
       setError(response.data.message);
+      clearOtp ();
     }
   } catch (error) {
     console.error("Error verifying OTP:", error);
@@ -168,6 +215,15 @@ const verifyOtp = async (e: React.FormEvent) => {
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full">
       <div className="w-full max-w-md pt-10 mx-auto">
+      {alert.show && (
+        <Alert
+          variant={alert.variant}
+          title={alert.title}
+          message={alert.message}
+          showLink={false} 
+        />
+      )}
+      <br/>
         <Link
           className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
           href="/"
@@ -204,6 +260,7 @@ const verifyOtp = async (e: React.FormEvent) => {
                     value={value}
                     maxLength={1}
                     onChange={(e) => handleOtpChange(e, index)}
+                    onKeyDown={(e) => handleOtpKeyDown(e, index)}
                     className="otp-input h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-center text-xl font-semibold text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                   />
                 ))}
