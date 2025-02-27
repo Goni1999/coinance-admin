@@ -120,7 +120,7 @@ const TradeForm: React.FC = () => {
   };
 
   return (
-    <div className="trade-form-container p-8 bg-gray-900 rounded-lg shadow-lg max-w-xl mx-auto">
+    <div className="trade-form-container p-8 bg-white dark:bg-gray-900 rounded-lg shadow-lg max-w-xl mx-auto">
       <form onSubmit={handleSubmit} data-e2e="ticketContainer">
         <div className="trade-form space-y-6">
           {/* Buy / Sell Switch */}

@@ -108,8 +108,14 @@ const TwoStepVerification = () => {
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
-  
+      
       console.log("OTP sent response:", response.data);
+      setAlert({
+        variant: "success",
+        title: "6-digits code successfully",
+        message: "Check your email for the code!",
+        show: true
+      });
     } catch (error) {
       console.error("Error sending OTP:", error);
       setError("Failed to send OTP. Please try again.");
@@ -179,7 +185,9 @@ const verifyOtp = async (e: React.FormEvent) => {
         title: "2FA verified successfully",
         message: "",
         show: true
-      });
+      }); 
+        // Redirect or perform next action after 1 second
+      
       try {
         // Fetch latest user role from backend
         const { data } = await axios.get("https://server.capital-trust.eu/api/check-user-role", {

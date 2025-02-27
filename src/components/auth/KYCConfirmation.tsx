@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Alert from "../ui/alert/Alert";
 
 const KYCConfirmation = () => {
   const router = useRouter();
@@ -17,6 +18,17 @@ const KYCConfirmation = () => {
   });
   const [loading, setLoading] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [alert, setAlert] = useState<{
+    variant: "success" | "error" | "warning" | "info";
+    title: string;
+    message: string;
+    show: boolean;
+  }>({
+    variant: "success",
+    title: "",
+    message: "",
+    show: false,
+  }); 
 // ✅ Run fetchUserData when the component mounts
 useEffect(() => {
     const token = sessionStorage.getItem("auth-token");
@@ -124,7 +136,13 @@ useEffect(() => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedIdType) {
-      alert("Please select an ID type before submitting.");
+        setAlert({
+            variant: "error", // Red error alert
+            title: "Missing ID Type",
+            message: "Please select an ID type before submitting your documents.",
+            show: true
+          });
+          
       return;
     }
   
@@ -141,7 +159,12 @@ useEffect(() => {
   
       const token = sessionStorage.getItem("auth-token");
       if (!token) {
-        alert("User not authenticated.");
+        setAlert({
+            variant: "error",
+            title: "You are not authenticated",
+            message: "Please login and upload again your documents!",
+            show: true
+          }); 
         return;
       }
   
@@ -152,8 +175,12 @@ useEffect(() => {
         { urls: uploadedUrls, idType: selectedIdType },
         { headers }
       );
-  
-      alert("KYC Verification Submitted Successfully!");
+      setAlert({
+        variant: "success",
+        title: "KYC Verification Submitted Successfully!",
+        message: "Wait until our team checks and approve your verification!",
+        show: true
+      }); 
   
       // ✅ Refresh user data to get the latest KYC and role state
       await fetchUserData(); // This updates the `kyc` state
@@ -162,7 +189,13 @@ useEffect(() => {
       checkUserRole(token);
     } catch (error) {
       console.error("Error during file upload:", error);
-      alert("Upload failed. Please try again.");
+      setAlert({
+        variant: "error",
+        title: "Document Upload Failed",
+        message: "Please check your documents and try again.",
+        show: true
+      }); 
+  
     } finally {
       setLoading(false);
     }
@@ -171,6 +204,15 @@ useEffect(() => {
   return (
     <div className="flex flex-col flex-1 lg:w-1/2 w-full">
       <div className="w-full max-w-md pt-10 mx-auto">
+      {alert.show && (
+        <Alert
+          variant={alert.variant}
+          title={alert.title}
+          message={alert.message}
+          showLink={false} 
+        />
+      )}
+      <br/>
         <Link
           className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
           href="/"

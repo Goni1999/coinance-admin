@@ -26,6 +26,7 @@ export default function Spotorder() {
 
       <div className="col-span-12 xl:col-span-5">
       <TradeForm />
+      <br/>
       <Watchlist/>
       </div>
 

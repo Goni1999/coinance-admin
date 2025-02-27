@@ -283,7 +283,7 @@ export default function TradingApp() {
           )}
         </div>
       </div>
-
+          <br/>
          {/* Table to Display Balance Information */}
          <div className="overflow-x-auto bg-white rounded-lg shadow-md">
           <table className="min-w-full table-auto">

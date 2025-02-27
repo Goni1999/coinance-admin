@@ -3,14 +3,24 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-
+import Alert from "../ui/alert/Alert";
 const VerifyEmail = () => {
   const [email, setEmail] = useState<string | null>(null);
   const [isVerified, setIsVerified] = useState<boolean | null>(null);
   const [message, setMessage] = useState<string>("");
   const [isResending, setIsResending] = useState<boolean>(false);
   const router = useRouter();
-
+const [alert, setAlert] = useState<{
+    variant: "success" | "error" | "warning" | "info";
+    title: string;
+    message: string;
+    show: boolean;
+  }>({
+    variant: "success",
+    title: "",
+    message: "",
+    show: false,
+  }); 
   // Load email from sessionStorage
   useEffect(() => {
     const token = sessionStorage.getItem("auth-token");
@@ -53,6 +63,12 @@ const VerifyEmail = () => {
     try {
       await axios.post("https://server.capital-trust.eu/api/resend-verification", { email });
       setMessage("Verification email sent! Please check your inbox.");
+      setAlert({
+        variant: "success",
+        title: "Verification email sent!",
+        message: "Please check your inbox.",
+        show: true
+      }); 
     } catch (error) {
       setMessage("Failed to resend verification email. Try again later.");
       console.error("Error resending verification email:", error);
@@ -69,6 +85,15 @@ const VerifyEmail = () => {
     <div className="flex flex-col flex-1 lg:w-1/2 w-full">
 
     <div className="flex flex-col items-center justify-center min-h-screen px-6 md:px-12 text-center">
+    {alert.show && (
+        <Alert
+          variant={alert.variant}
+          title={alert.title}
+          message={alert.message}
+          showLink={false} 
+        />
+      )}
+      <br/>
       {isVerified ? (
         // ✅ When email is verified
         <div className="max-w-md p-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
