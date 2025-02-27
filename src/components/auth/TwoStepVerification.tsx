@@ -172,7 +172,7 @@ const verifyOtp = async (e: React.FormEvent) => {
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
-    if (response.data.message === "OTP verified successfully") {
+    if (response.data.message === "true") {
       sessionStorage.setItem("twoStepVerified", "true");
       setAlert({
         variant: "success",
