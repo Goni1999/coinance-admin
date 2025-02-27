@@ -59,14 +59,32 @@ export default function UserDropdown() {
     setIsOpen(false);
   }
 
-  async function handleSignOut() {
+  const handleSignOut = async () => {
+    const token = sessionStorage.getItem("auth-token"); // Get JWT token from localStorage
+
     try {
-      console.log("Signing out...");
-      router.push("/signin");
+      const response = await fetch("https://server.capital-trust.eu/api/logout", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`, // Attach JWT token
+          "Content-Type": "application/json",
+        }, 
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Logged out successfully");
+        sessionStorage.removeItem("auth-token"); // If using JWT
+        sessionStorage.clear(); // Removes all session storage data
+
+        window.location.href = "/signin"; // Redirect to login page
+      } else {
+        console.error(data.message);
+      }
     } catch (error) {
-      console.error("Error signing out:", error);
+      console.error("Logout error:", error);
     }
-  }
+  };
 
   return (
     <div className="relative">
