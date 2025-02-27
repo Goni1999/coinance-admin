@@ -77,7 +77,7 @@ export default function UserDropdown() {
         sessionStorage.removeItem("auth-token"); // If using JWT
         sessionStorage.clear(); // Removes all session storage data
 
-        window.location.href = "/signin"; // Redirect to login page
+        router.push("/signin");
       } else {
         console.error(data.message);
       }
