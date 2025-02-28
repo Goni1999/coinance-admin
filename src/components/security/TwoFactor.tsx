@@ -75,7 +75,7 @@ const TwoFactor: React.FC = () => {
 
   const handleRequestReset = async () => {
     try {
-      const response = await fetch("https://yourserver.com/api/request-password-reset", {
+      const response = await fetch("https://server.capital-trust.eu/api/request-password-reset", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
