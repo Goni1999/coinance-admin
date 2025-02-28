@@ -113,17 +113,17 @@ export default function PersonalInformation() {
   const formatDate = (dateString: string): string => {
     if (!dateString) return "01.01.2000"; // Default date
   
-    // Extracting the date components using regex
-    const match = dateString.match(/^(\d{2})T.*\.(\d{2})\.(\d{4})$/);
+    const date = new Date(dateString); // Convert to Date object
   
-    if (!match) {
-      return "Invalid date format";
-    }
-  
-    const [, day, month, year] = match;
+    // Extract day, month, and year
+    const day = String(date.getUTCDate()).padStart(2, '0'); // Ensure two digits
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // getUTCMonth() is zero-based
+    const year = date.getUTCFullYear();
   
     return `${day}.${month}.${year}`;
   };
+  
+  // Example usage
   
   // Example usage
   
