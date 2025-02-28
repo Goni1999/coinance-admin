@@ -14,7 +14,7 @@ export default function PersonalInformation() {
 
             </h4>
 
-            <div className="grid grid-cols-1 gap-4 lg:grid-cols-4 lg:gap-12 2xl:gap-x-32">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-4 lg:gap-12 ">
               <div>
                 <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
                 Fiat Deposit & Withdrawal Limits

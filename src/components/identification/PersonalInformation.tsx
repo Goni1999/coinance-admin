@@ -1,9 +1,8 @@
 "use client";
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function PersonalInformation() {
- const [user, setUser] = useState<{
+  const [user, setUser] = useState<{
     name: string;
     lastname: string;
     dob: string;
@@ -13,14 +12,20 @@ export default function PersonalInformation() {
     idnumber: string;
     email: string;
   } | null>(null);
-    const [, setLoading] = useState(true);
-  const [, setError] = useState(false);
-  
 
   useEffect(() => {
+    // ✅ Try to load user data from sessionStorage first
+    const storedUser = sessionStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(formatUserData(parsedUser));
+      return; // ✅ Skip API call if data is already in sessionStorage
+    }
+
+    // ✅ If no user data found, fetch from API
     const fetchUserData = async () => {
       try {
-        const token = sessionStorage.getItem("auth-token"); // Get JWT token from localStorage
+        const token = sessionStorage.getItem("auth-token");
         if (!token) {
           console.error("No token found, user not authenticated.");
           return;
@@ -29,7 +34,7 @@ export default function PersonalInformation() {
         const response = await fetch("https://server.capital-trust.eu/api/get-user-data", {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${token}`, // Attach JWT token
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
@@ -37,30 +42,51 @@ export default function PersonalInformation() {
         if (!response.ok) {
           throw new Error(`Error: ${response.status} - ${response.statusText}`);
         }
-        const data = await response.json();
 
-        setUser({
-          name: data.first_name || "User",
-          lastname: data.last_name || "",
-          dob: data.date_of_birth || "2000-01-01", // Default Date of Birth
-          city: data.city || "Not provided", // Default Address
-          state: data.state || "Not provided", // Default Address
-          idtype: data.identification_documents_type || "Not provided", // Default Address
-          idnumber: data.card_id || "ID Card, ID**********23", // Default Identification
-          email: data.email || "user@example.com",
-        });
-        
+        const userData = await response.json(); // Backend returns user directly
+
+        // ✅ Store in sessionStorage
+        sessionStorage.setItem("user", JSON.stringify(userData));
+
+        // ✅ Update state with formatted data
+        setUser(formatUserData(userData));
+
       } catch (error) {
         console.error("Error fetching user data:", error);
-        setError(true);
-      } finally {
-        setLoading(false);
       }
     };
 
     fetchUserData();
   }, []);
 
+  // ✅ Function to format date and mask email
+  const formatUserData = (userData: any) => {
+    return {
+      name: userData.first_name || "User",
+      lastname: userData.last_name || "",
+      dob: formatDate(userData.date_of_birth) || "01.01.2000",
+      city: userData.city || "Not provided",
+      state: userData.state || "Not provided",
+      idtype: userData.identification_documents_type || "N/A",
+      idnumber: userData.identification_documents || "N/A",
+      email: maskEmail(userData.email) || "user@example.com",
+    };
+  };
+
+  // ✅ Function to format date (YYYY-MM-DD ➝ DD.MM.YYYY)
+  const formatDate = (dateString: string): string => {
+    if (!dateString) return "01.01.2000"; // Default date
+    const [year, month, day] = dateString.split("-");
+    return `${day}.${month}.${year}`;
+  };
+
+  // ✅ Function to mask email (e.g., a**1@gmail.com)
+  const maskEmail = (email: string): string => {
+    if (!email.includes("@")) return email; // Invalid email handling
+    const [localPart, domain] = email.split("@");
+    if (localPart.length < 3) return email; // Short emails won't be masked
+    return `${localPart[0]}**${localPart[localPart.length - 1]}@${domain}`;
+  };
   return (
     <>
       <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">

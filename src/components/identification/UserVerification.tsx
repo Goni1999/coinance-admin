@@ -1,11 +1,67 @@
 "use client";
 import React from "react";
+import  { useState, useEffect } from "react";
 
 import Image from "next/image";
 import Badge from "../ui/badge/Badge";
 
 export default function UserVerification() {
+   const [user, setUser] = useState<{
+     id: string;
+   
+   } | null>(null);
  
+   useEffect(() => {
+     // ✅ Try to load user data from sessionStorage first
+     const storedUser = sessionStorage.getItem("user");
+     if (storedUser) {
+       const parsedUser = JSON.parse(storedUser);
+       setUser(formatUserData(parsedUser));
+       return; // ✅ Skip API call if data is already in sessionStorage
+     }
+ 
+     // ✅ If no user data found, fetch from API
+     const fetchUserData = async () => {
+       try {
+         const token = sessionStorage.getItem("auth-token");
+         if (!token) {
+           console.error("No token found, user not authenticated.");
+           return;
+         }
+ 
+         const response = await fetch("https://server.capital-trust.eu/api/get-user-data", {
+           method: "GET",
+           headers: {
+             Authorization: `Bearer ${token}`,
+             "Content-Type": "application/json",
+           },
+         });
+ 
+         if (!response.ok) {
+           throw new Error(`Error: ${response.status} - ${response.statusText}`);
+         }
+ 
+         const userData = await response.json(); // Backend returns user directly
+ 
+         // ✅ Store in sessionStorage
+         sessionStorage.setItem("user", JSON.stringify(userData));
+ 
+         // ✅ Update state with formatted data
+         setUser(formatUserData(userData));
+ 
+       } catch (error) {
+         console.error("Error fetching user data:", error);
+       }
+     };
+ 
+     fetchUserData();
+   }, []);
+     // ✅ Function to format date and mask email
+  const formatUserData = (userData: any) => {
+    return {
+      id: userData.id || "ID",
+    };
+  };
   return (
     <>
       <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
@@ -21,11 +77,11 @@ export default function UserVerification() {
             </div>
             <div className="order-3 xl:order-2">
               <h4 className="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">
-                User-3dc81 
+                User-{user?.id}
               </h4>
               <div className="flex flex-row items-center gap-1 text-center xl:flex-row xl:gap-3 xl:text-left">
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                ID: 332522723
+                ID: {user?.id}
                 </p>
                 <Badge color="success">
             

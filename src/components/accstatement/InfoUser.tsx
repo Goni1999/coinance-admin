@@ -1,9 +1,72 @@
 "use client";
 import React from "react";
-
+import { useEffect, useState } from "react";
 
 export default function UserInfoCard() {
+   const [user, setUser] = useState<{
+     name: string;
+     lastname: string;
+     position: string;
+     phone: string;
+     email: string;
+   } | null>(null);
  
+   useEffect(() => {
+     // ✅ Try to load user data from sessionStorage first
+     const storedUser = sessionStorage.getItem("user");
+     if (storedUser) {
+       const parsedUser = JSON.parse(storedUser);
+       setUser(formatUserData(parsedUser));
+       return; // ✅ Skip API call if data is already in sessionStorage
+     }
+ 
+     // ✅ If no user data found, fetch from API
+     const fetchUserData = async () => {
+       try {
+         const token = sessionStorage.getItem("auth-token");
+         if (!token) {
+           console.error("No token found, user not authenticated.");
+           return;
+         }
+ 
+         const response = await fetch("https://server.capital-trust.eu/api/get-user-data", {
+           method: "GET",
+           headers: {
+             Authorization: `Bearer ${token}`,
+             "Content-Type": "application/json",
+           },
+         });
+ 
+         if (!response.ok) {
+           throw new Error(`Error: ${response.status} - ${response.statusText}`);
+         }
+ 
+         const userData = await response.json(); // Backend returns user directly
+ 
+         // ✅ Store in sessionStorage
+         sessionStorage.setItem("user", JSON.stringify(userData));
+ 
+         // ✅ Update state with formatted data
+         setUser(formatUserData(userData));
+ 
+       } catch (error) {
+         console.error("Error fetching user data:", error);
+       }
+     };
+ 
+     fetchUserData();
+   }, []);
+ 
+   // ✅ Function to format date and mask email
+   const formatUserData = (userData: any) => {
+     return {
+       name: userData.first_name || "User",
+       lastname: userData.last_name || "",
+       position: userData.position || "N/A",
+       phone: userData.phone || "N/A",
+       email: userData.email || "user@example.com",
+     };
+   };
   return (
     <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
@@ -19,7 +82,7 @@ export default function UserInfoCard() {
                 First Name
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                Filan
+              {user?.name || "Filan"}
               </p>
             </div>
 
@@ -28,7 +91,7 @@ export default function UserInfoCard() {
                 Last Name
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                Fisteku
+              {user?.lastname || "Fistek"}
               </p>
             </div>
 
@@ -37,7 +100,7 @@ export default function UserInfoCard() {
                 Email address
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                randomuser@pimjo.com
+              {user?.email || "user@example.com"}
               </p>
             </div>
 
@@ -46,16 +109,16 @@ export default function UserInfoCard() {
                 Phone
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                +09 363 398 46
+              {user?.phone || "+0 123 456"}
               </p>
             </div>
 
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Bio
+                Position
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                Team Manager
+              {user?.position || "CEO"}
               </p>
             </div>
           </div>
