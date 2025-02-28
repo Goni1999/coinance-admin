@@ -1,8 +1,8 @@
-"use client";  // Make sure this is at the top to mark the file as a client component
+"use client";  // Mark this component as client-side
 
 import Link from "next/link";
-import React, { useState } from "react"; // No need to import Suspense here
-import { useSearchParams } from "next/navigation"; // For getting the token from the URL
+import React, { useState } from "react"; 
+import { useSearchParams } from "next/navigation";  // For getting token from the URL
 
 const ResetPassword = () => {
   const [password, setPassword] = useState<string>("");
@@ -11,7 +11,7 @@ const ResetPassword = () => {
   const [success, setSuccess] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const searchParams = useSearchParams();
-  const token = searchParams?.get("token");
+  const token = searchParams?.get("token");  // Get token from query params
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
