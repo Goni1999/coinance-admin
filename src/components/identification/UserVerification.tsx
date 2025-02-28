@@ -57,7 +57,7 @@ export default function UserVerification() {
      fetchUserData();
    }, []);
      // ✅ Function to format date and mask email
-  const formatUserData = (userData: any) => {
+  const formatUserData = (userData: Record<string, any>) => {
     return {
       id: userData.id || "ID",
     };

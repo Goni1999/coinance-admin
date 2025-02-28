@@ -60,7 +60,7 @@ export default function PersonalInformation() {
   }, []);
 
   // ✅ Function to format date and mask email
-  const formatUserData = (userData: any) => {
+  const formatUserData = (userData: Record<string, any>) => {
     return {
       name: userData.first_name || "User",
       lastname: userData.last_name || "",

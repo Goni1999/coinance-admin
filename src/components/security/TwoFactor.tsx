@@ -56,7 +56,7 @@ const TwoFactor: React.FC = () => {
         fetchUserData();
       }, []);
 
-      const formatUserData = (userData: any) => {
+      const formatUserData = (userData: Record<string, any>) => {
         return {
           email: maskEmail(userData.email) || "email",
           phone: userData.phone || "phone",
@@ -83,7 +83,7 @@ const TwoFactor: React.FC = () => {
 
       const data = await response.json();
       setMessage(data.message);
-    } catch (error) {
+    } catch {
       setMessage("Failed to request reset.");
     }
   };
