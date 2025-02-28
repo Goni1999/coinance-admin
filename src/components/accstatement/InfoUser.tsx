@@ -57,16 +57,44 @@ export default function UserInfoCard() {
      fetchUserData();
    }, []);
  
-   // ✅ Function to format date and mask email
-   const formatUserData = (userData: Record<string, any>) => {
-     return {
-       name: userData.first_name || "User",
-       lastname: userData.last_name || "",
-       position: userData.position || "N/A",
-       phone: userData.phone || "N/A",
-       email: userData.email || "user@example.com",
-     };
-   };
+   const formatUserData = (userData: unknown) => {
+    // Type guard: Ensure userData has the necessary properties
+    if (
+      typeof userData === 'object' && 
+      userData !== null && 
+      'first_name' in userData &&
+      'last_name' in userData &&
+      'position' in userData &&
+      'phone' in userData &&
+      'email' in userData
+    ) {
+      const { first_name, last_name, position, phone, email } = userData as {
+        first_name: string;
+        last_name: string;
+        position: string;
+        phone: string;
+        email: string;
+      };
+  
+      return {
+        name: first_name || "User",
+        lastname: last_name || "",
+        position: position || "N/A",
+        phone: phone || "N/A",
+        email: email || "user@example.com",
+      };
+    } else {
+      // Default values if userData doesn't match the expected shape
+      return {
+        name: "User",
+        lastname: "",
+        position: "N/A",
+        phone: "N/A",
+        email: "user@example.com",
+      };
+    }
+  };
+  
   return (
     <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">

@@ -56,13 +56,22 @@ const TwoFactor: React.FC = () => {
         fetchUserData();
       }, []);
 
-      const formatUserData = (userData: Record<string, any>) => {
-        return {
-          email: maskEmail(userData.email) || "email",
-          phone: userData.phone || "phone",
-
-        };
+      const formatUserData = (userData: unknown) => {
+        // Type Guard: Ensure userData has 'email' and 'phone' properties
+        if (typeof userData === 'object' && userData !== null && 'email' in userData && 'phone' in userData) {
+          const { email, phone } = userData as { email: string; phone: string };
+          return {
+            email: maskEmail(email) || "email",  // Safely access email
+            phone: phone || "phone",  // Safely access phone
+          };
+        } else {
+          return {
+            email: "email",  // Default value
+            phone: "phone",  // Default value
+          };
+        }
       };
+      
 
        // ✅ Function to mask email (e.g., a**1@gmail.com)
   const maskEmail = (email: string): string => {

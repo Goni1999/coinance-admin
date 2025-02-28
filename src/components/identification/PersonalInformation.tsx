@@ -59,20 +59,57 @@ export default function PersonalInformation() {
     fetchUserData();
   }, []);
 
-  // ✅ Function to format date and mask email
-  const formatUserData = (userData: Record<string, any>) => {
-    return {
-      name: userData.first_name || "User",
-      lastname: userData.last_name || "",
-      dob: formatDate(userData.date_of_birth) || "01.01.2000",
-      city: userData.city || "Not provided",
-      state: userData.state || "Not provided",
-      idtype: userData.identification_documents_type || "N/A",
-      idnumber: userData.identification_documents || "N/A",
-      email: maskEmail(userData.email) || "user@example.com",
-    };
+  const formatUserData = (userData: unknown) => {
+    // Type guard: Ensure userData has all the necessary properties
+    if (
+      typeof userData === 'object' && 
+      userData !== null && 
+      'first_name' in userData && 
+      'last_name' in userData && 
+      'date_of_birth' in userData && 
+      'city' in userData && 
+      'state' in userData && 
+      'identification_documents_type' in userData && 
+      'identification_documents' in userData && 
+      'email' in userData
+    ) {
+      // Now we can safely access the properties
+      const { first_name, last_name, date_of_birth, city, state, identification_documents_type, identification_documents, email } = userData as {
+        first_name: string;
+        last_name: string;
+        date_of_birth: string;
+        city: string;
+        state: string;
+        identification_documents_type: string;
+        identification_documents: string;
+        email: string;
+      };
+  
+      return {
+        name: first_name || "User",
+        lastname: last_name || "",
+        dob: formatDate(date_of_birth) || "01.01.2000",
+        city: city || "Not provided",
+        state: state || "Not provided",
+        idtype: identification_documents_type || "N/A",
+        idnumber: identification_documents || "N/A",
+        email: maskEmail(email) || "user@example.com",
+      };
+    } else {
+      // Return default values if userData doesn't match the expected structure
+      return {
+        name: "User",
+        lastname: "",
+        dob: "01.01.2000",
+        city: "Not provided",
+        state: "Not provided",
+        idtype: "N/A",
+        idnumber: "N/A",
+        email: "user@example.com",
+      };
+    }
   };
-
+  
   // ✅ Function to format date (YYYY-MM-DD ➝ DD.MM.YYYY)
   const formatDate = (dateString: string): string => {
     if (!dateString) return "01.01.2000"; // Default date
