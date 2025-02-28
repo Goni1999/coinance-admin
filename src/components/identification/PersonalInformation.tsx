@@ -113,22 +113,20 @@ export default function PersonalInformation() {
   const formatDate = (dateString: string): string => {
     if (!dateString) return "01.01.2000"; // Default date
   
-    const dateParts = dateString.split("-");
+    // Extracting the date components using regex
+    const match = dateString.match(/^(\d{2})T.*\.(\d{2})\.(\d{4})$/);
   
-    // Ensure that the input has exactly 3 parts (year, month, day)
-    if (dateParts.length !== 3) {
+    if (!match) {
       return "Invalid date format";
     }
   
-    const [year, month, day] = dateParts;
+    const [, day, month, year] = match;
   
-    // Format day and month to ensure they are two digits
-    const formattedDay = String(day).padStart(2, '0');
-    const formattedMonth = String(month).padStart(2, '0');
-  
-    return `${formattedDay}.${formattedMonth}.${year}`;
+    return `${day}.${month}.${year}`;
   };
-
+  
+  // Example usage
+  
   // ✅ Function to mask email (e.g., a**1@gmail.com)
   const maskEmail = (email: string): string => {
     if (!email.includes("@")) return email; // Invalid email handling

@@ -78,7 +78,7 @@ const TwoFactor: React.FC = () => {
     if (!email.includes("@")) return email; // Invalid email handling
     const [localPart, domain] = email.split("@");
     if (localPart.length < 3) return email; // Short emails won't be masked
-    return `${localPart[0]}**${localPart[localPart.length - 1]}@${domain}`;
+    return `${localPart[0]}*****${localPart[localPart.length - 1]}@${domain}`;
   };
 
 
