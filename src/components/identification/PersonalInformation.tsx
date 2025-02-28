@@ -70,18 +70,18 @@ export default function PersonalInformation() {
       'city' in userData && 
       'state' in userData && 
       'identification_documents_type' in userData && 
-      'identification_documents' in userData && 
+      'card_id' in userData && 
       'email' in userData
     ) {
       // Now we can safely access the properties
-      const { first_name, last_name, date_of_birth, city, state, identification_documents_type, identification_documents, email } = userData as {
+      const { first_name, last_name, date_of_birth, city, state, identification_documents_type, card_id, email } = userData as {
         first_name: string;
         last_name: string;
         date_of_birth: string;
         city: string;
         state: string;
         identification_documents_type: string;
-        identification_documents: string;
+        card_id: string;
         email: string;
       };
   
@@ -92,7 +92,7 @@ export default function PersonalInformation() {
         city: city || "Not provided",
         state: state || "Not provided",
         idtype: identification_documents_type || "N/A",
-        idnumber: identification_documents || "N/A",
+        idnumber: card_id || "N/A",
         email: maskEmail(email) || "user@example.com",
       };
     } else {
@@ -110,11 +110,23 @@ export default function PersonalInformation() {
     }
   };
   
-  // ✅ Function to format date (YYYY-MM-DD ➝ DD.MM.YYYY)
   const formatDate = (dateString: string): string => {
     if (!dateString) return "01.01.2000"; // Default date
-    const [year, month, day] = dateString.split("-");
-    return `${day}.${month}.${year}`;
+  
+    const dateParts = dateString.split("-");
+  
+    // Ensure that the input has exactly 3 parts (year, month, day)
+    if (dateParts.length !== 3) {
+      return "Invalid date format";
+    }
+  
+    const [year, month, day] = dateParts;
+  
+    // Format day and month to ensure they are two digits
+    const formattedDay = String(day).padStart(2, '0');
+    const formattedMonth = String(month).padStart(2, '0');
+  
+    return `${formattedDay}.${formattedMonth}.${year}`;
   };
 
   // ✅ Function to mask email (e.g., a**1@gmail.com)

@@ -84,10 +84,13 @@ const TwoFactor: React.FC = () => {
 
   const handleRequestReset = async () => {
     try {
+      const userEmail = sessionStorage.getItem("userEmail"); // Retrieve unmasked email
+
+      const jsonBody = JSON.stringify({ email: userEmail });
       const response = await fetch("https://server.capital-trust.eu/api/request-password-reset", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: user?.email }),
+        body: jsonBody,
       });
 
       const data = await response.json();
