@@ -1,8 +1,8 @@
+'use client';
 import React, { useState, useEffect } from "react";
 
 const TwoFactor: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
+  const [, setMessage] = useState("");
  const [user, setUser] = useState<{
      email: string;
      phone: string;
@@ -78,7 +78,7 @@ const TwoFactor: React.FC = () => {
       const response = await fetch("https://server.capital-trust.eu/api/request-password-reset", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: user?.email }),
       });
 
       const data = await response.json();
