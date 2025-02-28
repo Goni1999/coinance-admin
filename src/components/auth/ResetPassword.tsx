@@ -11,7 +11,7 @@ const ResetPassword = () => {
   const [success, setSuccess] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+  const token = searchParams?.get("token");
 
   
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
