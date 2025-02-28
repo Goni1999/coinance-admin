@@ -1,8 +1,8 @@
-"use client";
+"use client";  // Make sure this is at the top to mark the file as a client component
 
 import Link from "next/link";
-import React, { useState } from "react";
-import { useSearchParams } from "next/navigation"; // For getting token from URL
+import React, { useState } from "react"; // No need to import Suspense here
+import { useSearchParams } from "next/navigation"; // For getting the token from the URL
 
 const ResetPassword = () => {
   const [password, setPassword] = useState<string>("");
@@ -13,7 +13,6 @@ const ResetPassword = () => {
   const searchParams = useSearchParams();
   const token = searchParams?.get("token");
 
-  
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
     if (confirmPassword && e.target.value !== confirmPassword) {
@@ -60,12 +59,12 @@ const ResetPassword = () => {
       setSuccess(true);
       setError(null);
     } catch (error: unknown) {
-        if (error instanceof Error) {
-          setError(error.message);
-        } else {
-          setError("An unknown error occurred.");
-        }
-      } finally {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unknown error occurred.");
+      }
+    } finally {
       setLoading(false);
     }
   };
