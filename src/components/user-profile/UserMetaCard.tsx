@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useModal } from "../../hooks/useModal";
 import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
@@ -9,11 +9,198 @@ import Image from "next/image";
 
 export default function UserMetaCard() {
   const { isOpen, openModal, closeModal } = useModal();
-  const handleSave = () => {
-    // Handle save logic here
-    console.log("Saving changes...");
-    closeModal();
-  };
+
+   const [user, setUser] = useState<{
+        name: string;
+        lastname: string;
+        city: string;
+        state: string;
+        position: string
+        instagram: string;
+        facebook: string;
+        linkedin: string;
+        xcom: string;
+
+      } | null>(null);
+    
+
+      const [formData, setFormData] = useState({
+        instagram: "",
+        facebook: "",
+        linkedin: "",
+        xcom: ""
+
+      });
+
+      useEffect(() => {
+        // ✅ Try to load user data from sessionStorage first
+        const storedUser = sessionStorage.getItem("user");
+        if (storedUser) {
+          const parsedUser = JSON.parse(storedUser);
+          setUser(formatUserData(parsedUser));
+          setFormData({
+            instagram: parsedUser.instagram_link || "",
+            facebook: parsedUser.facebook_link || "",
+            linkedin: parsedUser.linkedin_link || "",
+            xcom: parsedUser.xcom_link || "",
+
+          });
+          return; // ✅ Skip API call if data is already in sessionStorage
+        }
+    
+        // ✅ If no user data found, fetch from API
+        const fetchUserData = async () => {
+          try {
+            const token = sessionStorage.getItem("auth-token");
+            if (!token) {
+              console.error("No token found, user not authenticated.");
+              return;
+            }
+    
+            const response = await fetch("https://server.capital-trust.eu/api/get-user-data", {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            });
+    
+            if (!response.ok) {
+              throw new Error(`Error: ${response.status} - ${response.statusText}`);
+            }
+    
+            const userData = await response.json(); // Backend returns user directly
+    
+            // ✅ Store in sessionStorage
+            sessionStorage.setItem("user", JSON.stringify(userData));
+    
+            // ✅ Update state with formatted data
+            setUser(formatUserData(userData));
+            setFormData({
+              instagram: userData.instagram_link || "",
+              facebook: userData.facebook_link || "",
+              linkedin: userData.linkedin_link || "",
+              xcom: userData.xcom_link || "",
+  
+            });
+          } catch (error) {
+            console.error("Error fetching user data:", error);
+          }
+        };
+    
+        fetchUserData();
+      }, []);
+    
+
+      const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setFormData(prevData => ({ ...prevData, [name]: value }));
+      };
+
+      const handleSave = async () => {
+       
+        // Send updated data to the backend
+        try {
+          const token = sessionStorage.getItem("auth-token");
+          if (!token) {
+            console.error("No token found, user not authenticated.");
+            return;
+          }
+    
+          const response = await fetch("https://server.capital-trust.eu/api/update-user-data", {
+            method: "PUT", // or "PATCH" depending on your API
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData)
+          });
+    
+          if (response.ok) {
+            
+            // Update the sessionStorage with the new data
+            const currentUser = JSON.parse(sessionStorage.getItem("user") || "{}");
+            const updatedUser = {
+              ...currentUser, // This will keep other fields from the previous user data
+              instagram: formData.instagram, // Update the social links
+              facebook: formData.facebook,
+              linkedin: formData.linkedin,
+              xcom: formData.xcom,
+            };
+            sessionStorage.setItem("user", JSON.stringify(updatedUser));
+
+            setUser(updatedUser); // Update state
+            console.log("User data updated successfully!");
+            closeModal(); // Close the modal
+          } else {
+            console.error("Error updating user data.");
+          }
+        } catch (error) {
+          console.error("Error updating user data:", error);
+        }
+      };
+
+      const formatUserData = (userData: unknown) => {
+        // Type guard: Ensure userData has all the necessary properties
+        if (
+          typeof userData === 'object' && 
+          userData !== null && 
+          'first_name' in userData && 
+          'last_name' in userData && 
+          'city' in userData && 
+          'state' in userData &&
+          'position' in userData &&  
+          'instagram_link' in userData && 
+          'facebook_link' in userData && 
+          'linkedin_link' in userData && 
+          'xcom_link' in userData
+          
+         
+        ) {
+          // Now we can safely access the properties
+          const { first_name, last_name, city, state, position, instagram_link, facebook_link, linkedin_link, xcom_link  } = userData as {
+            first_name: string;
+            last_name: string;
+            city: string;
+            state: string;
+            position: string;
+            instagram_link: string;
+            facebook_link: string;
+            linkedin_link: string;
+            xcom_link: string;
+
+           
+          };
+      
+          return {
+            name: first_name || "name",
+            lastname: last_name || "lastname",
+            city: city || "city",
+            state: state || "Not provided",
+            position: position || "Not provided",
+            instagram: instagram_link || "instagram",
+            facebook: facebook_link || "position",
+            linkedin: linkedin_link || "position",
+            xcom: xcom_link || "position",
+
+          };
+        } else {
+          // Return default values if userData doesn't match the expected structure
+          return {
+            name: "name",
+            lastname: "lastname",
+            city: "city",
+            state: "state",
+            position: "Not provided",
+            instagram: "instagram",
+            facebook: "position",
+            linkedin: "position",
+            xcom: "position",          };
+        }
+      };
+      
+
+
   return (
     <>
       <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
@@ -29,22 +216,22 @@ export default function UserMetaCard() {
             </div>
             <div className="order-3 xl:order-2">
               <h4 className="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left">
-                Filan Fisteku
+              {user?.name || "name"} {user?.lastname || "lastname"}
               </h4>
               <div className="flex flex-col items-center gap-1 text-center xl:flex-row xl:gap-3 xl:text-left">
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Team Manager
+                {user?.position || "Position"}
                 </p>
                 <div className="hidden h-3.5 w-px bg-gray-300 dark:bg-gray-700 xl:block"></div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Arizona, United States
+                {user?.city || "City"}, {user?.state || "State"}
                 </p>
               </div>
             </div>
             <div className="flex items-center order-2 gap-2 grow xl:order-3 xl:justify-end">
               <a        
         target="_blank"
-        rel="noreferrer" href='https://www.facebook.com/PimjoHQ' className="flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-gray-300 bg-white text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
+        rel="noreferrer" href={user?.facebook} className="flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-gray-300 bg-white text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
                 <svg
                   className="fill-current"
                   width="20"
@@ -60,7 +247,7 @@ export default function UserMetaCard() {
                 </svg>
               </a>
 
-              <a href='https://x.com/PimjoHQ' target="_blank"
+              <a href={user?.xcom} target="_blank"
         rel="noreferrer"  className="flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-gray-300 bg-white text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
                 <svg
                   className="fill-current"
@@ -77,7 +264,7 @@ export default function UserMetaCard() {
                 </svg>
               </a>
 
-              <a href="https://www.linkedin.com/company/pimjo" target="_blank"
+              <a href={user?.linkedin} target="_blank"
         rel="noreferrer" className="flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-gray-300 bg-white text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
                 <svg
                   className="fill-current"
@@ -94,7 +281,7 @@ export default function UserMetaCard() {
                 </svg>
               </a>
 
-              <a href='https://instagram.com/PimjoHQ' target="_blank"
+              <a href={user?.instagram} target="_blank"
         rel="noreferrer" className="flex h-11 w-11 items-center justify-center gap-2 rounded-full border border-gray-300 bg-white text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
                 <svg
                   className="fill-current"
@@ -157,19 +344,19 @@ export default function UserMetaCard() {
                     <Label>Facebook</Label>
                     <Input
                       type="text"
-                      defaultValue="https://www.facebook.com/PimjoHQ" value={""}                    />
+                      defaultValue={user?.facebook} value={formData.facebook} onChange={handleChange}                   />
                   </div>
 
                   <div>
                     <Label>X.com</Label>
-                    <Input type="text" defaultValue="https://x.com/PimjoHQ" value={""}/>
+                    <Input type="text" defaultValue={user?.xcom} value={formData.xcom} onChange={handleChange} />
                   </div>
 
                   <div>
                     <Label>Linkedin</Label>
                     <Input
                       type="text"
-                      defaultValue="https://www.linkedin.com/company/pimjo" value={""}
+                      defaultValue={user?.linkedin} value={formData.linkedin} onChange={handleChange}
                     />
                   </div>
 
@@ -177,43 +364,12 @@ export default function UserMetaCard() {
                     <Label>Instagram</Label>
                     <Input
                       type="text"
-                      defaultValue="https://instagram.com/PimjoHQ" value={""}
+                      defaultValue={user?.instagram} value={formData.instagram} onChange={handleChange}
                     />
                   </div>
                 </div>
               </div>
-              <div className="mt-7">
-                <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
-                  Personal Information
-                </h5>
-
-                <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
-                  <div className="col-span-2 lg:col-span-1">
-                    <Label>First Name</Label>
-                    <Input type="text" defaultValue="Musharof" value={""}/>
-                  </div>
-
-                  <div className="col-span-2 lg:col-span-1">
-                    <Label>Last Name</Label>
-                    <Input type="text" defaultValue="Chowdhury" value={""}/>
-                  </div>
-
-                  <div className="col-span-2 lg:col-span-1">
-                    <Label>Email Address</Label>
-                    <Input type="text" defaultValue="randomuser@pimjo.com" value={""}/>
-                  </div>
-
-                  <div className="col-span-2 lg:col-span-1">
-                    <Label>Phone</Label>
-                    <Input type="text" defaultValue="+09 363 398 46" value={""}/>
-                  </div>
-
-                  <div className="col-span-2">
-                    <Label>Bio</Label>
-                    <Input type="text" defaultValue="Team Manager" value={""}/>
-                  </div>
-                </div>
-              </div>
+           
             </div>
             <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
               <Button size="sm" variant="outline" onClick={closeModal}>

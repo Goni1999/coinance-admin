@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from "react";
-
+import Alert from "../ui/alert/Alert";
 const TwoFactor: React.FC = () => {
   const [, setMessage] = useState("");
  const [user, setUser] = useState<{
@@ -9,7 +9,17 @@ const TwoFactor: React.FC = () => {
 
    } | null>(null);
 
-    
+   const [alert, setAlert] = useState<{
+    variant: "success" | "error" | "warning" | "info";
+    title: string;
+    message: string;
+    show: boolean;
+  }>({
+    variant: "success",
+    title: "",
+    message: "",
+    show: false,
+  }); 
       useEffect(() => {
         // ✅ Try to load user data from sessionStorage first
         const storedUser = sessionStorage.getItem("user");
@@ -94,13 +104,26 @@ const TwoFactor: React.FC = () => {
       });
 
       const data = await response.json();
+      setAlert({
+        variant: "success",
+        title: "Request password reset send successfully",
+        message: "Please check your inbox to reset your password!",
+        show: true
+      }); 
       setMessage(data.message);
     } catch {
       setMessage("Failed to request reset.");
+      setAlert({
+        variant: "error",
+        title: "Failed to request reset password",
+        message: "Please refresh the page and try again later!",
+        show: true
+      }); 
     }
   };
   return (
     <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
+     
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <h4 className="text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-6">
@@ -199,6 +222,15 @@ const TwoFactor: React.FC = () => {
           <br/>
 
           <div className="mb-6">
+          {alert.show && (
+        <Alert
+          variant={alert.variant}
+          title={alert.title}
+          message={alert.message}
+          showLink={false} 
+        />
+      )}
+      <br/>
   <div className="flex flex-col lg:flex-row items-center justify-between gap-4 mb-4">
     <div className="flex flex-col  justify-start gap-4">
 <div className="flex flex-row gap-4 ">
@@ -226,7 +258,7 @@ const TwoFactor: React.FC = () => {
     </div>
     <div className="flex flex-col lg:flex-row items-center gap-4">
       
-      <button onClick={handleRequestReset} className="bg-blue-500 text-white inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-7 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
+      <button onClick={handleRequestReset} className=" text-gray-700 inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-7 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
         Reset Password
       </button>
     </div>
