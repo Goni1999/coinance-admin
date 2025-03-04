@@ -246,8 +246,14 @@ const AppSidebar: React.FC = () => {
   const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // const isActive = (path: string) => path === pathname;
-   const isActive = useCallback((path: string) => path === pathname, [pathname]);
-
+  const isActive = useCallback(
+    (path: string) => {
+      const normalizedPath = pathname.replace(/^\/[a-z]{2}\//, "/"); // Removes "/en/", "/fr/", etc.
+      return normalizedPath === path;
+    },
+    [pathname]
+  );
+  
   useEffect(() => {
     // Check if the current path matches any submenu item
     let submenuMatched = false;

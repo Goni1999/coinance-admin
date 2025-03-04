@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
+import Alert from "../ui/alert/Alert";
 
 interface Coin {
   id: string;
@@ -16,7 +17,17 @@ const CryptoWithdraw: React.FC = () => {
   const [toCoin, setToCoin] = useState<Coin | null>(null);
   const [amount, setAmount] = useState<number>(0);
   const [convertedAmount, setConvertedAmount] = useState<number | null>(null);
-
+   const [alert, setAlert] = useState<{
+    variant: "success" | "error" | "warning" | "info";
+    title: string;
+    message: string;
+    show: boolean;
+  }>({
+    variant: "success",
+    title: "",
+    message: "",
+    show: false,
+  }); 
   // Corrected coin IDs mapping
   const coinIds: { [key: string]: string } = {
     bitcoin: "bitcoin",
@@ -156,14 +167,33 @@ const CryptoWithdraw: React.FC = () => {
         return updatedCoins;
       });
 
-      alert("Withdrawal processed successfully!");
+      setAlert({
+        variant: "success",
+        title: "Withdrawal processed successfully!",
+        message: "After confirm your transaction will appear in transactions list.",
+        show: true
+      }); 
     } catch (error) {
       console.error("Failed to process withdrawal:", error);
+      setAlert({
+        variant: "error",
+        title: "Failed to process withdrawal:",
+        message: "",
+        show: true
+      }); 
     }
   };
 
   return (
     <div className="max-w-lg mx-auto bg-white dark:bg-white/[0.03] rounded-lg shadow-md p-6">
+        {alert.show && (
+        <Alert
+          variant={alert.variant}
+          title={alert.title}
+          message={alert.message}
+          showLink={false} 
+        />
+      )}
       <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800 dark:text-white/90">Crypto Withdrawal</h2>
 
       {/* Select Coin */}

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react';
 
 const VerificationLevels: React.FC = () => {
@@ -66,9 +67,10 @@ const VerificationLevels: React.FC = () => {
         </div>
         <div className="css-vurnku">
           <div className="css-jlji81">
-            <a data-bn-type="link" target="_blank" href="/faqs" className="css-qfa0d5">
+            <Link href="/faqs" className="css-qfa0d5">
+            
               <div data-bn-type="text" className="css-1cjl26j text-gray-500 dark:text-gray-400">Identity Verification</div>
-            </a>
+            </Link>
           </div>
         </div>
       </div>
