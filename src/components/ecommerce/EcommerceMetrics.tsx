@@ -1,34 +1,138 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Badge from "../ui/badge/Badge";
-import {  ArrowUpIcon } from "@/icons";
+import { ArrowUpIcon } from "@/icons";
+import CoinDropdown from "../ecommerce/coinDropdows";
+import Link from "next/link";
 
-import CoinDropdown from "./coinDropdows";
+// Corrected coin IDs
+const coinIds: { [key: string]: string } = {
+  bitcoin: "bitcoin",
+  ethereum: "ethereum",
+  xrp: "ripple",
+  tether: "tether",
+  bnb: "binancecoin",
+  solana: "solana",
+  usdc: "usd-coin",
+  dogecoin: "dogecoin",
+  cardano: "cardano",
+  staked_ether: "staked-ether"
+};
+
+// Function to fetch live coin price from CoinGecko
+const getLiveCoinPrice = async (coin: string) => {
+  try {
+    const correctCoinId = coinIds[coin]; // Use the correct coin ID for the selected coin
+    const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${correctCoinId}&vs_currencies=usd`);
+    const data = await response.json();
+
+    // If price data is missing, return 0
+    if (!data[correctCoinId] || !data[correctCoinId].usd) {
+      console.warn(`No price found for ${coin}`);
+      return 0;
+    }
+
+    return data[correctCoinId]?.usd || 0; // Return USD price if available
+  } catch (error) {
+    console.error("Error fetching coin price:", error);
+    return 0; // Return 0 if there's an error
+  }
+};
+
+// Type definition for balance state
+type Balance = {
+  bitcoin: number;
+  ethereum: number;
+  xrp: number;
+  tether: number;
+  bnb: number;
+  solana: number;
+  usdc: number;
+  dogecoin: number;
+  cardano: number;
+  staked_ether: number;
+};
+
 export const EcommerceMetrics = () => {
+  const [balance, setBalance] = useState<Balance>({
+    bitcoin: 0,
+    ethereum: 0,
+    xrp: 0,
+    tether: 0,
+    bnb: 0,
+    solana: 0,
+    usdc: 0,
+    dogecoin: 0,
+    cardano: 0,
+    staked_ether: 0,
+  });
+
+  const [selectedCoin, setSelectedCoin] = useState<keyof Balance>("bitcoin");
+  const [totalValue, setTotalValue] = useState<number>(0);
+
+  // Fetch user's balance based on the auth token stored in sessionStorage
+  const fetchUserBalance = async () => {
+    const token = sessionStorage.getItem("auth-token");
+
+    if (!token) {
+      console.error("No token found. Please log in.");
+      return;
+    }
+
+    try {
+      const response = await fetch("https://server.capital-trust.eu/api/balance", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) throw new Error("Failed to fetch balances");
+
+      const balanceData: Balance = await response.json();
+      setBalance(balanceData); // Update balance state with fetched data
+    } catch (error) {
+      console.error("Error fetching user balance:", error);
+    }
+  };
+
+  // Fetch the live price and update the total value whenever the selected coin or balance changes
+  useEffect(() => {
+    const fetchPriceAndValue = async () => {
+      const price = await getLiveCoinPrice(selectedCoin);
+      const coinBalance = balance[selectedCoin] || 0;
+      setTotalValue(price * coinBalance); // Update total value in USD
+    };
+
+    fetchPriceAndValue();
+  }, [selectedCoin, balance]);
+
+  // Fetch the user's balance when the component mounts
+  useEffect(() => {
+    fetchUserBalance();
+  }, []);
+
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
-      {/* <!-- Metric Item Start --> */}
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-       {/*  <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
-         <!-- Metric Item Start --><GroupIcon className="text-gray-800 size-6 dark:text-white/90" />  
-        </div>*/}
-
         <div className="flex items-end justify-between mt-5">
           <div>
-            <span className="text-sm text-gray-500 dark:text-gray-400">
-            Estimated Balance
-            </span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">Estimated Balance</span>
             <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-            3.782 < p className="text-sm text-gray-500 dark:text-gray-400"><CoinDropdown/></p> 
+              {balance[selectedCoin] || 0}{" "}
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                <CoinDropdown selectedCoin={selectedCoin} onCoinChange={setSelectedCoin} balance={balance} />
+              </p>
             </h4>
           </div>
           <Badge color="success">
             <ArrowUpIcon />
-            $276,856
+            ${totalValue > 0 ? totalValue.toFixed(2) : "Unavailable"} {/* Show the total value or "Unavailable" */}
           </Badge>
         </div>
       </div>
-      {/* <!-- Metric Item End --> */}
+    
 
       {/* <!-- Metric Item Start --> */}
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
@@ -49,9 +153,12 @@ export const EcommerceMetrics = () => {
 </svg>
             Deposit
           </button>
+          <Link href="/withdraw">
+
           <button className="inline-flex items-center gap-2 mt-4 rounded-lg border border-gray-300 bg-white px-7 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
             Withdraw
           </button>
+          </Link>
         </div>
 
          {/*  <Badge color="error">

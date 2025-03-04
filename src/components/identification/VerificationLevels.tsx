@@ -66,7 +66,7 @@ const VerificationLevels: React.FC = () => {
         </div>
         <div className="css-vurnku">
           <div className="css-jlji81">
-            <a data-bn-type="link" target="_blank" href="/support/faq/account-functions?c=1&navId=1#10" className="css-qfa0d5">
+            <a data-bn-type="link" target="_blank" href="/faqs" className="css-qfa0d5">
               <div data-bn-type="text" className="css-1cjl26j text-gray-500 dark:text-gray-400">Identity Verification</div>
             </a>
           </div>

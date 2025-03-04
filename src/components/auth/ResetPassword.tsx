@@ -108,7 +108,7 @@ const ResetPassword = () => {
         {success ? (
           <div className="p-4 mb-5 text-sm text-green-600 bg-green-100 border border-green-400 rounded-lg">
             Password reset successfully! You can now{" "}
-            <Link href="/login" className="text-brand-500 hover:text-brand-600">
+            <Link href="/signin" className="text-brand-500 hover:text-brand-600">
               login
             </Link>.
           </div>

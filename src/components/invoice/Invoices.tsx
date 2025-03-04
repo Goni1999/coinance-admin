@@ -1,30 +1,59 @@
 'use client';
 
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 type Invoice = {
   id: number;
+  user_id: string; // Assuming user_id is a string (varchar in DB)
+  issued_date: string;
+  sub_total: number;
+  vat: number; // VAT percentage stored in the database
+  total: number;
+  link_of_pdf: string; // Link to the PDF
   status: string;
-  amount: number;
-  date: string;
+  created_at: string;
 };
 
 const Invoices = () => {
-  // Default invoice data
-  const defaultInvoices: Invoice[] = [
-    { id: 1, status: "Paid", amount: 1500, date: "2025-02-10" },
-    { id: 2, status: "Pending", amount: 3000, date: "2025-02-15" },
-    { id: 3, status: "Overdue", amount: 500, date: "2025-02-20" },
-  ];
-
-  // Set the default invoices into state
-  const [invoices, setInvoices] = useState<Invoice[]>(defaultInvoices);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch invoices when the component mounts
+  useEffect(() => {
+    const fetchInvoices = async () => {
+      try {
+        const token = sessionStorage.getItem("auth-token");
+        if (!token) throw new Error("No token found. Please log in.");
+
+        const response = await fetch("https://server.capital-trust.eu/api/invoices", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch invoices.");
+        }
+
+        const data = await response.json();
+        setInvoices(data); // Assuming the response data is an array of invoices
+        setLoading(false); // Set loading to false after fetching data
+      } catch {
+        setError("Something went wrong.");
+        setLoading(false);
+      }
+    };
+
+    fetchInvoices();
+  }, []); // Empty dependency array means this runs once when the component mounts
 
   const handleInvoiceClick = (invoice: Invoice) => {
     setSelectedInvoice(invoice);
-    setInvoices(defaultInvoices);
   };
 
   const handleProceedToPayment = () => {
@@ -33,11 +62,35 @@ const Invoices = () => {
     }
   };
 
+  // Handle download by redirecting the user to the PDF link
   const handleDownloadInvoice = () => {
     if (selectedInvoice) {
-      alert(`Downloading invoice #${selectedInvoice.id}`);
+      // Open the PDF link in a new tab
+      window.open(selectedInvoice.link_of_pdf, "_blank");
     }
   };
+  
+
+  const formatDate = (dateString: string): string => {
+    if (!dateString) return "01.01.2000"; // Default date
+
+    const date = new Date(dateString); // Convert to Date object
+
+    // Extract day, month, and year
+    const day = String(date.getUTCDate()).padStart(2, '0'); // Ensure two digits
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // getUTCMonth() is zero-based
+    const year = date.getUTCFullYear();
+
+    return `${day}.${month}.${year}`;
+  };
+
+  if (loading) {
+    return <div>Loading invoices...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <div className="p-4 mx-auto max-w-screen-2xl md:p-6">
@@ -65,9 +118,6 @@ const Invoices = () => {
                 className="flex cursor-pointer items-center gap-3 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-white/[0.03]"
                 onClick={() => handleInvoiceClick(invoice)}
               >
-                <div className="w-12 h-12 overflow-hidden rounded-full">
-                  {/* Optionally add an image or avatar here */}
-                </div>
                 <div>
                   <span className="mb-0.5 block text-sm font-medium text-gray-800 dark:text-white/90">
                     Invoice #{invoice.id}
@@ -90,19 +140,21 @@ const Invoices = () => {
               <div className="flex flex-col gap-6 mb-9 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <span className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-400">From</span>
-                  <h5 className="mb-2 text-base font-semibold text-gray-800 dark:text-white/90">Sender Name</h5>
+                  <h5 className="mb-2 text-base font-semibold text-gray-800 dark:text-white/90">Capital Trust</h5>
                   <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-                    Address Details here...
+                    NY City, USA
                   </p>
                   <span className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Issued On:</span>
-                  <span className="block text-sm text-gray-500 dark:text-gray-400">{selectedInvoice.date}</span>
+                  <span className="block text-sm text-gray-500 dark:text-gray-400">{formatDate(selectedInvoice.issued_date)}</span>
                 </div>
               </div>
               <div className="pb-6 my-6 text-right border-b border-gray-100 dark:border-gray-800">
-                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">Sub Total amount: $ {selectedInvoice.amount}</p>
-                <p className="mb-3 text-sm text-gray-500 dark:text-gray-400">Vat (10%): $ {selectedInvoice.amount * 0.1}</p>
+                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">Sub Total amount: $ {selectedInvoice.sub_total}</p>
+                <p className="mb-3 text-sm text-gray-500 dark:text-gray-400">
+                  Vat ({selectedInvoice.vat}%): $ {selectedInvoice.sub_total * (selectedInvoice.vat / 100)}
+                </p>
                 <p className="text-lg font-semibold text-gray-800 dark:text-white/90">
-                  Total : $ {selectedInvoice.amount + selectedInvoice.amount * 0.1}
+                  Total : $ {selectedInvoice.total}
                 </p>
               </div>
 

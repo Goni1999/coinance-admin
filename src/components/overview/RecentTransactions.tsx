@@ -1,52 +1,75 @@
 'use client';
-import React, { useState } from "react";
 
-const RecentTransactions = () => {
+import React, { useState, useEffect } from "react";
+
+interface Transaction {
+  time: string;
+  type: string;
+  balance_id: string;
+  coin: string;
+  amount: string;
+  destination: string;
+  txid: string;
+  status: string;
+}
+
+const TransactionsHistory = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [, setLoading] = useState(true);
+  const [, setError] = useState<string | null>(null);
 
-  const transactions = [
-    {
-      time: "Nov 23, 01:00 PM",
-      type: "Deposit",
-      wallet: "Wallet A",
-      coin: "BTC",
-      amount: "$5,000.00",
-      destination: "Exchange B",
-      txId: "TXID123456",
-      status: "Success",
-    },
-    {
-      time: "Nov 23, 02:00 PM",
-      type: "Withdraw",
-      wallet: "Wallet B",
-      coin: "ETH",
-      amount: "$2,500.00",
-      destination: "Wallet C",
-      txId: "TXID789101",
-      status: "Pending",
-    },
-    {
-      time: "Nov 23, 03:30 PM",
-      type: "Deposit",
-      wallet: "Wallet C",
-      coin: "ADA",
-      amount: "$1,000.00",
-      destination: "Wallet D",
-      txId: "TXID112233",
-      status: "Success",
-    },
-    {
-      time: "Nov 23, 04:45 PM",
-      type: "Withdraw",
-      wallet: "Wallet D",
-      coin: "LTC",
-      amount: "$800.00",
-      destination: "Exchange E",
-      txId: "TXID445566",
-      status: "Failed",
-    },
-    
-  ];
+  // Fetch transactions from the API with token
+  const fetchTransactions = async () => {
+    const token = sessionStorage.getItem("auth-token"); // Get stored auth token
+  
+    if (!token) {
+      setError("No token found. Please log in.");
+      setLoading(false);
+      return;
+    }
+  
+    try {
+      const response = await fetch("https://server.capital-trust.eu/api/transactions", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (!response.ok) throw new Error("Failed to fetch transactions");
+  
+      const data: Transaction[] = await response.json();
+  
+      // Store the fetched data in sessionStorage for later use
+      sessionStorage.setItem("transactions", JSON.stringify(data));
+      
+      // Slice the last 15 transactions
+      const last15Transactions = data.slice(-4);
+      setTransactions(last15Transactions);
+    } catch {
+      setError("Error fetching transactions");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
+  useEffect(() => {
+    const storedTransactions = sessionStorage.getItem("transactions");
+  
+    if (storedTransactions) {
+      const transactionsData = JSON.parse(storedTransactions);
+      // Slice the last 15 transactions
+      const last15Transactions = transactionsData.slice(-4);
+      setTransactions(last15Transactions);
+      setLoading(false);
+    } else {
+      fetchTransactions();
+    }
+  }, []);
+  
 
   // Handle search input
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -59,14 +82,41 @@ const RecentTransactions = () => {
     return (
       transaction.time.toLowerCase().includes(searchLower) ||
       transaction.type.toLowerCase().includes(searchLower) ||
-      transaction.wallet.toLowerCase().includes(searchLower) ||
+      transaction.balance_id.toLowerCase().includes(searchLower) ||
       transaction.coin.toLowerCase().includes(searchLower) ||
       transaction.amount.toLowerCase().includes(searchLower) ||
       transaction.destination.toLowerCase().includes(searchLower) ||
-      transaction.txId.toLowerCase().includes(searchLower) ||
+      transaction.txid.toLowerCase().includes(searchLower) ||
       transaction.status.toLowerCase().includes(searchLower)
     );
   });
+
+  const formatDate = (dateString: string): string => {
+    if (!dateString) return "01.01.2000"; // Default date
+  
+    const date = new Date(dateString); // Convert to Date object
+  
+    // Extract day, month, and year
+    const day = String(date.getUTCDate()).padStart(2, '0'); // Ensure two digits
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // getUTCMonth() is zero-based
+    const year = date.getUTCFullYear();
+  
+    return `${day}.${month}.${year}`;
+  };
+
+  const formatAmount = (amount: string): string => {
+    const amountNumber = parseFloat(amount);
+  
+    if (isNaN(amountNumber)) {
+      return 'Invalid amount'; // Return a fallback message if invalid number
+    }
+  
+    if (amountNumber % 1 === 0) {
+      return amountNumber.toFixed(0);
+    } else {
+      return amountNumber.toFixed(2);
+    }
+  };
 
   return (
     <div className="col-span-12">
@@ -144,25 +194,25 @@ const RecentTransactions = () => {
                   {filteredTransactions.map((transaction, index) => (
                     <tr key={index}>
                       <td className="px-4 py-4 text-blue-700 text-theme-sm dark:text-blue-400 dark:border-gray-800">
-                        <div>{transaction.time}</div>
+                        <div>{formatDate(transaction.time)}</div>
                       </td>
                       <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
                         {transaction.type}
                       </td>
                       <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
-                        {transaction.wallet}
+                        {transaction.balance_id}
                       </td>
                       <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
                         {transaction.coin}
                       </td>
                       <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
-                        {transaction.amount}
+                        {formatAmount(transaction.amount)}
                       </td>
                       <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
                         {transaction.destination}
                       </td>
                       <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
-                        {transaction.txId}
+                        {transaction.txid}
                       </td>
                       <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
                         <span
@@ -189,4 +239,4 @@ const RecentTransactions = () => {
   );
 };
 
-export default RecentTransactions;
+export default TransactionsHistory;

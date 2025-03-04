@@ -237,12 +237,18 @@ const TradeForm: React.FC = () => {
           )}
 
           {/* Submit Button */}
+          <div className="relative group ">
+
           <button
             type="submit"
-            className={`w-full py-3 rounded-lg text-white font-semibold mt-4 ${orderType === "buy" ? "bg-green-500 hover:bg-green-700" : "bg-red-500 hover:bg-red-700"}`}
+            className={`w-full py-3 rounded-lg text-white font-semibold  pointer-events-none cursor-not-allowed mt-4 ${orderType === "buy" ? "bg-green-500 opacity-50 hover:bg-green-700" : "bg-red-500 opacity-50 hover:bg-red-700"}`}
           >
             {orderType === "buy" ? "Buy Order" : "Sell Order"}
           </button>
+          <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-black text-white text-sm p-2 rounded">
+                        This option is locked now because of the transfer option is locked
+                      </div>
+                    </div>
         </div>
       </form>
     </div>

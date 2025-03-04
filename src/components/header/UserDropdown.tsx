@@ -1,9 +1,11 @@
 "use client";
+
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,11 +13,21 @@ export default function UserDropdown() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const router = useRouter();
+  const t = useTranslations();
 
   useEffect(() => {
+    const storedUser = sessionStorage.getItem("userdr");
+
+    if (storedUser) {
+      setUser(JSON.parse(storedUser)); // ✅ Use stored user data
+      console.log(storedUser);
+      setLoading(false);
+      return; // ✅ Skip API call
+    }
+
     const fetchUserData = async () => {
       try {
-        const token = sessionStorage.getItem("auth-token"); // Get JWT token from localStorage
+        const token = sessionStorage.getItem("auth-token");
         if (!token) {
           console.error("No token found, user not authenticated.");
           return;
@@ -24,7 +36,7 @@ export default function UserDropdown() {
         const response = await fetch("https://server.capital-trust.eu/api/get-user-data", {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${token}`, // Attach JWT token
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
         });
@@ -32,13 +44,16 @@ export default function UserDropdown() {
         if (!response.ok) {
           throw new Error(`Error: ${response.status} - ${response.statusText}`);
         }
-        const data = await response.json();
 
-        setUser({
+        const data = await response.json();
+        const userData = {
           name: data.first_name || "User",
           lastname: data.last_name || "",
           email: data.email || "user@example.com",
-        });
+        };
+
+        sessionStorage.setItem("userdr", JSON.stringify(userData)); // ✅ Store in sessionStorage
+        setUser(userData);
       } catch (error) {
         console.error("Error fetching user data:", error);
         setError(true);
@@ -60,26 +75,24 @@ export default function UserDropdown() {
   }
 
   const handleSignOut = async () => {
-    const token = sessionStorage.getItem("auth-token"); // Get JWT token from localStorage
-
     try {
+      const token = sessionStorage.getItem("auth-token");
+
       const response = await fetch("https://server.capital-trust.eu/api/logout", {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${token}`, // Attach JWT token
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
-        }, 
+        },
       });
-  
-      const data = await response.json();
-      if (response.ok) {
-        console.log("Logged out successfully");
-        sessionStorage.removeItem("auth-token"); // If using JWT
-        sessionStorage.clear(); // Removes all session storage data
 
+      if (response.ok) {
+        sessionStorage.clear(); // ✅ Clear session on logout
         router.push("/signin");
       } else {
-        console.error(data.message);
+        console.error("Logout failed");
+        sessionStorage.clear();
+        router.push("/signin");
       }
     } catch (error) {
       console.error("Logout error:", error);
@@ -169,12 +182,11 @@ export default function UserDropdown() {
           </li>
         </ul>
 
-        {/* Sign Out Button */}
         <button
           onClick={handleSignOut}
           className="flex w-full items-center gap-3 px-3 py-2 mt-3 font-medium text-red-600 rounded-lg group text-theme-sm hover:bg-red-100 hover:text-red-700 dark:text-red-400 dark:hover:bg-white/5 dark:hover:text-red-300"
         >
-          Sign Out
+          {t("signout")}
         </button>
       </Dropdown>
     </div>

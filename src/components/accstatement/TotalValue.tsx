@@ -2,8 +2,119 @@
 import React from "react";
 import Badge from "../ui/badge/Badge";
 import {  ArrowUpIcon } from "@/icons";
+import { useState, useEffect } from "react";
+import CoinDropdown from "../ecommerce/coinDropdows";
+
+
+// Corrected coin IDs
+const coinIds: { [key: string]: string } = {
+  bitcoin: "bitcoin",
+  ethereum: "ethereum",
+  xrp: "ripple",
+  tether: "tether",
+  bnb: "binancecoin",
+  solana: "solana",
+  usdc: "usd-coin",
+  dogecoin: "dogecoin",
+  cardano: "cardano",
+  staked_ether: "staked-ether"
+};
+
+// Function to fetch live coin price from CoinGecko
+const getLiveCoinPrice = async (coin: string) => {
+  try {
+    const correctCoinId = coinIds[coin]; // Use the correct coin ID for the selected coin
+    const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${correctCoinId}&vs_currencies=usd`);
+    const data = await response.json();
+
+    // If price data is missing, return 0
+    if (!data[correctCoinId] || !data[correctCoinId].usd) {
+      console.warn(`No price found for ${coin}`);
+      return 0;
+    }
+
+    return data[correctCoinId]?.usd || 0; // Return USD price if available
+  } catch (error) {
+    console.error("Error fetching coin price:", error);
+    return 0; // Return 0 if there's an error
+  }
+};
+
+// Type definition for balance state
+type Balance = {
+  bitcoin: number;
+  ethereum: number;
+  xrp: number;
+  tether: number;
+  bnb: number;
+  solana: number;
+  usdc: number;
+  dogecoin: number;
+  cardano: number;
+  staked_ether: number;
+};
+
 
 export const TotalValue = () => {
+    const [balance, setBalance] = useState<Balance>({
+      bitcoin: 0,
+      ethereum: 0,
+      xrp: 0,
+      tether: 0,
+      bnb: 0,
+      solana: 0,
+      usdc: 0,
+      dogecoin: 0,
+      cardano: 0,
+      staked_ether: 0,
+    });
+  
+    const [selectedCoin, setSelectedCoin] = useState<keyof Balance>("bitcoin");
+    const [totalValue, setTotalValue] = useState<number>(0);
+  
+    // Fetch user's balance based on the auth token stored in sessionStorage
+    const fetchUserBalance = async () => {
+      const token = sessionStorage.getItem("auth-token");
+  
+      if (!token) {
+        console.error("No token found. Please log in.");
+        return;
+      }
+  
+      try {
+        const response = await fetch("https://server.capital-trust.eu/api/balance", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+  
+        if (!response.ok) throw new Error("Failed to fetch balances");
+  
+        const balanceData: Balance = await response.json();
+        setBalance(balanceData); // Update balance state with fetched data
+      } catch (error) {
+        console.error("Error fetching user balance:", error);
+      }
+    };
+  
+    // Fetch the live price and update the total value whenever the selected coin or balance changes
+    useEffect(() => {
+      const fetchPriceAndValue = async () => {
+        const price = await getLiveCoinPrice(selectedCoin);
+        const coinBalance = balance[selectedCoin] || 0;
+        setTotalValue(price * coinBalance); // Update total value in USD
+      };
+  
+      fetchPriceAndValue();
+    }, [selectedCoin, balance]);
+  
+    // Fetch the user's balance when the component mounts
+    useEffect(() => {
+      fetchUserBalance();
+    }, []);
+  
   return (
     <div className="flex flex-col gap-4 sm:grid-cols-2 md:gap-6">
       {/* <!-- Metric Item Start --> */}
@@ -18,7 +129,18 @@ export const TotalValue = () => {
             <span className="text-sm text-gray-500 dark:text-gray-400">
             
             </span>
-            <h2 className=" text-gray-500 dark:text-gray-400">-- BTC≈ -- USDT</h2>
+            <div className="flex items-end justify-between mt-5">
+          <div>
+            <span className="text-sm text-gray-500 dark:text-gray-400">Estimated Balance</span>
+            <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
+              {balance[selectedCoin] || 0}{" "}
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                <CoinDropdown selectedCoin={selectedCoin} onCoinChange={setSelectedCoin} balance={balance} />
+              </p>
+            </h4>
+          </div>
+          
+        </div>
             <br/>
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-7 2xl:gap-x-32">
             <div>
@@ -48,7 +170,7 @@ export const TotalValue = () => {
           </div>
           <Badge color="success">
             <ArrowUpIcon />
-            0.00
+            ${totalValue > 0 ? totalValue.toFixed(2) : "Unavailable"} {/* Show the total value or "Unavailable" */}
           </Badge>
         </div>
       </div>

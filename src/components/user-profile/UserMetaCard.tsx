@@ -6,200 +6,248 @@ import Button from "../ui/button/Button";
 import Input from "../form/input/InputField";
 import Label from "../form/Label";
 import Image from "next/image";
+import Alert from "../ui/alert/Alert";
 
 export default function UserMetaCard() {
   const { isOpen, openModal, closeModal } = useModal();
+  const [loading, setLoading] = useState(false);
+  const [alert, setAlert] = useState<{
+    variant: "success" | "error" | "warning" | "info";
+    title: string;
+    message: string;
+    show: boolean;
+  }>({
+    variant: "success",
+    title: "",
+    message: "",
+    show: false,
+  });
 
-   const [user, setUser] = useState<{
-        name: string;
-        lastname: string;
-        city: string;
-        state: string;
-        position: string
-        instagram: string;
-        facebook: string;
-        linkedin: string;
-        xcom: string;
+  // Default user data structure and state initialization
+  const [user, setUser] = useState<{
+    name: string;
+    lastname: string;
+    city: string;
+    state: string;
+    position: string;
+    instagram: string;
+    facebook: string;
+    linkedin: string;
+    xcom: string;
+  } | null>(null);
 
-      } | null>(null);
-    
+  const [formData, setFormData] = useState({
+    instagram: "",
+    facebook: "",
+    linkedin: "",
+    xcom: "",
+  });
 
-      const [formData, setFormData] = useState({
-        instagram: "",
-        facebook: "",
-        linkedin: "",
-        xcom: ""
+  useEffect(() => {
+    const storedUser = sessionStorage.getItem("user");
 
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(formatUserData(parsedUser));
+      setFormData({
+        instagram: parsedUser.instagram_link || "",
+        facebook: parsedUser.facebook_link || "",
+        linkedin: parsedUser.linkedin_link || "",
+        xcom: parsedUser.xcom_link || "",
+      });
+      return; // Skip API call if user is already in sessionStorage
+    }
+
+    const fetchUserData = async () => {
+      try {
+        const token = sessionStorage.getItem("auth-token");
+        if (!token) {
+          console.error("No token found, user not authenticated.");
+          return;
+        }
+
+        const response = await fetch("https://server.capital-trust.eu/api/get-user-data", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status} - ${response.statusText}`);
+        }
+
+        const userData = await response.json();
+        sessionStorage.setItem("user", JSON.stringify(userData));
+
+        setUser(formatUserData(userData));
+        setFormData({
+          instagram: userData.instagram_link || "",
+          facebook: userData.facebook_link || "",
+          linkedin: userData.linkedin_link || "",
+          xcom: userData.xcom_link || "",
+        });
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const token = sessionStorage.getItem("auth-token");
+      if (!token) {
+        console.error("No token found, user not authenticated.");
+        return;
+      }
+
+      // Prepare the data to be sent
+      const dataToSend = {
+        instagram: formData.instagram || null,
+        facebook: formData.facebook || null,
+        linkedin: formData.linkedin || null,
+        xcom: formData.xcom || null,
+      };
+
+      const response = await fetch("https://server.capital-trust.eu/api/update-user-data", {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataToSend),
       });
 
-      useEffect(() => {
-        // ✅ Try to load user data from sessionStorage first
-        const storedUser = sessionStorage.getItem("user");
-        if (storedUser) {
-          const parsedUser = JSON.parse(storedUser);
-          setUser(formatUserData(parsedUser));
-          setFormData({
-            instagram: parsedUser.instagram_link || "",
-            facebook: parsedUser.facebook_link || "",
-            linkedin: parsedUser.linkedin_link || "",
-            xcom: parsedUser.xcom_link || "",
-
-          });
-          return; // ✅ Skip API call if data is already in sessionStorage
-        }
-    
-        // ✅ If no user data found, fetch from API
-        const fetchUserData = async () => {
-          try {
-            const token = sessionStorage.getItem("auth-token");
-            if (!token) {
-              console.error("No token found, user not authenticated.");
-              return;
-            }
-    
-            const response = await fetch("https://server.capital-trust.eu/api/get-user-data", {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-            });
-    
-            if (!response.ok) {
-              throw new Error(`Error: ${response.status} - ${response.statusText}`);
-            }
-    
-            const userData = await response.json(); // Backend returns user directly
-    
-            // ✅ Store in sessionStorage
-            sessionStorage.setItem("user", JSON.stringify(userData));
-    
-            // ✅ Update state with formatted data
-            setUser(formatUserData(userData));
-            setFormData({
-              instagram: userData.instagram_link || "",
-              facebook: userData.facebook_link || "",
-              linkedin: userData.linkedin_link || "",
-              xcom: userData.xcom_link || "",
-  
-            });
-          } catch (error) {
-            console.error("Error fetching user data:", error);
-          }
+      if (response.ok) {
+        // Update sessionStorage directly and update user and formData state
+        const currentUser = JSON.parse(sessionStorage.getItem("user") || "{}");
+        const updatedUser = {
+          ...currentUser,
+          instagram_link: dataToSend.instagram,
+          facebook_link: dataToSend.facebook,
+          linkedin_link: dataToSend.linkedin,
+          xcom_link: dataToSend.xcom,
         };
-    
-        fetchUserData();
-      }, []);
-    
 
-      const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData(prevData => ({ ...prevData, [name]: value }));
+        // Update sessionStorage with the new data
+        sessionStorage.setItem("user", JSON.stringify(updatedUser));
+
+        // Update state with the updated user and form data
+        setUser(formatUserData(updatedUser));
+        setFormData({
+          instagram: updatedUser.instagram_link || "",
+          facebook: updatedUser.facebook_link || "",
+          linkedin: updatedUser.linkedin_link || "",
+          xcom: updatedUser.xcom_link || "",
+        });
+
+        setAlert({
+          variant: "success",
+          title: "Changes saved successfully",
+          message: "",
+          show: true,
+        });
+      } else {
+        setAlert({
+          variant: "error",
+          title: "Error updating user data.",
+          message: "",
+          show: true,
+        });
+      }
+    } catch (error) {
+      setAlert({
+        variant: "error",
+        title: "Error updating user data.",
+        message: "",
+        show: true,
+      });
+      console.error("Error updating user data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const storedUser = sessionStorage.getItem("user");
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      setUser(formatUserData(parsedUser));
+      setFormData({
+        instagram: parsedUser.instagram_link || "",
+        facebook: parsedUser.facebook_link || "",
+        linkedin: parsedUser.linkedin_link || "",
+        xcom: parsedUser.xcom_link || "",
+      });
+    }
+  }, []);
+
+
+  const formatUserData = (userData: unknown) => {
+    if (
+      typeof userData === "object" &&
+      userData !== null &&
+      "first_name" in userData &&
+      "last_name" in userData &&
+      "city" in userData &&
+      "state" in userData &&
+      "position" in userData &&
+      "instagram_link" in userData &&
+      "facebook_link" in userData &&
+      "linkedin_link" in userData &&
+      "xcom_link" in userData
+    ) {
+      const { first_name, last_name, city, state, position, instagram_link, facebook_link, linkedin_link, xcom_link } = userData as {
+        first_name: string;
+        last_name: string;
+        city: string;
+        state: string;
+        position: string;
+        instagram_link: string;
+        facebook_link: string;
+        linkedin_link: string;
+        xcom_link: string;
       };
 
-      const handleSave = async () => {
-       
-        // Send updated data to the backend
-        try {
-          const token = sessionStorage.getItem("auth-token");
-          if (!token) {
-            console.error("No token found, user not authenticated.");
-            return;
-          }
-    
-          const response = await fetch("https://server.capital-trust.eu/api/update-user-data", {
-            method: "PUT", // or "PATCH" depending on your API
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData)
-          });
-    
-          if (response.ok) {
-            
-            // Update the sessionStorage with the new data
-            const currentUser = JSON.parse(sessionStorage.getItem("user") || "{}");
-            const updatedUser = {
-              ...currentUser, // This will keep other fields from the previous user data
-              instagram: formData.instagram, // Update the social links
-              facebook: formData.facebook,
-              linkedin: formData.linkedin,
-              xcom: formData.xcom,
-            };
-            sessionStorage.setItem("user", JSON.stringify(updatedUser));
-
-            setUser(updatedUser); // Update state
-            console.log("User data updated successfully!");
-            closeModal(); // Close the modal
-          } else {
-            console.error("Error updating user data.");
-          }
-        } catch (error) {
-          console.error("Error updating user data:", error);
-        }
+      return {
+        name: first_name || "name",
+        lastname: last_name || "lastname",
+        city: city || "city",
+        state: state || "Not provided",
+        position: position || "Not provided",
+        instagram: instagram_link || "instagram",
+        facebook: facebook_link || "facebook",
+        linkedin: linkedin_link || "linkedin",
+        xcom: xcom_link || "xcom",
       };
-
-      const formatUserData = (userData: unknown) => {
-        // Type guard: Ensure userData has all the necessary properties
-        if (
-          typeof userData === 'object' && 
-          userData !== null && 
-          'first_name' in userData && 
-          'last_name' in userData && 
-          'city' in userData && 
-          'state' in userData &&
-          'position' in userData &&  
-          'instagram_link' in userData && 
-          'facebook_link' in userData && 
-          'linkedin_link' in userData && 
-          'xcom_link' in userData
-          
-         
-        ) {
-          // Now we can safely access the properties
-          const { first_name, last_name, city, state, position, instagram_link, facebook_link, linkedin_link, xcom_link  } = userData as {
-            first_name: string;
-            last_name: string;
-            city: string;
-            state: string;
-            position: string;
-            instagram_link: string;
-            facebook_link: string;
-            linkedin_link: string;
-            xcom_link: string;
-
-           
-          };
-      
-          return {
-            name: first_name || "name",
-            lastname: last_name || "lastname",
-            city: city || "city",
-            state: state || "Not provided",
-            position: position || "Not provided",
-            instagram: instagram_link || "instagram",
-            facebook: facebook_link || "position",
-            linkedin: linkedin_link || "position",
-            xcom: xcom_link || "position",
-
-          };
-        } else {
-          // Return default values if userData doesn't match the expected structure
-          return {
-            name: "name",
-            lastname: "lastname",
-            city: "city",
-            state: "state",
-            position: "Not provided",
-            instagram: "instagram",
-            facebook: "position",
-            linkedin: "position",
-            xcom: "position",          };
-        }
+    } else {
+      return {
+        name: "name",
+        lastname: "lastname",
+        city: "city",
+        state: "state",
+        position: "Not provided",
+        instagram: "instagram",
+        facebook: "facebook",
+        linkedin: "linkedin",
+        xcom: "xcom",
       };
-      
-
+    }
+  };
 
   return (
     <>
@@ -332,7 +380,7 @@ export default function UserMetaCard() {
               Update your details to keep your profile up-to-date.
             </p>
           </div>
-          <form className="flex flex-col">
+          <form onSubmit={handleSave} className="flex flex-col">
             <div className="custom-scrollbar h-[450px] overflow-y-auto px-2 pb-3">
               <div>
                 <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
@@ -343,19 +391,19 @@ export default function UserMetaCard() {
                   <div>
                     <Label>Facebook</Label>
                     <Input
-                      type="text"
+                      type="text"  name="facebook"
                       defaultValue={user?.facebook} value={formData.facebook} onChange={handleChange}                   />
                   </div>
 
                   <div>
                     <Label>X.com</Label>
-                    <Input type="text" defaultValue={user?.xcom} value={formData.xcom} onChange={handleChange} />
+                    <Input type="text" name="xcom" defaultValue={user?.xcom} value={formData.xcom} onChange={handleChange} />
                   </div>
 
                   <div>
                     <Label>Linkedin</Label>
                     <Input
-                      type="text"
+                      type="text" name="linkedin"
                       defaultValue={user?.linkedin} value={formData.linkedin} onChange={handleChange}
                     />
                   </div>
@@ -363,7 +411,7 @@ export default function UserMetaCard() {
                   <div>
                     <Label>Instagram</Label>
                     <Input
-                      type="text"
+                      type="text" name="instagram"
                       defaultValue={user?.instagram} value={formData.instagram} onChange={handleChange}
                     />
                   </div>
@@ -371,13 +419,26 @@ export default function UserMetaCard() {
               </div>
            
             </div>
+            {alert.show && (
+        <Alert
+          variant={alert.variant}
+          title={alert.title}
+          message={alert.message}
+          showLink={false} 
+        />
+      )}
+      <br/>
             <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
               <Button size="sm" variant="outline" onClick={closeModal}>
                 Close
               </Button>
-              <Button size="sm" onClick={handleSave}>
-                Save Changes
-              </Button>
+              
+              <button
+                  type="submit" disabled={loading}
+                  className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
+                >
+                  {loading ? "Saving Changes..." : "Save Changes"}
+                </button>
             </div>
           </form>
         </div>

@@ -53,12 +53,14 @@ export default function TradingApp() {
   useEffect(() => {
     const fetchCoins = async () => {
       try {
-        const response = await axios.get("https://api.coingecko.com/api/v3/coins/markets", {
+        const response = await axios.get("https://pro-api.coingecko.com/api/v3/coins/markets", {
           params: {
             vs_currency: "usd",
             order: "market_cap_desc",
-            per_page: 10,
+            per_page: 20,
             page: 1,
+            x_cg_pro_api_key: "CG-8aPXtsAQq7PxPLcL89vgjaDT", // Replace with your actual API key
+
           },
         });
         setCryptoCoins(response.data);

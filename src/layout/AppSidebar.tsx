@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSidebar } from "../context/SidebarContext";
+
 import {
   CalenderIcon,
   ChevronDownIcon,
@@ -11,7 +12,7 @@ import {
   WalletIcon,
   HorizontaLDots,
   ListIcon,
- 
+ PageIcon,
   UserCircleIcon,
   InvoiceIcon,
 } from "../icons/index";
@@ -36,7 +37,7 @@ const navItems: NavItem[] = [
     subItems: [
       { name: "Overview", path: "/overview", pro: false },
       { name: "Spot", path: "/spot", pro: false },
-      { name: "Third-Party Wallet", path: "https://21bitcoin.app/en/download", pro: false,},// This opens the link in a new tab      
+      { name: "Wallet - Deposit", path: "/managewallet-deposit", pro: false,},// This opens the link in a new tab      
 
     ],
   },
@@ -44,8 +45,9 @@ const navItems: NavItem[] = [
     icon: <CalenderIcon />,
     name: "Orders",
     subItems: [
-      { name: "Spot Order - Trade", path: "/spotorder", pro: false },
-      { name: "Calendar", path: "/calendar", pro: false },
+      { name: "Spot Order - Trade", path: "/spotorder", pro: true },
+      { name: "Withdraw", path: "/withdraw", pro: false },
+      { name: "Calendar", path: "/calendar", new: true, pro: false },
       { name: "Transaction History", path: "/transactions", pro: false },
 
     ],
@@ -78,6 +80,11 @@ const navItems: NavItem[] = [
     icon:  <InvoiceIcon/>,
     name: "Unpaid",
     path: "/invoices",
+  },
+  {
+    icon:  <PageIcon/>,
+    name: "FAQs",
+    path: "/faqs",
   },
  
 ];

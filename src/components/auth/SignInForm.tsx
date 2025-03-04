@@ -68,7 +68,7 @@ export default function SignInForm() {
         // ✅ Add timeout for stability
         setTimeout(() => {
           router.replace(data.redirect);
-        }, 400);
+        }, 500);
       } else {
         throw new Error("Unexpected response from server.");
       }
@@ -119,7 +119,7 @@ export default function SignInForm() {
               <div>
                 <Label>Email <span className="text-error-500">*</span></Label>
                 <Input 
-                  placeholder="info@gmail.com" 
+                  placeholder="info@mail.com" 
                   type="email" 
                   value={email} 
                   onChange={(e) => setEmail(e.target.value)} 
