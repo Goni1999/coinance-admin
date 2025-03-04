@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react';
 
 const AdvancedSecurity: React.FC = () => {
@@ -36,15 +37,12 @@ const AdvancedSecurity: React.FC = () => {
     </div>
     <div className="flex flex-col lg:flex-row items-center gap-4">
       
-    <a
-  href="/managewallet-deposit" // Change this to your desired link
-  target="_blank" // Open the link in a new tab
-  rel="noopener noreferrer" // Security best practices
->
+    <Link href="/managewallet-deposit">
+
   <button className="bg-blue-500 text-gray-700 inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-7 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
     Manage Your Wallet
   </button>
-</a>
+</Link>
 
     </div>
   </div>

@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import React from "react";
 
 export const P2P = () => {
@@ -21,16 +22,13 @@ export const P2P = () => {
         <div className="flex flex-col items-center lg:items-end lg:flex-row md:flex-col md:items-center  justify-between mt-5" >
         <h6 className="lg:max-w-3xl  text-gray-500 dark:text-gray-400">P2P payment methods: When you sell cryptocurrencies, the payment method added will be displayed to buyer as options to accept payment, please ensure that the account owner’s name is consistent with your verified name on Binance. You can add up to 20 payment methods.
         </h6>
-        <a
-  href="/managewallet-deposit" // Change this to your desired link
-  target="_blank" // Open the link in a new tab
-  rel="noopener noreferrer" // Security best practices
->
+        <Link href="/managewallet-deposit">
+
         <button className="inline-flex   items-center lg:px-16 gap-2  md:mt-6 rounded-lg border border-gray-300 bg-white px-7 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
             
             Add a payment method
           </button>
-          </a>
+          </Link>
         </div>
         </div>
           

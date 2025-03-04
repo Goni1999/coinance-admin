@@ -54,9 +54,9 @@ const Steps: React.FC = () => {
         </p>
       </div>
 
-      <div className="text-center mt-6">
+      <div className="flex flex-col items-center mt-6">
         <a href="#" target="_blank" rel="noreferrer nofollow noopener">
-          <img src="/images/deposit/register.png" width="273" alt="Onboarding Image" className="rounded-lg shadow-md" />
+          <img src="/images/deposit/Send.png" width="273" alt="Onboarding Image" className="rounded-lg shadow-md" />
         </a>
       </div>
 
@@ -189,7 +189,7 @@ const Steps: React.FC = () => {
         </p>
       </div>
 
-      <div className="text-center mt-6">
+      <div className="flex flex-col items-center mt-6">
         <a href="#" target="_blank" rel="noreferrer nofollow noopener">
           <img src="/images/deposit/Send.jpg" width="273" alt="Onboarding Image" className="rounded-lg shadow-md" />
         </a>

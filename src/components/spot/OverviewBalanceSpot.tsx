@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Badge from "../ui/badge/Badge";
 import { ArrowUpIcon } from "@/icons";
 import CoinDropdown from "../ecommerce/coinDropdows";
+import Link from "next/link";
 
 // Fake balance data
 const fakeBalance = {
@@ -65,6 +66,8 @@ export const EstimatedBalance = () => {
         </div>*/}
         <div className="flex items-end justify-between mt-5">
         <div className="flex items-center  gap-3">
+        <Link href="/managewallet-deposit">
+
           <button className="inline-flex items-center lg:px-24 mt-4 gap-2 rounded-lg border border-gray-300 bg-white px-7 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
           <svg width="22" height="22" viewBox="-2.4 -2.4 28.80 28.80" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ffffff" transform="matrix(1, 0, 0, 1, 0, 0)rotate(0)">
 
@@ -77,6 +80,7 @@ export const EstimatedBalance = () => {
 </svg>
             Deposit
           </button>
+          </Link>
           <div className="relative group ">
 
           <button className="inline-flex items-center lg:px-20 gap-2 mt-4 rounded-lg border border-gray-300 bg-white px-7 py-2.5 text-theme-sm font-medium text-gray-500 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200 pointer-events-none cursor-not-allowed">
