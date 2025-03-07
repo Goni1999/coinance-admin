@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
-
+import { useTranslations } from "next-intl";
 export const BuyCrypto = () => {
+  const t = useTranslations();
   return (
     <div className="flex flex-col gap-4 sm:grid-cols-2 md:gap-6">
       {/* <!-- Metric Item Start --> */}
@@ -13,13 +14,13 @@ export const BuyCrypto = () => {
         <div className="flex items-end justify-between mt-5">
           <div>
             <span className="text-3xl text-gray-500 dark:text-gray-400">
-            Buy Crypto
+           {t("pay1")} 
             </span>
             
          
 
         <div className="flex items-end justify-between mt-5" style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        <h6 className=" text-gray-500 dark:text-gray-400">Manage the payment method of your credit and debit card on the buy crypto page
+        <h6 className=" text-gray-500 dark:text-gray-400">{t("pay2")}
 
         </h6>
         
@@ -88,7 +89,7 @@ export const BuyCrypto = () => {
               </linearGradient>
             </defs>
           </svg>
-          <div className="mt-6 text-gray-500 dark:text-gray-400">There are no payment method to manage.</div>
+          <div className="mt-6 text-gray-500 dark:text-gray-400">{t("pay3")}</div>
         </div>
         </div>
       {/* <!-- Metric Item Start --> 

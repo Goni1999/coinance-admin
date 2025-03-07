@@ -1,8 +1,11 @@
 'use client';
 import React from 'react';
+import { useTranslations } from "next-intl";
+import Link from 'next/link';
 
 const Tips = () => {
   // State to handle copying the referral link
+   const t = useTranslations();
  
   return (
     <div className="p-5">
@@ -14,7 +17,7 @@ const Tips = () => {
             <path d="M10.8333 13.3334L10.8332 11.1786L13.9225 8.08934L12.7439 6.91083L9.99986 9.65491L7.25578 6.91083L6.07727 8.08934L9.16653 11.1786L9.16665 13.3334H5.83334V17.5H9.16667V19.1667H10.8333V17.5H14.1667V13.3334H10.8333Z" fill="#76808F"></path>
             <defs><linearGradient id="paint0_linear_tooltip_g" x1="10" y1="13.3333" x2="10" y2="0.833312" gradientUnits="userSpaceOnUse"><stop stop-color="#F0B90B"></stop><stop offset="1" stop-color="#F8D33A"></stop></linearGradient></defs>
           </svg>
-          <h3 className="text-3xl text-gray-500 dark:text-gray-400 font-semibold">Tips</h3>
+          <h3 className="text-3xl text-gray-500 dark:text-gray-400 font-semibold">{t("ref7")}</h3>
         </div>
       </div>
 
@@ -22,20 +25,20 @@ const Tips = () => {
       <div className="flex flex-col llg:flex-row justify-between gap-x-6 mb-10">
         {/* Step 1 */}
         <div className=" p-5 border border-gray-300 rounded-lg mb-8">
-          <div className="text-2xl text-gray-500 dark:text-gray-400 font-semibold mb-3 text-left">Step 1</div>
-          <div className="text-lg text-gray-500 dark:text-gray-400 text-left">Share your referral link with friends</div>
+          <div className="text-2xl text-gray-500 dark:text-gray-400 font-semibold mb-3 text-left">{t("ref8")}</div>
+          <div className="text-lg text-gray-500 dark:text-gray-400 text-left">{t("ref9")}</div>
         </div>
 
         {/* Step 2 */}
         <div className=" p-5 border border-gray-300 rounded-lg mb-6">
-          <div className="text-2xl text-gray-500 dark:text-gray-400 font-semibold mb-3 text-left">Step 2</div>
-          <div className="text-lg text-gray-500 dark:text-gray-400 text-left">Invite friends to sign up and accumulatively deposit more than $50</div>
+          <div className="text-2xl text-gray-500 dark:text-gray-400 font-semibold mb-3 text-left">{t("ref10")}</div>
+          <div className="text-lg text-gray-500 dark:text-gray-400 text-left">{t("ref11")}</div>
         </div>
 
         {/* Step 3 */}
         <div className=" p-5 border border-gray-300 rounded-lg mb-6">
-          <div className="text-2xl text-gray-500 dark:text-gray-400 font-semibold mb-3 text-left">Step 3</div>
-          <div className="text-lg text-gray-500 dark:text-gray-400 text-left">Receive 100 USD cashback voucher each</div>
+          <div className="text-2xl text-gray-500 dark:text-gray-400 font-semibold mb-3 text-left">{t("ref12")}</div>
+          <div className="text-lg text-gray-500 dark:text-gray-400 text-left">{t("ref13")}</div>
         </div>
       </div>
 
@@ -57,19 +60,19 @@ const Tips = () => {
                 </linearGradient>
               </defs>
             </svg>
-            <div className="text-xl font-semibold text-gray-500 dark:text-gray-400">Rules</div>
+            <div className="text-xl font-semibold text-gray-500 dark:text-gray-400">{t("ref14")}</div>
           </div>
           <div className="text-lg text-gray-500 dark:text-gray-400 mb-4">
-            Share your Referral ID / link with a friend who does not have a Binance account.
+          {t("ref15")}
           </div>
           <div className="text-lg text-gray-500 dark:text-gray-400 mb-4">
-            <strong>Regular Task:</strong> Referees must accumulatively deposit more than $50 within 14 days of registration. Both referrer and referee will be rewarded with a 100 USD trading fee rebate voucher each.
+            <strong>{t("ref16")}:</strong> {t("ref17")}
           </div>
           <div className="text-sm text-gray-500 dark:text-gray-400 mb-5">
-            <strong>Disclaimer:</strong> You can only claim one reward per referral. For example, you will not be eligible for Referral Pro rewards if friends sign up using your [Referral Mode] ID / link.
+            <strong>{t("ref18")}:</strong> {t("ref19")}
           </div>
         </div>
-        <a href="/faqs" target="_blank" className="text-blue-500 hover:underline">FAQ</a>
+        <Link href="/faqs" className="text-blue-500 hover:underline">{t("ref20")}</Link>
       </div>
     </div>
   );

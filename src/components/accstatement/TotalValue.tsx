@@ -4,6 +4,7 @@ import Badge from "../ui/badge/Badge";
 import {  ArrowUpIcon } from "@/icons";
 import { useState, useEffect } from "react";
 import CoinDropdown from "../ecommerce/coinDropdows";
+import { useTranslations } from "next-intl";
 
 
 // Corrected coin IDs
@@ -68,7 +69,7 @@ export const TotalValue = () => {
       cardano: 0,
       staked_ether: 0,
     });
-  
+  const t = useTranslations();
     const [selectedCoin, setSelectedCoin] = useState<keyof Balance>("bitcoin");
     const [totalValue, setTotalValue] = useState<number>(0);
   
@@ -122,7 +123,7 @@ export const TotalValue = () => {
        {/*  <div className="flex items-center justify-center w-12 h-12 bg-gray-100 rounded-xl dark:bg-gray-800">
          <!-- Metric Item Start --><GroupIcon className="text-gray-800 size-6 dark:text-white/90" />  
         </div>*/}
-        <h1 className="text-3xl text-gray-500 dark:text-gray-400">Total Value</h1>
+        <h1 className="text-3xl text-gray-500 dark:text-gray-400">{t("totalvalue")}</h1>
 
         <div className="flex items-end justify-between mt-5">
           <div>
@@ -131,7 +132,7 @@ export const TotalValue = () => {
             </span>
             <div className="flex items-end justify-between mt-5">
           <div>
-            <span className="text-sm text-gray-500 dark:text-gray-400">Estimated Balance</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">{t("estimatedbalance")}</span>
             <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
               {balance[selectedCoin] || 0}{" "}
               <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -145,7 +146,7 @@ export const TotalValue = () => {
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-7 2xl:gap-x-32">
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-              Spot
+              {t("spot")}
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
               -- BTC
@@ -157,7 +158,7 @@ export const TotalValue = () => {
 
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-              Funding
+              {t("funding")}
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
               -- BTC

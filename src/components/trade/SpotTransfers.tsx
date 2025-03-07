@@ -1,8 +1,10 @@
 'use client';
 import React, { useState } from "react";
+import { useTranslations } from 'next-intl';
 
 const SpotTransfers = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const t = useTranslations();
 
  
 
@@ -20,7 +22,7 @@ const SpotTransfers = () => {
         <div className="flex flex-col gap-2 px-5 mb-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div>
             <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-              Spot Transactions
+            {t("trade2")} 
             </h3>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -61,28 +63,28 @@ const SpotTransfers = () => {
                 <thead className="border-gray-200 border-y dark:border-gray-800">
                   <tr>
                     <th className="py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      Time
+                    {t("trade3")} 
                     </th>
                     <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      Type
+                    {t("trade4")} 
                     </th>
                     <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      Deposit Wallet
+                    {t("trade5")} 
                     </th>
                     <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      Coin
+                    {t("trade6")} 
                     </th>
                     <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      Amount
+                    {t("trade7")} 
                     </th>
                     <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      Destination
+                    {t("trade8")} 
                     </th>
                     <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      TxID
+                    {t("trade9")} 
                     </th>
                     <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      Status details
+                    {t("trade10")} 
                     </th>
                   </tr>
                 </thead>

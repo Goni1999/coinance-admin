@@ -1,8 +1,12 @@
 'use client';
 import React, { useState, useEffect } from "react";
 import Alert from "../ui/alert/Alert";
+import { useTranslations } from 'next-intl';
+
 const TwoFactor: React.FC = () => {
   const [, setMessage] = useState("");
+    const t = useTranslations();
+  
  const [user, setUser] = useState<{
      email: string;
      phone: string;
@@ -127,7 +131,7 @@ const TwoFactor: React.FC = () => {
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <h4 className="text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-6">
-            Two-Factor Authentication (2FA)
+           {t("sec14")} 
           </h4>
           <div className="mb-6">
             <div className="flex items-center gap-4 mb-4">
@@ -145,14 +149,14 @@ const TwoFactor: React.FC = () => {
                 ></path>
               </svg>
               <p className="text-md leading-normal text-gray-500 dark:text-gray-400">
-                To increase your account security, it is recommended to enable 2FA, using your email to provide code.
+           {t("sec18")}  
               </p>
             </div>
             <a
               href="##"
               className="text-md text-gray-500 dark:text-gray-400"
             >
-              By default is enabled 2FA using your email
+             {t("sec19")} 
             </a>
           </div>
 
@@ -175,11 +179,11 @@ const TwoFactor: React.FC = () => {
                 ></path>
               </svg>
               <p className="text-md leading-normal text-gray-500 dark:text-gray-400">
-                Email
+              {t("sec20")} 
               </p>
             </div>
             <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-              Use your email to protect your account and transactions.
+            {t("sec21")} 
             </p>
             <div className="flex items-center justify-between mt-2">
               <div className="text-sm text-gray-800 dark:text-white/90">
@@ -206,11 +210,11 @@ const TwoFactor: React.FC = () => {
                 ></path>
               </svg>
               <p className="text-md leading-normal text-gray-500 dark:text-gray-400">
-                Phone Number
+              {t("sec22")} 
               </p>
             </div>
             <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-              Use your phone number to protect your account and transactions.
+            {t("sec23")} 
             </p>
             <div className="flex items-center justify-between mt-2">
               <div className="text-sm text-gray-800 dark:text-white/90">
@@ -249,17 +253,17 @@ const TwoFactor: React.FC = () => {
         ></path>
       </svg>
       <p className="text-md leading-normal text-gray-500 dark:text-gray-400">
-        Login Password
+      {t("sec24")} 
       </p>
       </div>
       <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-        Login password is used to log in to your account.
+      {t("sec25")} 
       </p>
     </div>
     <div className="flex flex-col lg:flex-row items-center gap-4">
       
       <button onClick={handleRequestReset} className=" text-gray-700 inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-7 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
-        Reset Password
+      {t("sec26")} 
       </button>
     </div>
   </div>

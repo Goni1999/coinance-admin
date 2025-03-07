@@ -8,6 +8,7 @@ import Label from "@/components/form/Label";
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "@/icons";
 import Link from "next/link";
 import Alert from "../ui/alert/Alert";
+import { useTranslations } from "next-intl";
 export default function SignInForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -16,7 +17,7 @@ export default function SignInForm() {
   const [isChecked, setIsChecked] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
+  const t = useTranslations();
   const [alert, setAlert] = useState<{
       variant: "success" | "error" | "warning" | "info";
       title: string;
@@ -98,7 +99,7 @@ export default function SignInForm() {
           className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
         >
           <ChevronLeftIcon />
-          Back
+          {t("back")}
         </Link>
       </div>
 
@@ -107,17 +108,17 @@ export default function SignInForm() {
        
           <div className="mb-5 sm:mb-8">
             <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
-              Sign In
+            {t("signin")}
             </h1>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Enter your email and password to sign in!
+            {t("signinp1")} 
             </p>
           </div>
 
           <form onSubmit={handleSubmit}>
             <div className="space-y-6">
               <div>
-                <Label>Email <span className="text-error-500">*</span></Label>
+                <Label>{t("signinemail")} <span className="text-error-500">*</span></Label>
                 <Input 
                   placeholder="info@mail.com" 
                   type="email" 
@@ -127,11 +128,11 @@ export default function SignInForm() {
               </div>
 
               <div>
-                <Label>Password <span className="text-error-500">*</span></Label>
+                <Label>{t("signinpass")} <span className="text-error-500">*</span></Label>
                 <div className="relative">
                   <Input
                     type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
+                    placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
@@ -156,14 +157,14 @@ export default function SignInForm() {
                     onChange={handleCheckboxChange}
                   />
                   <span className="block font-normal text-gray-700 text-theme-sm dark:text-gray-400">
-                    Keep me logged in
+                  {t("signinkeepme")}
                   </span>
                 </div>
                 <Link
                   href="/reset-password"
                   className="text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400"
                 >
-                  Forgot password?
+                  {t("signinforgot")}
                 </Link>
               </div>
 
@@ -174,7 +175,7 @@ export default function SignInForm() {
                   type="submit" disabled={loading}
                   className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
                 >
-                  {loading ? "Signing in..." : "Sign in"}
+                  {loading ? `${t("Signing in...")}` : `${t("signin")}` }
                 </button>
               </div>
             </div>
@@ -182,12 +183,12 @@ export default function SignInForm() {
 
           <div className="mt-5">
             <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
-              Don&apos;t have an account?{" "}
+            {t("signindonthave")}{" "}
               <Link
                 href="/signup"
                 className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
               >
-                Sign Up
+                {t("signup")}
               </Link>
             </p>
           </div>

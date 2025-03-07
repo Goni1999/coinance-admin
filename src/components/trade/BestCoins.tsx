@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import { useTranslations } from 'next-intl';
 type Coin = {
   id: string;
   name: string;
@@ -14,7 +14,7 @@ type Coin = {
 const BestCoins = () => {
   const [coins, setCoins] = useState<Coin[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-
+  const t = useTranslations();
   useEffect(() => {
     const fetchCoins = async () => {
       try {
@@ -40,7 +40,7 @@ const BestCoins = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>{t("trade1")}</div>;
   }
 
   return (

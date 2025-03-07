@@ -1,11 +1,13 @@
+'use client';
 import React from 'react';
-
-const FinancialReports: React.FC = () => {
+import { useTranslations } from 'next-intl';
+export default function FinancialReports() {
+const t = useTranslations();
   return (
     <div className="px-m py-0 tablet:px-[64px] tablet:py-xl bg-CardBg min-h-[calc(100vh-100px)]">
       <div className="bn-flex" style={{ flexDirection: 'column', gap: 'var(--space-xl)' }}>
         <div className="flex items-end justify-between mt-5" style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-          <h1 className="text-gray-500 dark:text-gray-400">Financial Reports</h1>
+          <h1 className="text-gray-500 dark:text-gray-400">{t("financial1")}</h1>
           <button className="inline-flex items-center lg:px-20 gap-2 mt-4 rounded-lg border border-gray-300 bg-white px-7 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
             
                      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="bn-svg">
@@ -16,7 +18,7 @@ const FinancialReports: React.FC = () => {
                 fill="currentColor"
               ></path>
             </svg>
-            Refresh
+            {t("financial2")}
           </button>
         </div>
         <div className="flex mt-16" style={{ flexDirection: 'column', alignItems: 'center', gap: 'var(--space-xl)' }}>
@@ -79,11 +81,10 @@ const FinancialReports: React.FC = () => {
               </linearGradient>
             </defs>
           </svg>
-          <div className="mt-6 text-gray-500 dark:text-gray-400" >There are no documents generated for you at this time.</div>
+          <div className="mt-6 text-gray-500 dark:text-gray-400" >{t("financial3")}</div>
         </div>
       </div>
     </div>
   );
 };
 
-export default FinancialReports;

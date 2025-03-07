@@ -3,13 +3,13 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-
+import { useTranslations } from "next-intl";
 const EmailVerify = () => {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
-
+const t = useTranslations();
   useEffect(() => {
     // Get token from URL query parameters
     const urlParams = new URLSearchParams(window.location.search);
@@ -48,7 +48,7 @@ const EmailVerify = () => {
     <div className="flex flex-col flex-1 lg:w-1/2 w-full">
 
     <div className="flex flex-col items-center justify-center h-screen text-center">
-      {loading && <p className="text-lg text-gray-700">Verifying email, please wait...</p>}
+      {loading && <p className="text-lg text-gray-700">{t("verifyingemail")}</p>}
 
       {error && <p className="text-lg text-red-500">{error}</p>}
       {message && <p className="text-lg text-green-500">{message}</p>}

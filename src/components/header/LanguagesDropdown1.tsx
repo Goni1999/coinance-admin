@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Dropdown } from "../ui/dropdown/Dropdown";
+import { Dropdown1 } from "../ui/dropdown/Dropdown1";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { useTranslations } from 'next-intl';
 
@@ -24,7 +24,7 @@ const updateUrlWithLocale = (url: string, locale: string) => {
   return `${urlObj.origin}/${pathSegments.join("/")}`;
 };
 
-export default function LanguageDropdown() {
+export default function LanguageDropdown1() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState("en");
   const t = useTranslations();
@@ -64,14 +64,14 @@ export default function LanguageDropdown() {
           {currentLanguageData?.flag}
         </span>
       </button>
-      <Dropdown
+      <Dropdown1
         isOpen={isOpen}
         onClose={closeDropdown}
         className="absolute mt-[17px] w-[200px] rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark"
       >
         <div className="flex items-center justify-between pb-3 mb-3 border-b border-gray-100 dark:border-gray-700">
           <h5 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-           {t("header1")} 
+          {t("header1")} 
           </h5>
           <button
             onClick={closeDropdown}
@@ -101,7 +101,7 @@ export default function LanguageDropdown() {
             </li>
           ))}
         </ul>
-      </Dropdown>
+      </Dropdown1>
     </div>
   );
 }

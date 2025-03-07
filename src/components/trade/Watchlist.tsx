@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 
 type Coin = {
   id: string;
@@ -14,6 +15,7 @@ type Coin = {
 const Watchlist = () => {
   const [coins, setCoins] = useState<Coin[]>([]);
   const [visibleCount, setVisibleCount] = useState(5);
+  const t = useTranslations();
 
   useEffect(() => {
     // Fetch the coin data from the API
@@ -81,7 +83,7 @@ const Watchlist = () => {
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-white/[0.03]">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">My Watchlist</h3>
+        <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">{t("trade31")}</h3>
       </div>
       <div className="flex h-[372px] flex-col">
         <div className="flex flex-col h-auto pr-3 overflow-y-auto custom-scrollbar" onScroll={handleScroll}>

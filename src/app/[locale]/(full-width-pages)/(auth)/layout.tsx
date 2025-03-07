@@ -7,7 +7,7 @@ import ThemeTogglerTwo from "@/components/common/ThemeTogglerTwo";
 import Image from "next/image";
 import Link from "next/link";
 import { ReactNode } from "react";
-
+import LanguageDropdown1 from "@/components/header/LanguagesDropdown1";
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <SessionProvider>
@@ -15,9 +15,15 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <body className="relative p-6 bg-white z-1 dark:bg-gray-900 sm:p-0">
           <ThemeProvider>
             <div className="relative flex lg:flex-row w-full h-screen justify-center flex-col dark:bg-gray-900 sm:p-0">
+            <div className="fixed top-6 right-6 z-50">
+                <LanguageDropdown1 />
+            </div>
               {children}
+              
               {/* Sidebar for large screens */}
               <div className="lg:w-1/2 w-full h-full bg-brand-950 dark:bg-white/5 lg:grid items-center hidden">
+              
+
                 <div className="relative flex items-center justify-center z-1">
                   <GridShape />
                   <div className="flex flex-col items-center max-w-xs">
@@ -36,9 +42,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 </div>
               </div>
               {/* Theme toggler */}
-              <div className="fixed bottom-6 right-6 z-50 hidden sm:block">
-                <ThemeTogglerTwo />
-              </div>
+              <div className="fixed bottom-6 right-6 z-50">
+              <ThemeTogglerTwo />
+            </div>
+
             </div>
           </ThemeProvider>
         </body>

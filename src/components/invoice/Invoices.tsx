@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-
+import { useTranslations } from "next-intl";
 type Invoice = {
   id: number;
   user_id: string; // Assuming user_id is a string (varchar in DB)
@@ -20,7 +20,7 @@ const Invoices = () => {
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
+const t = useTranslations();
   // Fetch invoices when the component mounts
   useEffect(() => {
     const fetchInvoices = async () => {
@@ -56,11 +56,7 @@ const Invoices = () => {
     setSelectedInvoice(invoice);
   };
 
-  const handleProceedToPayment = () => {
-    if (selectedInvoice) {
-      alert(`Proceeding to payment for invoice #${selectedInvoice.id}`);
-    }
-  };
+ 
 
   // Handle download by redirecting the user to the PDF link
   const handleDownloadInvoice = () => {
@@ -95,15 +91,15 @@ const Invoices = () => {
   return (
     <div className="p-4 mx-auto max-w-screen-2xl md:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-        <h2 className="text-xl font-semibold text-gray-800 dark:text-white/90">Invoices</h2>
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-white/90">{t("inv1")}</h2>
         <nav>
           <ol className="flex items-center gap-1.5">
             <li>
               <Link className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400" href="/">
-                Home
+              {t("inv2")}
               </Link>
             </li>
-            <li className="text-sm text-gray-800 dark:text-white/90">Invoices</li>
+            <li className="text-sm text-gray-800 dark:text-white/90">{t("inv1")}</li>
           </ol>
         </nav>
       </div>
@@ -120,7 +116,7 @@ const Invoices = () => {
               >
                 <div>
                   <span className="mb-0.5 block text-sm font-medium text-gray-800 dark:text-white/90">
-                    Invoice #{invoice.id}
+                  {t("inv3")} #{invoice.id}
                   </span>
                   <span className="block text-gray-500 text-theme-xs dark:text-gray-400">{invoice.status}</span>
                 </div>
@@ -133,43 +129,44 @@ const Invoices = () => {
         {selectedInvoice && (
           <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] xl:w-4/5">
             <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800">
-              <h3 className="font-medium text-gray-800 text-theme-xl dark:text-white/90">Invoice</h3>
+              <h3 className="font-medium text-gray-800 text-theme-xl dark:text-white/90">{t("inv3")}</h3>
               <h4 className="text-base font-medium text-gray-700 dark:text-gray-400">ID : #{selectedInvoice.id}</h4>
             </div>
             <div className="p-5 xl:p-8">
               <div className="flex flex-col gap-6 mb-9 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <span className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-400">From</span>
+                  <span className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-400">{t("inv4")}</span>
                   <h5 className="mb-2 text-base font-semibold text-gray-800 dark:text-white/90">Capital Trust</h5>
                   <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
                     NY City, USA
                   </p>
-                  <span className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">Issued On:</span>
+                  <span className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">{t("inv5")}:</span>
                   <span className="block text-sm text-gray-500 dark:text-gray-400">{formatDate(selectedInvoice.issued_date)}</span>
                 </div>
               </div>
               <div className="pb-6 my-6 text-right border-b border-gray-100 dark:border-gray-800">
-                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">Sub Total amount: $ {selectedInvoice.sub_total}</p>
+                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">{t("inv6")}: $ {selectedInvoice.sub_total}</p>
                 <p className="mb-3 text-sm text-gray-500 dark:text-gray-400">
-                  Vat ({selectedInvoice.vat}%): $ {selectedInvoice.sub_total * (selectedInvoice.vat / 100)}
+                {t("inv7")} ({selectedInvoice.vat}%): $ {selectedInvoice.sub_total * (selectedInvoice.vat / 100)}
                 </p>
                 <p className="text-lg font-semibold text-gray-800 dark:text-white/90">
-                  Total : $ {selectedInvoice.total}
+                {t("inv8")} : $ {selectedInvoice.total}
                 </p>
               </div>
 
               <div className="flex items-center justify-end gap-3">
+                <Link href="/managewallet-deposit">
                 <button
                   className="flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
-                  onClick={handleProceedToPayment}
+                  
                 >
-                  Proceed to payment
-                </button>
+                 {t("inv9")} 
+                </button></Link>
                 <button
                   className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-white rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
                   onClick={handleDownloadInvoice}
                 >
-                  Download Invoice
+                 {t("inv10")} 
                 </button>
               </div>
             </div>

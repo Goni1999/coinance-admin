@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { ApexOptions } from "apexcharts";
+import { useTranslations } from 'next-intl';
 
 // Dynamically import the ReactApexChart component with ssr: false
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
@@ -45,6 +46,7 @@ export default function TradingApp() {
     btc: 0,
     usdt: 1000.0,
   });
+  const t = useTranslations();
 
   const [previousPrice, setPreviousPrice] = useState<number | null>(null); // Store previous price for comparison
   const [, setPriceChangeColor] = useState<string>(""); // For changing color of price
@@ -53,13 +55,12 @@ export default function TradingApp() {
   useEffect(() => {
     const fetchCoins = async () => {
       try {
-        const response = await axios.get("https://pro-api.coingecko.com/api/v3/coins/markets", {
+        const response = await axios.get("https://api.coingecko.com/api/v3/coins/markets", {
           params: {
             vs_currency: "usd",
             order: "market_cap_desc",
             per_page: 20,
             page: 1,
-            x_cg_pro_api_key: "CG-8aPXtsAQq7PxPLcL89vgjaDT", // Replace with your actual API key
 
           },
         });
@@ -291,8 +292,8 @@ export default function TradingApp() {
           <table className="min-w-full table-auto">
             <thead className="bg-gray-100 text-gray-700">
               <tr>
-                <th className="px-4 py-2 text-left">Coins Data</th>
-                <th className="px-4 py-2 text-left">Amount</th>
+                <th className="px-4 py-2 text-left">{t("trade21")}</th>
+                <th className="px-4 py-2 text-left">{t("trade30")}Amount</th>
               </tr>
             </thead>
             <tbody>
@@ -301,23 +302,23 @@ export default function TradingApp() {
                 <td className="px-4 py-2">{balance.btc}</td>
               </tr>
               <tr className="border-b">
-                <td className="px-4 py-2">USDT Balance</td>
+                <td className="px-4 py-2">{t("trade22")}</td>
                 <td className="px-4 py-2">${balance.usdt.toFixed(2)}</td>
               </tr>
               <tr className="border-b">
-                <td className="px-4 py-2">Price of {selectedCoin?.name}</td>
+                <td className="px-4 py-2">{t("trade23")} {selectedCoin?.name}</td>
                 <td className="px-4 py-2">${selectedCoin?.current_price.toFixed(2)}</td>
               </tr>
               <tr className="border-b">
-                <td className="px-4 py-2">Last Trade</td>
+                <td className="px-4 py-2">{t("trade24")}</td>
                 <td className="px-4 py-2">${selectedCoin?.current_price.toFixed(2)}</td>
               </tr>
               <tr className="border-b">
-                <td className="px-4 py-2">Mark Price</td>
+                <td className="px-4 py-2">{t("trade25")}</td>
                 <td className="px-4 py-2">${selectedCoin?.current_price.toFixed(2)}</td>
               </tr>
               <tr className="border-b">
-  <td className="px-4 py-2">24h Change</td>
+  <td className="px-4 py-2">{t("trade26")}</td>
   <td className="px-4 py-2">
     {selectedCoin ? (
       <span
@@ -333,7 +334,7 @@ export default function TradingApp() {
   </td>
 </tr>
 <tr className="border-b">
-  <td className="px-4 py-2">24h High</td>
+  <td className="px-4 py-2">{t("trade27")}</td>
   <td className="px-4 py-2">
     {selectedCoin ? (
       <span
@@ -350,7 +351,7 @@ export default function TradingApp() {
 </tr>
 
 <tr className="border-b">
-  <td className="px-4 py-2">24h Low</td>
+  <td className="px-4 py-2">{t("trade28")}</td>
   <td className="px-4 py-2">
     {selectedCoin ? (
       <span
@@ -367,7 +368,7 @@ export default function TradingApp() {
 </tr>
 
               <tr>
-                <td className="px-4 py-2">24h Volume</td>
+                <td className="px-4 py-2">{t("trade29")}</td>
                 <td className="px-4 py-2 text-gray-500">N/A {selectedCoin?.name}</td>
               </tr>
             </tbody>

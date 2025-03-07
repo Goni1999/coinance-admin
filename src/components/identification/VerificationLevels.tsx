@@ -1,12 +1,14 @@
+'use client';
 import Link from 'next/link';
 import React from 'react';
-
+import { useTranslations } from 'next-intl';
 const VerificationLevels: React.FC = () => {
+  const t = useTranslations();
   return (
     <div className="css-vurnku">
       <div className="css-vurnku">
         <div className="css-1d6nk9p">
-          <div data-bn-type="text" className="css-v9337m"> <h1 className='text-xl lg:text-3xl text-gray-700 dark:text-gray-200'>Verification Levels</h1></div>
+          <div data-bn-type="text" className="css-v9337m"> <h1 className='text-xl lg:text-3xl text-gray-700 dark:text-gray-200'>{t("ident16")}</h1></div>
         </div>
         <div className="css-nga4y6">
           {/* First Verification Level */}
@@ -17,9 +19,9 @@ const VerificationLevels: React.FC = () => {
               </svg>
             </div>
             <div className="css-1nkwd9v ml-4 mt-12">
-              <div data-bn-type="text" className="css-yf6v6g text-green-500 dark:text-green-400">Verified</div>
-              <div data-bn-type="text" className="css-14zn9b2 text-gray-700 dark:text-gray-200">Fiat Limit of 100K USD Daily</div>
-              <div data-bn-type="text" className="css-15u79n8 text-gray-500 dark:text-gray-400">Verified:</div>
+              <div data-bn-type="text" className="css-yf6v6g text-green-500 dark:text-green-400">{t("ident15")}</div>
+              <div data-bn-type="text" className="css-14zn9b2 text-gray-700 dark:text-gray-200">{t("ident17")}</div>
+              <div data-bn-type="text" className="css-15u79n8 text-gray-500 dark:text-gray-400">{t("ident15")}:</div>
             </div>
           </div>
 
@@ -31,9 +33,9 @@ const VerificationLevels: React.FC = () => {
               </svg>
             </div>
             <div className="css-1nkwd9v ml-4 mt-12">
-              <div data-bn-type="text" className="css-egoftg text-gray-500 dark:text-gray-400">Verified Plus</div>
-              <div data-bn-type="text" className="css-14zn9b2 text-gray-700 dark:text-gray-200">Fiat Limit of 4M USD Daily</div>
-              <div data-bn-type="text" className="css-15u79n8 text-gray-500 dark:text-gray-400">Required:</div>
+              <div data-bn-type="text" className="css-egoftg text-gray-500 dark:text-gray-400">{t("ident18")}</div>
+              <div data-bn-type="text" className="css-14zn9b2 text-gray-700 dark:text-gray-200">{t("ident19")}</div>
+              <div data-bn-type="text" className="css-15u79n8 text-gray-500 dark:text-gray-400">{t("ident20")}:</div>
             </div>
           </div>
 
@@ -45,11 +47,11 @@ const VerificationLevels: React.FC = () => {
               </svg>
             </div>
             <div className="css-1nkwd9v ml-4 mt-16">
-              <div data-bn-type="text" className="css-egoftg text-gray-500 dark:text-gray-400">Verified Plus</div>
-              <div data-bn-type="text" className="css-14zn9b2 text-gray-700 dark:text-gray-200">Higher Fiat Limits</div>
-              <div data-bn-type="text" className="css-15u79n8 text-gray-500 dark:text-gray-400">Required:</div>
+              <div data-bn-type="text" className="css-egoftg text-gray-500 dark:text-gray-400">{t("ident18")}</div>
+              <div data-bn-type="text" className="css-14zn9b2 text-gray-700 dark:text-gray-200">{t("ident21")}</div>
+              <div data-bn-type="text" className="css-15u79n8 text-gray-500 dark:text-gray-400">{t("ident20")}:</div>
               <div id="StyleWrapper" className="css-h21u74">
-                <div data-bn-type="text" className="css-4xllew text-gray-500 dark:text-gray-400">&nbsp;&nbsp;Enhanced due diligence</div>
+                <div data-bn-type="text" className="css-4xllew text-gray-500 dark:text-gray-400">&nbsp;&nbsp;{t("ident22")}</div>
               </div>
             </div>
           </div>
@@ -63,13 +65,13 @@ const VerificationLevels: React.FC = () => {
       {/* FAQ Section */}
       <div className="css-vurnku">
         <div className="css-8oj9i9">
-          <div data-bn-type="text" className="css-v9337m text-gray-700 dark:text-gray-200">FAQ</div>
+          <div data-bn-type="text" className="css-v9337m text-gray-700 dark:text-gray-200">{t("ident23")}</div>
         </div>
         <div className="css-vurnku">
           <div className="css-jlji81">
             <Link href="/faqs" className="css-qfa0d5">
             
-              <div data-bn-type="text" className="css-1cjl26j text-gray-500 dark:text-gray-400">Identity Verification</div>
+              <div data-bn-type="text" className="css-1cjl26j text-gray-500 dark:text-gray-400">{t("ident24")}</div>
             </Link>
           </div>
         </div>

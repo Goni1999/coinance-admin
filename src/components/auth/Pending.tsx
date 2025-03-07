@@ -4,11 +4,11 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-
+import { useTranslations } from "next-intl";
 const Pending = () => {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(true);
-
+const t = useTranslations();
   useEffect(() => {
     const token = sessionStorage.getItem("auth-token");
     if (!token) {
@@ -71,17 +71,17 @@ const Pending = () => {
               strokeLinejoin="round"
             />
           </svg>
-          Back
+          {t("back")}
         </Link>
       </div>
 
       <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
         <div className="mb-5 sm:mb-8 text-center">
           <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
-            Your Request is Pending
+          {t("requestpending")}
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            We are currently processing your request. Please check back later for updates.
+          {t("pendingp1")}
           </p>
         </div>
 
@@ -110,9 +110,9 @@ const Pending = () => {
 
         <div className="mt-5 text-center">
           <p className="text-sm font-normal text-gray-700 dark:text-gray-400">
-            Need help?{" "}
-            <Link className="text-brand-500 hover:text-brand-600 dark:text-brand-400" href="/support">
-              Contact Support
+          {t("needhelp")}{" "}
+            <Link className="text-brand-500 hover:text-brand-600 dark:text-brand-400" href="https://www.capital-trust.eu/support">
+            {t("contactsupport")}
             </Link>
           </p>
         </div>

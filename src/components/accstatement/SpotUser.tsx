@@ -3,10 +3,11 @@ import React, { useState } from "react";
 import Badge from "../ui/badge/Badge";
 import { ArrowUpIcon } from "@/icons";
 import CoinDropdown from "../ecommerce/coinDropdows"; // Ensure this is the correct path
+import { useTranslations } from "next-intl";
 
 // Dummy balance data for example purposes
 const dummyBalance = {
-  bitcoin: 0,
+    bitcoin: 0,
     ethereum: 0,
     xrp: 0,
     tether: 0,
@@ -20,79 +21,39 @@ const dummyBalance = {
 };
 
 export const SpotUser = () => {
-  const [selectedCoin, setSelectedCoin] = useState<keyof typeof dummyBalance>("bitcoin");
-  const [balance, setBalance] = useState<number>(dummyBalance[selectedCoin]);
-
-  // Handle coin selection change
-  const handleCoinChange = (coin: keyof typeof dummyBalance) => {
-    setSelectedCoin(coin);
-    setBalance(dummyBalance[coin]);  // Update balance based on selected coin
-  };
+ const [selectedCoin, setSelectedCoin] = useState<keyof typeof dummyBalance>("bitcoin");
+   const t = useTranslations();
+ 
+   // Handle coin selection change
+   const handleCoinChange = (coin: keyof typeof dummyBalance) => {
+     setSelectedCoin(coin);
+   };
 
   return (
     <div className="flex flex-col gap-4 sm:grid-cols-2 md:gap-6">
-      <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-        <div className="flex items-end justify-between mt-5">
-          <div>
-            <span className="text-3xl text-gray-500 dark:text-gray-400">Spot</span>
+    <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
+      <div className="flex items-end justify-between mt-5">
+        <div>
+          <span className="text-3xl text-gray-500 dark:text-gray-400">
+            {t("spot")}
+            </span>
             <br />
-            <h6 className="text-gray-500 dark:text-gray-400">Total Balance</h6>
+            <h6 className=" text-gray-500 dark:text-gray-400">{t("totalbalance")}</h6>
+
             <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-              {balance.toFixed(2)}
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              0.00 <p className="text-sm text-gray-500 dark:text-gray-400">
                 <CoinDropdown
                   selectedCoin={selectedCoin}
                   onCoinChange={handleCoinChange}
                   balance={dummyBalance}
                 />
-                ≈ {balance.toFixed(2)} {selectedCoin.toUpperCase()}
+                ≈ -- USDT
               </p>
             </h4>
           </div>
           <Badge color="success">
             <ArrowUpIcon />
-            {balance.toFixed(2)}
-          </Badge>
-        </div>
-        <hr />
-      </div>
-    </div>
-  );
-};
-
-export const FundingUser = () => {
-  const [selectedCoin, setSelectedCoin] = useState<keyof typeof dummyBalance>("bitcoin");
-  const [balance, setBalance] = useState<number>(dummyBalance[selectedCoin]);
-
-  // Handle coin selection change
-  const handleCoinChange = (coin: keyof typeof dummyBalance) => {
-    setSelectedCoin(coin);
-    setBalance(dummyBalance[coin]);  // Update balance based on selected coin
-  };
-
-  return (
-    <div className="flex flex-col gap-4 sm:grid-cols-2 md:gap-6">
-      <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-        <div className="flex items-end justify-between mt-5">
-          <div>
-            <span className="text-3xl text-gray-500 dark:text-gray-400">Funding</span>
-            <br />
-            <h6 className="text-gray-500 dark:text-gray-400">Total Balance</h6>
-            <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-              {balance.toFixed(2)}
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                <CoinDropdown
-                  selectedCoin={selectedCoin}
-                  onCoinChange={handleCoinChange}
-                  balance={dummyBalance}
-                />
-                ≈ {balance.toFixed(2)} {selectedCoin.toUpperCase()}
-              </p>
-            </h4>
-          </div>
-          <Badge color="success">
-            <ArrowUpIcon />
-            {balance.toFixed(2)}
+            0.00
           </Badge>
         </div>
         <br />
@@ -157,7 +118,7 @@ export const FundingUser = () => {
               </linearGradient>
             </defs>
           </svg>
-          <div className="mt-6 text-gray-500 dark:text-gray-400">There are no documents generated for you at this time.</div>
+          <div className="mt-6 text-gray-500 dark:text-gray-400">{t("fundingp")}</div>
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { ApexOptions } from "apexcharts";
 import { useEffect, useState } from "react";
 import { MoreDotIcon } from "@/icons";
+import { useTranslations } from "next-intl";
 // Dynamically import ReactApexChart
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -30,6 +31,7 @@ const coinIds: { [key: string]: string } = {
 };
 
 export default function MonthlyTarget() {
+  const t = useTranslations();
   const [data, setData] = useState<ProfitData | null>(null); // Allow null for initial state
   const [prices, setPrices] = useState<{ [key: string]: { usd: number } }>({});
   const [loading, setLoading] = useState(true);
@@ -83,15 +85,15 @@ export default function MonthlyTarget() {
   }, []);
 
   if (loading) {
-    return <div className="text-center text-gray-500">Loading...</div>;
+    return <div className="text-center text-gray-500">{t("ecommontar1")}</div>;
   }
 
   if (error) {
-    return <div className="text-center text-red-500">Error: {error}</div>;
+    return <div className="text-center text-red-500">{t("ecommontar2")} {error}</div>;
   }
 
   if (!data) {
-    return <div className="text-center text-red-500">No data available</div>;
+    return <div className="text-center text-red-500">{t("ecommontar3")}</div>;
   }
 
   const { unpaid_amount, usdt_total, ...coins } = data;
@@ -127,7 +129,6 @@ export default function MonthlyTarget() {
     : "0.00";
     const timesX = (parseFloat(percentageIncrease) / 100).toFixed(2);
 
-    console.log("Percentage Increase:", percentageIncrease); // Log the percentage increase
 
   const series = [parseFloat(percentageIncrease)];
   const options: ApexOptions = {
@@ -167,10 +168,10 @@ export default function MonthlyTarget() {
         <div className="flex justify-between">
           <div>
             <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-              Profit from Invest
+            {t("ecommontar4")} 
             </h3>
             <p className="mt-1 font-normal text-gray-500 text-theme-sm dark:text-gray-400">
-              Complete a Deposit to Start Your Trading Journey with your assets
+            {t("ecommontar5")} 
             </p>
           </div>
           <div className="relative inline-block">
@@ -190,11 +191,11 @@ export default function MonthlyTarget() {
           </div>
 
           <span className="absolute left-1/2 top-full -translate-x-1/2 -translate-y-[95%] rounded-full bg-success-50 px-3 py-1 text-xs font-medium text-success-600 dark:bg-success-500/15 dark:text-success-500">
-            x{timesX} times increase
+            x{timesX} {t("ecommontar6")} 
           </span>
         </div>
         <p className="mx-auto mt-10 w-full max-w-[380px] text-center text-sm text-gray-500 sm:text-base">
-          Your revenue is higher than last year. Keep up your good work!
+        {t("ecommontar7")} 
         </p>
       </div>
 
@@ -202,7 +203,7 @@ export default function MonthlyTarget() {
         <div className="flex justify-around w-full">
           <div>
             <p className="mb-1 text-center text-gray-500 text-theme-xs dark:text-gray-400 sm:text-sm">
-              Unpaid Amount
+            {t("ecommontar8")} 
             </p>
             <p className="text-base font-semibold text-gray-800 dark:text-white/90 sm:text-lg">
               ${unpaidAmount.toFixed(2).toLocaleString()}
@@ -213,7 +214,7 @@ export default function MonthlyTarget() {
 
           <div>
             <p className="mb-1 text-center text-gray-500 text-theme-xs dark:text-gray-400 sm:text-sm">
-              USDT Total (Live)
+            {t("ecommontar9")}  
             </p>
             <p className="text-base font-semibold text-gray-800 dark:text-white/90 sm:text-lg">
               ${usdtTotal.toFixed(2).toLocaleString()}
@@ -224,7 +225,7 @@ export default function MonthlyTarget() {
 
           <div>
             <p className="mb-1 text-center text-gray-500 text-theme-xs dark:text-gray-400 sm:text-sm">
-              Total Balance
+            {t("ecommontar10")} 
             </p>
             <p className="text-base font-semibold text-gray-800 dark:text-white/90 sm:text-lg">
               ${totalBalance.toFixed(2).toLocaleString()}

@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 
 const Referral = () => {
   // State to handle copying the referral link
   const [copied, setCopied] = useState(false);
   const [user, setUser] = useState<{ id: string } | null>(null);
+  const t = useTranslations();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -85,9 +87,9 @@ const Referral = () => {
       {/* Left Side */}
       <div className="w-full lg:w-[2/3]">
         <h2 className="text-3xl text-gray-500 dark:text-gray-400 font-semibold leading-snug md:text-5xl lg:text-6xl">
-          Refer Friends.
+          {t("ref1")} 
           <br />
-          Get 100 USD Equivalent Trading Fee Credit Each.
+          {t("ref2")}
         </h2>
       </div>
       <br />
@@ -95,7 +97,7 @@ const Referral = () => {
       <div className="w-full lg:w-[1/3] border border-gray-300 rounded-lg p-5">
         <div className="mb-5">
           {/* Referral ID */}
-          <div className="font-bold text-gray-500 dark:text-gray-400 text-lg mb-2">Referral ID</div>
+          <div className="font-bold text-gray-500 dark:text-gray-400 text-lg mb-2">{t("ref3")}</div>
           <input
             type="text"
             value={`CPA_${user?.id}001QNLQ8NZ`}
@@ -106,7 +108,7 @@ const Referral = () => {
 
         <div className="mb-5">
           {/* Referral Link */}
-          <div className="font-bold text-gray-500 dark:text-gray-400 text-lg mb-2">Referral Link</div>
+          <div className="font-bold text-gray-500 dark:text-gray-400 text-lg mb-2">{t("ref4")}</div>
           <input
             type="text"
             value={`https://www.dashboar.capital-trust.eu/CPA_${user?.id}001QNLQ8NZ`}
@@ -120,7 +122,7 @@ const Referral = () => {
           onClick={copyToClipboard}
           className="w-full py-3 bg-blue-500 text-white rounded-md text-lg font-semibold hover:bg-blue-600 transition duration-300"
         >
-          {copied ? "Link Copied!" : "Invite Friends"}
+          {copied ? `${t("ref5")}` : `${t("ref6")}`}
         </button>
       </div>
     </div>

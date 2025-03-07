@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import  { useState, useEffect } from "react";
-
+import { useTranslations } from "next-intl";
 import Image from "next/image";
 import Badge from "../ui/badge/Badge";
 
@@ -10,7 +10,7 @@ export default function UserVerification() {
      id: string;
    
    } | null>(null);
- 
+  const t = useTranslations();
    useEffect(() => {
      // ✅ Try to load user data from sessionStorage first
      const storedUser = sessionStorage.getItem("user");
@@ -94,7 +94,7 @@ export default function UserVerification() {
                 </p>
                 <Badge color="success">
             
-            Verified
+            {t("ident15")} 
           </Badge>
               
               </div>

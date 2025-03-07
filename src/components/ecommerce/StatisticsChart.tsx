@@ -5,7 +5,7 @@ import axios from "axios";
 import { ApexOptions } from "apexcharts";
 import ChartTab from "../common/ChartTab";
 import dynamic from "next/dynamic";
-
+import { useTranslations } from "next-intl";
 // Dynamically import the ReactApexChart component with ssr: false
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false, // Disable server-side rendering for this component
@@ -37,7 +37,7 @@ export default function StatisticsChart() {
   const [isClient, setIsClient] = useState(false); // Flag to check if we're on the client
   const [isDataFetched, setIsDataFetched] = useState(false); // Flag for data fetch completion
   const [previousPrice, setPreviousPrice] = useState<number | null>(null);  // Track the previous price
-
+const t = useTranslations();
   useEffect(() => {
     setIsClient(true);
     const fetchCryptoCoins = async () => {
@@ -195,10 +195,10 @@ export default function StatisticsChart() {
       <div className="flex flex-col gap-5 mb-6 sm:flex-row sm:justify-between">
         <div className="w-full">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            Cryptocurrency Statistics
+          {t("ecomstats1")}  
           </h3>
           <p className="mt-1 text-gray-500 text-theme-sm dark:text-gray-400">
-            Monitor real-time statistics and changes.
+          {t("ecomstats2")} 
           </p>
         </div>
         <div className="flex items-start w-full gap-3 sm:justify-end">
@@ -219,19 +219,19 @@ export default function StatisticsChart() {
 
       <div className="mt-6">
         <h4 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Cryptocurrency List
+        {t("ecomstats3")}  
         </h4>
         <div className="overflow-x-auto mt-3">
           <table className="min-w-full table-auto">
             <thead>
               <tr className="bg-gray-100 dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-300">
-                <th className="px-4 py-2 text-left">Logo</th> {/* Added Logo column */}
-                <th className="px-4 py-2 text-left">Name</th>
-                <th className="px-4 py-2 text-left">Price</th>
-                <th className="px-4 py-2 text-left">24h %</th>
-                <th className="px-4 py-2 text-left">Market Cap</th>
-                <th className="px-4 py-2 text-left">Volume (24h)</th>
-                <th className="px-4 py-2 text-left">Circulating Supply</th>
+                <th className="px-4 py-2 text-left">{t("ecomstats4")}</th> {/* Added Logo column */}
+                <th className="px-4 py-2 text-left">{t("ecomstats5")}</th>
+                <th className="px-4 py-2 text-left">{t("ecomstats6")}</th>
+                <th className="px-4 py-2 text-left">{t("ecomstats7")} %</th>
+                <th className="px-4 py-2 text-left">{t("ecomstats8")}</th>
+                <th className="px-4 py-2 text-left">{t("ecomstats9")}</th>
+                <th className="px-4 py-2 text-left">{t("ecomstats10")}</th>
               </tr>
             </thead>
             <tbody>
@@ -292,17 +292,17 @@ export default function StatisticsChart() {
       {selectedCoin && (
         <div className="hidden lg:block mt-6">
           <h5 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            {selectedCoin.name} Stats
+            {selectedCoin.name} {t("ecomstats11")} 
           </h5>
           <div className="flex items-center justify-between mt-3 text-sm">
             <div className="flex items-center">
-              <p className="text-gray-500 mr-2">Market Cap:</p>
+              <p className="text-gray-500 mr-2">{t("ecomstats12")}</p>
               <p className="font-semibold dark:text-white/90">
                 ${selectedCoin.market_cap.toLocaleString()}
               </p>
             </div>
             <div className="flex items-center">
-              <p className="text-gray-500 mr-2">24h Change:</p>
+              <p className="text-gray-500 mr-2">{t("ecomstats13")}</p>
               <p  className={`px-4 py-2 ${
                       selectedCoin.price_change_percentage_24h !== undefined &&
                       selectedCoin.price_change_percentage_24h > 0
@@ -314,13 +314,13 @@ export default function StatisticsChart() {
                     %</p>
             </div>
             <div className="flex items-center">
-              <p className="text-gray-500 mr-2">Volume:</p>
+              <p className="text-gray-500 mr-2">{t("ecomstats14")}</p>
               <p className="font-semibold dark:text-white/90">
                 ${selectedCoin.total_volume.toLocaleString()}
               </p>
             </div>
             <div className="flex items-center">
-              <p className="text-gray-500 mr-2">Circulating Supply:</p>
+              <p className="text-gray-500 mr-2">{t("ecomstats15")}</p>
               <p className="font-semibold dark:text-white/90">
                 {selectedCoin.circulating_supply.toLocaleString()}
               </p>

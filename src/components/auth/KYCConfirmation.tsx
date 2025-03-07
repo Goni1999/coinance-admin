@@ -5,7 +5,7 @@ import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Alert from "../ui/alert/Alert";
-
+import { useTranslations } from "next-intl";
 const KYCConfirmation = () => {
   const router = useRouter();
   const [selectedIdType, setSelectedIdType] = useState<string>("");
@@ -16,6 +16,7 @@ const KYCConfirmation = () => {
     passportId: null,
     driversLicenseId: null,
   });
+  const t = useTranslations();
   const [loading, setLoading] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [alert, setAlert] = useState<{
@@ -232,17 +233,17 @@ useEffect(() => {
               strokeLinejoin="round"
             />
           </svg>
-          Back
+          {t("back")}
         </Link>
       </div>
 
       <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
         <div className="mb-5 sm:mb-8">
           <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
-            KYC Verification
+          {t("kycverification")} 
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Upload your identification documents to complete the KYC verification process.
+          {t("kycp")} 
           </p>
         </div>
 
@@ -250,7 +251,7 @@ useEffect(() => {
           <div className="space-y-5">
             <div>
               <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                Select ID Type<span className="text-error-500">*</span>
+              {t("kycselect")}<span className="text-error-500">*</span>
               </label>
               <select
                 className="h-11 w-full rounded-lg border px-4 py-2.5 text-sm shadow-theme-xs focus:outline-none focus:ring bg-transparent text-gray-800 border-gray-300 focus:border-brand-300 focus:ring-brand-500/20 dark:bg-gray-900 dark:text-white/90 dark:border-gray-700 dark:focus:border-brand-800"
@@ -258,10 +259,10 @@ useEffect(() => {
                 onChange={handleIdTypeChange}
                 required
               >
-                <option value="">Choose an ID Type</option>
-                <option value="idCard">ID Card</option>
-                <option value="passport">Passport</option>
-                <option value="driversLicense">Driver&apos;s License</option>
+                <option value="">{t("kycchoose")}</option>
+                <option value="idCard">{t("kycid")}</option>
+                <option value="passport">{t("kycpass")}</option>
+                <option value="driversLicense">{t("kycdl")}</option>
               </select>
             </div>
 
@@ -269,13 +270,13 @@ useEffect(() => {
               <>
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Upload Front of ID
+                  {t("kycidupload1")}
                   </label>
                   <input type="file" name="frontId" onChange={handleFileChange} required />
                 </div>
                 <div>
                   <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                    Upload Back of ID
+                  {t("kycidupload2")}
                   </label>
                   <input type="file" name="backId" onChange={handleFileChange} required />
                 </div>
@@ -285,7 +286,7 @@ useEffect(() => {
             {selectedIdType === "passport" && (
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                  Upload Passport
+                {t("kycpassupload")}
                 </label>
                 <input type="file" name="passportId" onChange={handleFileChange} required />
               </div>
@@ -294,7 +295,7 @@ useEffect(() => {
             {selectedIdType === "driversLicense" && (
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                  Upload Driver&apos;s License
+                {t("kycdlupload")}
                 </label>
                 <input type="file" name="driversLicenseId" onChange={handleFileChange} required />
               </div>
@@ -306,7 +307,8 @@ useEffect(() => {
                 className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
                 disabled={loading}
               >
-                {loading ? "Uploading..." : "Submit KYC"}
+                {loading ? `${t("uploading...")} ` : `${t("submitkyc")} `}
+
               </button>
             </div>
           </div>

@@ -1,12 +1,13 @@
 'use client';
 import React from 'react';
-
+import { useTranslations } from 'next-intl';
 const Steps: React.FC = () => {
+  const t = useTranslations();
   return (
     <article className="space-y-6 px-8 py-6 bg-white rounded-lg shadow-lg max-w-3xl mx-auto">
       <div className="text-left">
         <p className="text-lg text-gray-700">
-          To buy, sell, or send Bitcoin on 21bitcoin, start here.
+          {t("depositstepsp1")}
         </p>
       </div>
 
@@ -16,24 +17,24 @@ const Steps: React.FC = () => {
 
       <div className="text-left">
         <h2 className="text-2xl font-semibold text-gray-800 mt-6" id="h_48e32db2a8">
-          What you&apos;ll need
+        {t("depositstepsp2")}
         </h2>
       </div>
 
       <div className="space-y-3 mt-3">
         <ul className="list-disc pl-6 text-gray-700">
-          <li>You must be at least 18 years old</li>
-          <li>An official photo ID</li>
-          <li>A smartphone connected to the internet</li>
-          <li>The latest 21bitcoin app version. Make sure your phone&apos;s operating system is up-to-date.</li>
+          <li>{t("depositstepsp3")}</li>
+          <li>{t("depositstepsp4")}</li>
+          <li>{t("depositstepsp5")}</li>
+          <li>{t("depositstepsp6")}</li>
         </ul>
       </div>
 
       <div className="text-left">
         <p className="text-gray-700">
-          21bitcoin does not charge a fee for creating or managing your 21bitcoin account. Find out about our{' '}
+        {t("depositstepsp7")}{' '}
           <a href="https://help.21bitcoin.app/en/articles/6453204-what-are-the-fees-at-21bitcoin" className="text-blue-500 hover:underline">
-            fees
+          {t("depositstepsp8")} 
           </a>.
         </p>
       </div>
@@ -44,13 +45,13 @@ const Steps: React.FC = () => {
 
       <div className="text-left">
         <h2 className="text-2xl font-semibold text-gray-800 mt-6" id="h_46fcd223fc">
-          1. Create your Account
+          1. {t("depositstepsp9")}
         </h2>
       </div>
 
       <div className="text-left">
         <p className="text-gray-700">
-          Download and open the 21bitcoin app on Android or iOS to get started.
+        {t("depositstepsp10")}
         </p>
       </div>
 
@@ -63,78 +64,78 @@ const Steps: React.FC = () => {
       <div className="space-y-3 mt-6">
         <ol className="list-decimal pl-6 text-gray-700">
           <li>
-            <p>Tap on “<b>Sign Up</b>”.</p>
+            <p>{t("depositstepsp11")} “<b>{t("depositstepsp12")}</b>”.</p>
           </li>
           <li>
-            <p>You will be asked for the following information. Important: Please provide accurate and up-to-date information to avoid problems.</p>
+            <p>{t("depositstepsp13")}</p>
             <ol className="list-inside pl-4 space-y-2">
-              <li>Phone number (21bitcoin will send you a code to confirm)</li>
-              <li>Password (write it down and keep it safe)</li>
+              <li>{t("depositstepsp14")}</li>
+              <li>{t("depositstepsp15")}</li>
             </ol>
           </li>
           <li>
-            <p>Read the{' '}
+            <p>{t("depositstepsp16")}{' '}
               <a href="https://21bitcoin.app/en/terms" className="text-blue-500 hover:underline" target="_blank" rel="nofollow noopener noreferrer">
-                Terms and Conditions
-              </a> and the{' '}
+              {t("depositstepsp17")}
+              </a> {t("depositstepsp18")}{' '}
               <a href="https://21bitcoin.app/en/privacy" className="text-blue-500 hover:underline" target="_blank" rel="nofollow noopener noreferrer">
-                Privacy Policy
+              {t("depositstepsp19")} 
               </a>.
             </p>
           </li>
           <li>
-            <p>If you&apos;re happy with our terms, tick the box and tap “<b>Sign Up</b>”.</p>
+            <p>{t("depositstepsp20")} “<b>{t("depositstepsp21")}</b>”.</p>
           </li>
         </ol>
       </div>
 
       <div className="text-left">
         <h2 className="text-2xl font-semibold text-gray-800 mt-6" id="h_9bb6a3639d">
-          2. Confirm your Phone Number
+          2. {t("depositstepsp22")}
         </h2>
       </div>
 
       <div className="space-y-3 mt-3">
         <ol className="list-decimal pl-6 text-gray-700">
           <li>
-            <p><b>Type in the code</b> in the message you receive from us. This message comes from 21bitcoin.</p>
+            <p><b>{t("depositstepsp23")}</b> {t("depositstepsp24")}</p>
           </li>
           <li>
-            <p>If you don&apos;t receive a message, you can try to send it again.</p>
+            <p>{t("depositstepsp25")}</p>
           </li>
         </ol>
       </div>
 
       <div className="text-left">
         <h2 className="text-2xl font-semibold text-gray-800 mt-6" id="h_e12c8c62fd">
-          3. Add your Personal Information
+          3. {t("depositstepsp26")}
         </h2>
       </div>
 
       <div className="space-y-3 mt-3">
         <ol className="list-decimal pl-6 text-gray-700">
-          <li>Enter the information on your valid government-issued photo ID. You will need to submit a photo of this ID later.</li>
-          <li>All first names</li>
-          <li>All last names</li>
-          <li>Your birthdate</li>
-          <li>Your current residency</li>
+          <li>{t("depositstepsp27")}</li>
+          <li>{t("depositstepsp28")}</li>
+          <li>{t("depositstepsp29")}</li>
+          <li>{t("depositstepsp30")}</li>
+          <li>{t("depositstepsp31")}</li>
           <li>
-            <p>For compliance reasons, you also need to answer the following questions:</p>
+            <p>{t("depositstepsp32")}</p>
             <ol className="list-inside pl-4 space-y-2">
-              <li>What do you use 21bitcoin for?</li>
-              <li>Where does the money to be invested come from?</li>
-              <li>What is your current income situation?</li>
+              <li>{t("depositstepsp33")}</li>
+              <li>{t("depositstepsp34")}</li>
+              <li>{t("depositstepsp35")}</li>
             </ol>
           </li>
           <li>
-            <p>Tap “<b>Next</b>” to complete the process</p>
+            <p>{t("depositstepsp36")} “<b>{t("depositstepsp37")}</b>” {t("depositstepsp38")}</p>
           </li>
         </ol>
       </div>
 
       <div className="text-left">
         <p className="text-gray-700">
-          In order to buy and sell bitcoin through 21bitcoin, the next thing you need to do is verify your identity and add a bank account.
+        {t("depositstepsp39")}
         </p>
       </div>
 
@@ -144,48 +145,48 @@ const Steps: React.FC = () => {
 
       <div className="text-left">
         <h2 className="text-2xl font-semibold text-gray-800 mt-6" id="h_487da0c794">
-          4. Verify your Identity
+          4. {t("depositstepsp40")}
         </h2>
       </div>
 
       <div className="space-y-3 mt-3">
         <ol className="list-decimal pl-6 text-gray-700">
-          <li>Log into your 21bitcoin account</li>
-          <li>Complete the ID verification</li>
+          <li>{t("depositstepsp41")}</li>
+          <li>{t("depositstepsp42")}</li>
         </ol>
       </div>
 
       <div className="text-left">
         <h2 className="text-2xl font-semibold text-gray-800 mt-6" id="h_aeb30944de">
-          5. Top up your Euro Account Balance
+          5. {t("depositstepsp43")}
         </h2>
       </div>
 
       <div className="text-left mt-3">
         <p className="text-gray-700">
-          Once your account is verified, you can deposit funds to your Euro account in the 21bitcoin app, via bank transfer or SEPA transfer.
+        {t("depositstepsp44")}
         </p>
       </div>
       <div className="space-y-3 mt-3">
         <ol className="list-decimal pl-6 text-gray-700">
-          <li>Tap the big “<b>+ button</b>” at the bottom of the app&apos;s navigation bar and select “<b>Add Cash</b>”.</li>
-          <li>Select “<b>Manual Bank Transfer</b>”</li>
-          <li>In the next step, the bank details of FIOR Digital GmbH will be displayed. Make sure to copy the <b>payment reference</b> so that we can assign the payment to your account.</li>
-          <li>Switch to your banking app and make a transfer / standing order from a bank account in your name.</li>
-          <li>As soon as the money has arrived (a bank transfer usually takes up to 2 working days), you will be notified by us, and you can buy Bitcoin immediately.</li>
+          <li>{t("depositstepsp45")} “<b>+ {t("depositstepsp46")}</b>” {t("depositstepsp47")} “<b>{t("depositstepsp48")}</b>”.</li>
+          <li>{t("depositstepsp49")} “<b>{t("depositstepsp50")}</b>”</li>
+          <li>{t("depositstepsp51")} <b>{t("depositstepsp54")}</b> {t("depositstepsp55")}</li>
+          <li>{t("depositstepsp52")}</li>
+          <li>{t("depositstepsp53")}</li>
           
         </ol>
       </div>
 
       <div className="text-left">
         <h2 className="text-2xl font-semibold text-gray-800 mt-6" id="h_aeb30944de">
-          6. How to send Bitcoin
+          6. {t("depositstepsp56")}
         </h2>
       </div>
 
       <div className="text-left mt-3">
         <p className="text-gray-700">
-        Sending bitcoin to an external wallet
+        {t("depositstepsp57")}
         </p>
       </div>
 
@@ -196,26 +197,26 @@ const Steps: React.FC = () => {
       </div>
       <div className="space-y-3 mt-3">
         <ol className="list-decimal pl-6 text-gray-700">
-          <li>Tap on the “<b>Send-Button</b>” on the homescreen next to the “<b>Sell-Button</b>” select “<b>Send</b>”.</li>
-          <li>Add a “<b>wallet address</b>” by copying in the top of the page</li>
-          <li>Enter the <b>Bitcoin amount (in sats)</b> </li>
-          <li>In the next step you will be shown a preview of the withdrawal. If everything is correct, tap on “<b>Confirm”</b></li>
-          <li>As soon as the money has arrived (a bank transfer usually takes up to 2 working days), you will be notified by us, and you can buy Bitcoin immediately.</li>
+          <li>{t("depositstepsp58")} “<b>{t("depositstepsp59")}</b>” {t("depositstepsp60")} “<b>{t("depositstepsp61")}</b>” {t("depositstepsp62")} “<b>{t("depositstepsp63")}</b>”.</li>
+          <li>{t("depositstepsp64")} “<b>{t("depositstepsp65")}</b>” {t("depositstepsp66")}</li>
+          <li>{t("depositstepsp67")} <b>{t("depositstepsp68")}</b> </li>
+          <li>{t("depositstepsp69")} “<b>{t("depositstepsp71")}</b></li>
+          <li>{t("depositstepsp70")}</li>
           
         </ol>
       </div>
 
       <div className="text-left">
         <p className="text-gray-700">
-          <b>Your Bitcoin withdrawal has been initiated and will be with you shortly!</b> 🎉 </p>
+          <b>{t("depositstepsp72")}</b> 🎉 </p>
       </div>
       <div className="text-left">
         <p className="text-gray-700">
-        You can view the withdrawal in the activity overview. We&apos;ll also email you the details of your transaction. </p>
+        {t("depositstepsp73")} </p>
       </div>
       <div className="text-left">
         <p className="text-gray-700">
-        The minimum for bitcoin withdrawals is 65,000 sats.
+        {t("depositstepsp74")}
 
 </p>
       </div>

@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from "react";
 import Alert from "../ui/alert/Alert";
+import { useTranslations } from "next-intl";
 const AccountManagement: React.FC = () => {
   const [alert, setAlert] = useState({
     variant: "success" as "success" | "error" | "warning" | "info",
@@ -9,7 +10,7 @@ const AccountManagement: React.FC = () => {
     show: false,
   });
 
-
+const t = useTranslations();
  
   
   const handleRequest = async (action: "disable" | "delete") => {
@@ -57,7 +58,7 @@ const AccountManagement: React.FC = () => {
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <h4 className="text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-6">
-            Account Management
+           {t("sec1")} 
           </h4>
 
           {/* Disable Account Section */}
@@ -66,18 +67,18 @@ const AccountManagement: React.FC = () => {
               <div className="flex flex-col justify-start gap-4">
                 <div className="flex flex-row gap-4">
                   <p className="text-md leading-normal text-gray-500 dark:text-gray-400">
-                    Disable Account
+                  {t("sec2")}
                   </p>
                 </div>
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                  Once disabled, your actions will be restricted. You can unblock anytime. This will not delete your account.
+                {t("sec3")}
                 </p>
               </div>
               <button
                 onClick={() => handleRequest("disable")}
                 className="text-gray-700 inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-7 py-2.5 text-theme-sm font-medium shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03]"
               >
-                Request
+                {t("sec4")}
               </button>
             </div>
           </div>
@@ -88,18 +89,18 @@ const AccountManagement: React.FC = () => {
               <div className="flex flex-col justify-start gap-4">
                 <div className="flex flex-row gap-4">
                   <p className="text-md leading-normal text-gray-500 dark:text-gray-400">
-                    Delete Account
+                  {t("sec5")} 
                   </p>
                 </div>
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                  This action is irreversible. Once deleted, you cannot recover your account or transaction history.
+                {t("sec6")} 
                 </p>
               </div>
               <button
                 onClick={() => handleRequest("delete")}
                 className="text-gray-700 inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-7 py-2.5 text-theme-sm font-medium shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03]"
               >
-                Request
+               {t("sec4")} 
               </button>
             </div>
           </div>

@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, useEffect } from "react";
-
+import { useTranslations } from "next-intl";
 const CopyAddress = () => {
   const [copied, setCopied] = useState(false);
   const [balanceId, setBalanceId] = useState<string | null>(null);
-
+const t = useTranslations();
   useEffect(() => {
     // Try to get balance_id from sessionStorage first
     const storedBalanceId = sessionStorage.getItem("balance_id");
@@ -77,22 +77,22 @@ const CopyAddress = () => {
         <div className="mb-5">
           {/* Referral ID */}
           <h2 className="text-2xl text-gray-500 dark:text-gray-400 font-semibold leading-snug md:text-5xl lg:text-3xl">
-        Transfer Assets to Your Wallet: Copy and Confirm the Address
+        {t("depositcopyp1")}
         
           
         </h2>
         <br/>
           <p className=" text-gray-500 dark:text-gray-400 font-semibold leading-snug  ">
-          Copy the wallet address below to transfer your assets. Double-check it before confirming the transaction to ensure accuracy
+          {t("depositcopyp2")}
             </p>
         </div>
 
         <div className="mb-5">
           {/* Referral Link */}
-          <div className="font-bold text-gray-500 dark:text-gray-400 text-lg mb-2">Wallet Address</div>
+          <div className="font-bold text-gray-500 dark:text-gray-400 text-lg mb-2">{t("depositcopyp3")}</div>
           <input
             type="text"
-            value={balanceId || "Loading..."}
+            value={balanceId || `${t("depositcopyp4")}`}
 
             className="w-full p-3 border border-gray-300 rounded-md"
             readOnly
@@ -104,7 +104,7 @@ const CopyAddress = () => {
           onClick={copyToClipboard}
           className="w-full py-3 bg-blue-500 text-white rounded-md text-lg font-semibold hover:bg-blue-600 transition duration-300"
         >
-          {copied ? "Address Copied!" : "Copy Address"}
+          {copied ? `${t("depositcopyp5")}`  :  `${t("depositcopyp6")}` }
         </button>
       </div>
     <br/>

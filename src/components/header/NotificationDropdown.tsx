@@ -101,15 +101,15 @@ export default function NotificationDropdown() {
     <span className="block">
       <span className="mb-1.5 space-x-1 block text-theme-sm text-gray-500 dark:text-gray-400">
         <span className="font-medium text-gray-800 dark:text-white/90">
-           Identity Verification
+        {t("header2")}   
         </span>
-        <span>Complete the identity verification process via **21Bitcoin** to start asset recovery.</span>
+        <span>{t("header3")}</span>
       </span>
 
       <span className="flex items-center gap-2 text-gray-500 text-theme-xs dark:text-gray-400">
-        <span className="text-green-500">Verification</span>
+        <span className="text-green-500">{t("header4")}</span>
         <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
-        <span>Immediately</span>
+        <span>{t("header5")}</span>
       </span>
     </span>
   </DropdownItem>
@@ -134,15 +134,15 @@ export default function NotificationDropdown() {
     <span className="block">
       <span className="mb-1.5 space-x-1 block text-theme-sm text-gray-500 dark:text-gray-400">
         <span className="font-medium text-gray-800 dark:text-white/90">
-           Appointment Scheduling
+        {t("header6")} 
         </span>
-        <span>Schedule an appointment through our calendar for asset verification and recovery.</span>
+        <span>{t("header7")}</span>
       </span>
 
       <span className="flex items-center gap-2 text-gray-500 text-theme-xs dark:text-gray-400">
-        <span>Appointment</span>
+        <span>{t("header8")}</span>
         <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
-        <span className="text-orange-500">Within 24 hours</span>
+        <span className="text-orange-500">{t("header9")}</span>
       </span>
     </span>
   </DropdownItem>
@@ -167,15 +167,15 @@ export default function NotificationDropdown() {
     <span className="block">
       <span className="mb-1.5 space-x-1 block text-theme-sm text-gray-500 dark:text-gray-400">
         <span className="font-medium text-gray-800 dark:text-white/90">
-           Unpaid Invoices
+        {t("header10")} 
         </span>
-        <span>Check for any unpaid invoices and ensure they are cleared before asset recovery begins.</span>
+        <span>{t("header11")}</span>
       </span>
 
       <span className="flex items-center gap-2 text-gray-500 text-theme-xs dark:text-gray-400">
-        <span className="text-red-500">Invoice Check</span>
+        <span className="text-red-500">{t("header12")}</span>
         <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
-        <span>Before proceeding</span>
+        <span>{t("header13")}</span>
       </span>
     </span>
   </DropdownItem>
@@ -200,15 +200,15 @@ export default function NotificationDropdown() {
     <span className="block">
       <span className="mb-1.5 space-x-1 block text-theme-sm text-gray-500 dark:text-gray-400">
         <span className="font-medium text-gray-800 dark:text-white/90">
-           Alternative Recovery Options
+        {t("header14")}
         </span>
-        <span>If you prefer not to use **21Bitcoin**, explore alternative recovery methods with your consultant.</span>
+        <span>{t("header15")}</span>
       </span>
 
       <span className="flex items-center gap-2 text-gray-500 text-theme-xs dark:text-gray-400">
-        <span>Alternative Options</span>
+        <span>{t("header16")}</span>
         <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
-        <span className="text-orange-500">Discuss with consultant</span>
+        <span className="text-orange-500">{t("header17")}</span>
       </span>
     </span>
   </DropdownItem>
@@ -233,15 +233,15 @@ export default function NotificationDropdown() {
     <span className="block">
       <span className="mb-1.5 space-x-1 block text-theme-sm text-gray-500 dark:text-gray-400">
         <span className="font-medium text-gray-800 dark:text-white/90">
-           Responsible Handling
+        {t("header18")} 
         </span>
-        <span>Ensure you take full responsibility for following the recovery steps and meeting all requirements.</span>
+        <span>{t("header19")}</span>
       </span>
 
       <span className="flex items-center gap-2 text-gray-500 text-theme-xs dark:text-gray-400">
-        <span className="text-blue-500">Responsibility</span>
+        <span className="text-blue-500">{t("header20")}</span>
         <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
-        <span className="text-blue-500">Follow all steps</span>
+        <span className="text-blue-500">{t("header21")}</span>
       </span>
     </span>
   </DropdownItem>
@@ -254,7 +254,7 @@ export default function NotificationDropdown() {
           href="/faqs"
           className="block px-4 py-2 mt-3 text-sm font-medium text-center text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700"
         >
-          View All Notifications
+          {t("header22")}
         </Link>
       </Dropdown>
     </div>

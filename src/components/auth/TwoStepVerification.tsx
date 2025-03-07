@@ -5,12 +5,13 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
 import Alert from "../ui/alert/Alert";
+import { useTranslations } from "next-intl";
 const TwoStepVerification = () => {
   const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
-
+  const t = useTranslations();
   const [alert, setAlert] = useState<{
     variant: "success" | "error" | "warning" | "info";
     title: string;
@@ -112,7 +113,7 @@ const TwoStepVerification = () => {
       console.log("OTP sent response:", response.data);
       setAlert({
         variant: "success",
-        title: "6-digits code successfully",
+        title: "6-digits code resend successfully",
         message: "Check your email for the code!",
         show: true
       });
@@ -239,17 +240,17 @@ const verifyOtp = async (e: React.FormEvent) => {
           <svg className="stroke-current" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
             <path d="M12.7083 5L7.5 10.2083L12.7083 15.4167" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
-          Back
+          {t("back")}
         </Link>
       </div>
 
       <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
         <div className="mb-5 sm:mb-8">
           <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
-            Two Step Verification
+          {t("2fa")}
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            A verification code has been sent to your email. Please enter it below.
+          {t("2fap1")}
           </p>
         </div>
 
@@ -257,7 +258,7 @@ const verifyOtp = async (e: React.FormEvent) => {
           <div className="space-y-5">
             <div>
               <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                Enter your 6-digit security code
+              {t("2faenter")}
               </label>
               <div className="flex gap-2 sm:gap-4">
                 {otp.map((value, index) => (
@@ -283,7 +284,7 @@ const verifyOtp = async (e: React.FormEvent) => {
                 className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600 disabled:opacity-50"
                 disabled={loading}
               >
-                {loading ? "Verifying..." : "Verify My Account"}
+                {loading ? `${t("Verifying...")}` : `${t("verifymyaccount")}`}
               </button>
             </div>
           </div>
@@ -291,13 +292,13 @@ const verifyOtp = async (e: React.FormEvent) => {
 
         <div className="mt-5">
           <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
-            Didn’t get the code?{" "}
+          {t("didntget")} {" "}
             <button
               type="button"
               className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
               onClick={sendOTP}
             >
-              Resend
+              {t("resend")}
             </button>
           </p>
         </div>

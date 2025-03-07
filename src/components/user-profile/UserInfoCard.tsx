@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { useTranslations } from 'next-intl';
 
 
 export default function UserInfoCard() {
@@ -11,6 +12,7 @@ export default function UserInfoCard() {
       email: string;
       phone: string;
     } | null>(null);
+      const t = useTranslations();
   
     useEffect(() => {
       // ✅ Try to load user data from sessionStorage first
@@ -120,13 +122,13 @@ export default function UserInfoCard() {
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <h4 className="text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-6">
-            Personal Information
+          {t("userpr5")} 
           </h4>
 
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-7 2xl:gap-x-32">
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                First Name
+              {t("userpr6")}  
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
               {user?.name || "N/A"}
@@ -135,7 +137,7 @@ export default function UserInfoCard() {
 
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Last Name
+              {t("userpr7")}  
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
               {user?.lastname || "N/A"}
@@ -144,7 +146,7 @@ export default function UserInfoCard() {
 
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Email address
+              {t("userpr8")}  
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
               {user?.email || "N/A"}
@@ -153,7 +155,7 @@ export default function UserInfoCard() {
 
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Phone
+              {t("userpr9")}  
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
               {user?.phone || "N/A"}
@@ -163,7 +165,7 @@ export default function UserInfoCard() {
 
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Birthday
+              {t("userpr10")}  
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
               {user?.dob || "N/A"}
@@ -173,7 +175,7 @@ export default function UserInfoCard() {
 
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Position
+              {t("userpr11")}  
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
               {user?.position || "N/A"}

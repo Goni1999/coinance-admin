@@ -10,7 +10,7 @@ import Radio from "../form/input/Radio";
 import Select from "../form/Select";
 import { useRouter } from "next/navigation";
 import Alert from "../../components/ui/alert/Alert";
-
+import { useTranslations } from "next-intl";
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -45,7 +45,7 @@ export default function SignUpForm() {
     message: "",
     show: false,
   });
-  
+  const t = useTranslations();
 
   const options = [
     { value: "id_card", label: "ID Card" },
@@ -159,17 +159,17 @@ export default function SignUpForm() {
           href="/"
           className="inline-flex items-center text-sm text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
         >
-          Back
+          {t("back")}
         </Link>
       </div>
 
       <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
         <div className="mb-8">
           <h1 className="mb-2 font-semibold text-gray-800 text-xl dark:text-white/90">
-            Sign Up
+          {t("signup")}
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Fill out the form below to create your account!
+          {t("signupp1")}
           </p>
         </div>
        
@@ -179,7 +179,7 @@ export default function SignUpForm() {
               {/* First Name */}
               <div className="sm:col-span-1">
                 <Label>
-                  First Name<span className="text-red-500">*</span>
+                {t("signupfn")}<span className="text-red-500">*</span>
                 </Label>
                 <Input
                   type="text"
@@ -194,7 +194,7 @@ export default function SignUpForm() {
               {/* Last Name */}
               <div className="sm:col-span-1">
                 <Label>
-                  Last Name<span className="text-red-500">*</span>
+                {t("signupln")}<span className="text-red-500">*</span>
                 </Label>
                 <Input
                   type="text"
@@ -210,7 +210,7 @@ export default function SignUpForm() {
             {/* Phone */}
             <div>
               <Label>
-                Phone<span className="text-red-500">*</span>
+              {t("signupphone")}<span className="text-red-500">*</span>
               </Label>
               <Input
                 type="text"
@@ -226,7 +226,7 @@ export default function SignUpForm() {
             {/* Email */}
             <div>
               <Label>
-                Email<span className="text-red-500">*</span>
+              {t("signupemail")}<span className="text-red-500">*</span>
               </Label>
               <Input
                 type="email"
@@ -238,7 +238,7 @@ export default function SignUpForm() {
               />
             </div>
             <Label>
-                Gender<span className="text-red-500">*</span>
+            {t("gender")}<span className="text-red-500">*</span>
               </Label>
             <div className="grid grid-cols-3 gap-5 sm:grid-cols-">
               
@@ -250,7 +250,7 @@ export default function SignUpForm() {
            {/* Birthday */}
            <div>
               <Label>
-                Birthday<span className="text-red-500">*</span>
+              {t("bday")}<span className="text-red-500">*</span>
               </Label>
               <Input
                 type="date"
@@ -265,7 +265,7 @@ export default function SignUpForm() {
             {/* Password */}
             <div className="sm:col-span-1">
               <Label>
-                Password<span className="text-red-500">*</span>
+              {t("pass")}<span className="text-red-500">*</span>
               </Label>
               <div className="relative">
                 <Input
@@ -291,7 +291,7 @@ export default function SignUpForm() {
            {/* Password */}
            <div className="sm:col-span-1">
               <Label>
-                Confirm Password<span className="text-red-500">*</span>
+              {t("cpass")}<span className="text-red-500">*</span>
               </Label>
               <div className="relative">
                 <Input
@@ -318,7 +318,7 @@ export default function SignUpForm() {
             {/* Address */}
             <div>
               <Label>
-                Address<span className="text-red-500">*</span>
+              {t("address")}<span className="text-red-500">*</span>
               </Label>
               <Input
                 type="text"
@@ -333,7 +333,7 @@ export default function SignUpForm() {
             {/* City */}
             <div>
               <Label>
-                City<span className="text-red-500">*</span>
+              {t("city")}<span className="text-red-500">*</span>
               </Label>
               <Input
                 type="text"
@@ -350,7 +350,7 @@ export default function SignUpForm() {
                 {/* Password */}
                 <div className="sm:col-span-1">
                 <Label>
-                Zip Code<span className="text-red-500">*</span>
+                {t("zipcode")}<span className="text-red-500">*</span>
               </Label>
               <Input
                 type="text"
@@ -364,7 +364,7 @@ export default function SignUpForm() {
             {/* State */}
                 <div className="sm:col-span-1">
               <Label>
-                State<span className="text-red-500">*</span>
+              {t("state")}<span className="text-red-500">*</span>
               </Label>
               <Input
                 type="text"
@@ -382,14 +382,14 @@ export default function SignUpForm() {
             {/* ID Document Type */}
             <div className="sm:col-span-1">
               <Label>
-                ID Document Type<span className="text-red-500">*</span>
+              {t("idtype")}<span className="text-red-500">*</span>
               </Label>
               <Select options={options} onChange={handleSelectChange}  />
 
             </div>
             <div className="sm:col-span-1">
                 <Label>
-                ID Document Number<span className="text-red-500">*</span>
+                {t("idnumber")}<span className="text-red-500">*</span>
               </Label>
               <Input
                 type="text"
@@ -406,7 +406,7 @@ export default function SignUpForm() {
             {/* Position */}
             <div>
               <Label>
-                Position<span className="text-red-500">*</span>
+              {t("position")}<span className="text-red-500">*</span>
               </Label>
               <Input
                 type="text"
@@ -428,13 +428,13 @@ export default function SignUpForm() {
                 onChange={handleCheckboxChange}
               />
               <p className="inline-block font-normal text-gray-500 dark:text-gray-400">
-                By creating an account, you agree to the{" "}
+              {t("youagree")} {" "}
                 <span className="text-gray-800 dark:text-white/90">
-                  Terms and Conditions
+                {t("termsandconditions")} 
                 </span>{" "}
-                and our{" "}
+                {t("andour")}{" "}
                 <span className="text-gray-800 dark:text-white">
-                  Privacy Policy
+                {t("privacypolicy")}Privacy Policy
                 </span>
               </p>
             </div>
@@ -445,7 +445,7 @@ export default function SignUpForm() {
                 type="submit"
                 className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
               >
-                Sign Up
+                {t("signup")}
               </button>
             </div>
           </div>
@@ -453,13 +453,16 @@ export default function SignUpForm() {
 
         <div className="mt-5">
           <p className="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start">
-            Already have an account?
+          {t("alreadyhaveacc")}
             <Link
               href="/signin"
               className="text-brand-500 hover:text-brand-600 dark:text-brand-400"
             >
-              Sign In
+              {t("signin")}
             </Link>
+
+            <br/>
+            <br/>
           </p>
         </div>
       </div>

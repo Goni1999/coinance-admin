@@ -1,8 +1,11 @@
 "use client";
 import Link from "next/link";
 import React from "react";
+import { useTranslations } from "next-intl";
 
 export const P2P = () => {
+    const t = useTranslations();
+  
   return (
     <div className="flex flex-col gap-4 sm:grid-cols-2 md:gap-6">
       {/* <!-- Metric Item Start --> */}
@@ -14,19 +17,19 @@ export const P2P = () => {
         <div className="flex items-end justify-between mt-5">
           <div>
             <span className="text-3xl text-gray-500 dark:text-gray-400">
-            P2P
+            {t("pay4")}
             </span>
             
          
 
         <div className="flex flex-col items-center lg:items-end lg:flex-row md:flex-col md:items-center  justify-between mt-5" >
-        <h6 className="lg:max-w-3xl  text-gray-500 dark:text-gray-400">P2P payment methods: When you sell cryptocurrencies, the payment method added will be displayed to buyer as options to accept payment, please ensure that the account owner’s name is consistent with your verified name on Binance. You can add up to 20 payment methods.
+        <h6 className="lg:max-w-3xl  text-gray-500 dark:text-gray-400">{t("pay5")}
         </h6>
         <Link href="/managewallet-deposit">
 
         <button className="inline-flex   items-center lg:px-16 gap-2  md:mt-6 rounded-lg border border-gray-300 bg-white px-7 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200">
             
-            Add a payment method
+        {t("pay6")} 
           </button>
           </Link>
         </div>
@@ -94,7 +97,7 @@ export const P2P = () => {
               </linearGradient>
             </defs>
           </svg>
-          <div className="mt-6 text-gray-500 dark:text-gray-400">There are no payment method associated with your account yet.</div>
+          <div className="mt-6 text-gray-500 dark:text-gray-400">{t("pay7")} </div>
         </div>
         </div>
       {/* <!-- Metric Item Start --> 

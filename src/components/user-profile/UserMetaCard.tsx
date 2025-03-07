@@ -7,7 +7,7 @@ import Input from "../form/input/InputField";
 import Label from "../form/Label";
 import Image from "next/image";
 import Alert from "../ui/alert/Alert";
-
+import { useTranslations } from "next-intl";
 export default function UserMetaCard() {
   const { isOpen, openModal, closeModal } = useModal();
   const [loading, setLoading] = useState(false);
@@ -22,7 +22,7 @@ export default function UserMetaCard() {
     message: "",
     show: false,
   });
-
+const t = useTranslations();
   // Default user data structure and state initialization
   const [user, setUser] = useState<{
     name: string;
@@ -366,7 +366,7 @@ export default function UserMetaCard() {
                 fill=""
               />
             </svg>
-            Edit
+            {t("userpr12")}  
           </button>
         </div>
       </div>
@@ -374,17 +374,17 @@ export default function UserMetaCard() {
         <div className="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11">
           <div className="px-2 pr-14">
             <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-              Edit Personal Information
+            {t("userpr13")}
             </h4>
             <p className="mb-6 text-sm text-gray-500 dark:text-gray-400 lg:mb-7">
-              Update your details to keep your profile up-to-date.
+            {t("userpr14")}
             </p>
           </div>
           <form onSubmit={handleSave} className="flex flex-col">
             <div className="custom-scrollbar h-[450px] overflow-y-auto px-2 pb-3">
               <div>
                 <h5 className="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
-                  Social Links
+                {t("userpr15")} 
                 </h5>
 
                 <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
@@ -430,14 +430,14 @@ export default function UserMetaCard() {
       <br/>
             <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
               <Button size="sm" variant="outline" onClick={closeModal}>
-                Close
+              {t("userpr16")} 
               </Button>
               
               <button
                   type="submit" disabled={loading}
                   className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
                 >
-                  {loading ? "Saving Changes..." : "Save Changes"}
+                  {loading ? `${t("userpr17")}` :`${t("userpr18")}` }
                 </button>
             </div>
           </form>

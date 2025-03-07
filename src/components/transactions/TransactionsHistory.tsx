@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from "react";
+import { useTranslations } from 'next-intl';
 
 interface Transaction {
   time: string;
@@ -18,6 +19,7 @@ const TransactionsHistory = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [, setLoading] = useState(true);
   const [, setError] = useState<string | null>(null);
+  const t = useTranslations();
 
   // Fetch transactions from the API with token
   const fetchTransactions = async () => {
@@ -124,7 +126,7 @@ const TransactionsHistory = () => {
         <div className="flex flex-col gap-2 px-5 mb-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div>
             <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-              Latest Transactions
+              {t("transaction1")}
             </h3>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -162,31 +164,31 @@ const TransactionsHistory = () => {
           <div className="max-w-full px-5 overflow-x-auto sm:px-6">
             <div>
               <table className="min-w-full undefined">
-                <thead className="border-gray-200 border-y dark:border-gray-800">
+              <thead className="border-gray-200 border-y dark:border-gray-800">
                   <tr>
                     <th className="py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      Time
+                    {t("overview10")}
                     </th>
                     <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      Type
+                    {t("overview11")}
                     </th>
                     <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      Deposit Wallet
+                    {t("overview12")} 
                     </th>
                     <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      Coin
+                    {t("overview13")} 
                     </th>
                     <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      Amount
+                    {t("overview14")} 
                     </th>
                     <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      Destination
+                    {t("overview15")} 
                     </th>
                     <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      TxID
+                    {t("overview16")} 
                     </th>
                     <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                      Status details
+                    {t("overview17")} 
                     </th>
                   </tr>
                 </thead>

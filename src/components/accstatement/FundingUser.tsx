@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Badge from "../ui/badge/Badge";
 import { ArrowUpIcon } from "@/icons";
 import CoinDropdown from "../ecommerce/coinDropdows";
-
+import { useTranslations } from "next-intl";
 // Dummy balance data for example purposes
 const dummyBalance = {
   bitcoin: 0,
@@ -22,6 +22,7 @@ const dummyBalance = {
 
 export const FundingUser = () => {
   const [selectedCoin, setSelectedCoin] = useState<keyof typeof dummyBalance>("bitcoin");
+  const t = useTranslations();
 
   // Handle coin selection change
   const handleCoinChange = (coin: keyof typeof dummyBalance) => {
@@ -34,11 +35,11 @@ export const FundingUser = () => {
         <div className="flex items-end justify-between mt-5">
           <div>
             <span className="text-3xl text-gray-500 dark:text-gray-400">
-              Funding
+              {t("funding")}
               <br />
             </span>
             <br />
-            <h6 className=" text-gray-500 dark:text-gray-400">Total Balance</h6>
+            <h6 className=" text-gray-500 dark:text-gray-400">{t("totalbalance")}</h6>
 
             <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
               0.00 <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -118,7 +119,7 @@ export const FundingUser = () => {
               </linearGradient>
             </defs>
           </svg>
-          <div className="mt-6 text-gray-500 dark:text-gray-400">There are no documents generated for you at this time.</div>
+          <div className="mt-6 text-gray-500 dark:text-gray-400">{t("fundingp")}</div>
         </div>
       </div>
     </div>

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 
+
 interface AlertProps {
   variant: "success" | "error" | "warning" | "info"; // Alert type
   title: string; // Title of the alert
@@ -41,7 +42,6 @@ const Alert: React.FC<AlertProps> = ({
       icon: "text-blue-light-500",
     },
   };
-
   // Icon for each variant
   const icons = {
     success: (

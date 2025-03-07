@@ -1,8 +1,11 @@
 "use client";
 import React from "react";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function UserInfoCard() {
+    const t = useTranslations();
+  
    const [user, setUser] = useState<{
      name: string;
      lastname: string;
@@ -100,14 +103,14 @@ export default function UserInfoCard() {
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
         <div>
           <h4 className="text-3xl font-semibold text-gray-800 dark:text-white/90 lg:mb-6">
-          Account Statement
+          {t("accountstatement")}
 
           </h4>
 
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-5 lg:gap-7 2xl:gap-x-32">
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                First Name
+                {t("userfn")}
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
               {user?.name || "Filan"}
@@ -116,7 +119,7 @@ export default function UserInfoCard() {
 
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Last Name
+                {t("userln")}
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
               {user?.lastname || "Fistek"}
@@ -125,7 +128,7 @@ export default function UserInfoCard() {
 
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Email address
+              {t("useremail")}
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
               {user?.email || "user@example.com"}
@@ -134,7 +137,7 @@ export default function UserInfoCard() {
 
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Phone
+              {t("userphone")}
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
               {user?.phone || "+0 123 456"}
@@ -143,7 +146,7 @@ export default function UserInfoCard() {
 
             <div>
               <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Position
+              {t("userposition")}
               </p>
               <p className="text-sm font-medium text-gray-800 dark:text-white/90">
               {user?.position || "CEO"}

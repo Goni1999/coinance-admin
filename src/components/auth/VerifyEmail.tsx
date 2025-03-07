@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import Alert from "../ui/alert/Alert";
+import { useTranslations } from "next-intl";
 const VerifyEmail = () => {
   const [email, setEmail] = useState<string | null>(null);
   const [isVerified, setIsVerified] = useState<boolean | null>(null);
@@ -21,6 +22,7 @@ const [alert, setAlert] = useState<{
     message: "",
     show: false,
   }); 
+  const t = useTranslations();
   // Load email from sessionStorage
   useEffect(() => {
     const token = sessionStorage.getItem("auth-token");
@@ -97,26 +99,26 @@ const [alert, setAlert] = useState<{
       {isVerified ? (
         // ✅ When email is verified
         <div className="max-w-md p-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
-          <h1 className="text-2xl font-bold text-green-600 md:text-3xl">Your email is Verified!</h1>
+          <h1 className="text-2xl font-bold text-green-600 md:text-3xl">{t("continuep3")}</h1>
           <button
             className="mt-4 w-full px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition"
             onClick={handleContinue}
           >
-            Continue
+           {t("continue")} 
           </button>
         </div>
       ) : (
         // ❌ When email is NOT verified
         <div className="max-w-md p-6 bg-white rounded-lg shadow-md dark:bg-gray-800">
-          <h1 className="text-xl font-semibold text-red-600 md:text-2xl">Your email is not verified</h1>
-          <p className="text-sm text-gray-500 mt-2">Please check your inbox for the verification email.</p>
+          <h1 className="text-xl font-semibold text-red-600 md:text-2xl">{t("continuep1")}</h1>
+          <p className="text-sm text-gray-500 mt-2">{t("continuep2")}</p>
 
           {/* Disabled Continue Button */}
           <button
             className="mt-4 w-full px-6 py-3 bg-gray-400 text-white font-semibold rounded-lg cursor-not-allowed"
             disabled
           >
-            Continue
+           {t("continue")}
           </button>
 
           {/* Resend Verification Email Button */}
@@ -125,7 +127,7 @@ const [alert, setAlert] = useState<{
             onClick={resendVerificationEmail}
             disabled={isResending}
           >
-            {isResending ? "Resending..." : "Resend Verification Email"}
+            {isResending ? `${t("resending")}` : `${t("resendemailv")}`}
           </button>
 
           {/* Display Message (Success/Error) */}

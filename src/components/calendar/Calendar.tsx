@@ -7,7 +7,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { EventInput, DateSelectArg, EventClickArg, EventContentArg } from "@fullcalendar/core";
 import { useModal } from "@/hooks/useModal";
 import { Modal } from "@/components/ui/modal";
-
+import { useTranslations } from "next-intl";
 interface CalendarEvent extends EventInput {
   extendedProps: {
     calendar: string;
@@ -23,6 +23,7 @@ const Calendar: React.FC = () => {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const calendarRef = useRef<FullCalendar>(null);
   const { isOpen, openModal, closeModal } = useModal();
+  const t = useTranslations();
 
   const calendarsEvents = {
     Danger: "Danger",
@@ -251,7 +252,7 @@ const Calendar: React.FC = () => {
           eventContent={renderEventContent}
           customButtons={{
             addEventButton: {
-              text: "Add Event +",
+              text: `${t("addevent")} +`,
               click: openModal,
             },
           }}
@@ -265,13 +266,13 @@ const Calendar: React.FC = () => {
               {selectedEvent ? "Edit Event" : "Add Event"}
             </h5>
             <p className="text-sm text-gray-500 dark:text-gray-400">
-              Plan your next big moment: schedule or edit an event to stay on track
+            {t("calendarp1")}
             </p>
           </div>
           <div className="mt-8">
             <div>
               <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                Event Title
+              {t("calendarp2")} 
               </label>
               <input
                 id="event-title"
@@ -285,7 +286,7 @@ const Calendar: React.FC = () => {
 
             <div className="mt-6">
               <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                Event Dates
+              {t("calendarp3")}   
               </label>
               <input
                 type="date"
@@ -303,7 +304,7 @@ const Calendar: React.FC = () => {
 
             <div className="mt-6">
               <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                Event Level
+              {t("calendarp4")}
               </label>
               <div className="dark:bg-dark-900 p-4 rounded-lg">
               <div className="flex flex-wrap items-center gap-4 sm:gap-5">
@@ -335,20 +336,20 @@ const Calendar: React.FC = () => {
               onClick={closeModal}
               className="h-11 rounded-lg border border-gray-300 bg-transparent px-6 py-3 text-sm font-semibold text-gray-800 shadow-theme-xs hover:bg-gray-100 focus:outline-none dark:border-gray-700 dark:text-white dark:hover:bg-white/10"
             >
-              Cancel
+             {t("calendarp5")} 
             </button>
             <button
               onClick={handleAddOrUpdateEvent}
               className="h-11 rounded-lg border border-gray-300 bg-primary px-6 py-3 text-sm font-semibold text-gray-800 shadow-theme-xs hover:bg-primary-500 focus:outline-none dark:border-gray-700 dark:bg-primary-500 dark:text-white dark:hover:bg-primary-600"
             >
-              {selectedEvent ? "Update Event" : "Add Event"}
+              {selectedEvent ? `${t("calendar7")}` : `${t("calendar7")}`}
             </button>
             {selectedEvent && (
               <button
                 onClick={handleDeleteEvent}
                 className="h-11 rounded-lg border border-gray-300 bg-danger-500 px-6 py-3 text-sm font-semibold text-gray-800 shadow-theme-xs hover:bg-danger-400 focus:outline-none dark:border-gray-700 dark:bg-danger-500 dark:text-white dark:hover:bg-danger-600"
               >
-                Delete
+               {t("calendarp6")}   
               </button>
             )}
           </div>

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import React, { useState } from "react"; 
 import { useSearchParams } from "next/navigation";  // For getting token from the URL
-
+import { useTranslations } from "next-intl";
 const ResetPassword = () => {
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -12,7 +12,7 @@ const ResetPassword = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const searchParams = useSearchParams();
   const token = searchParams?.get("token");  // Get token from query params
-
+ const t = useTranslations();
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
     if (confirmPassword && e.target.value !== confirmPassword) {
@@ -91,25 +91,25 @@ const ResetPassword = () => {
               strokeLinejoin="round"
             />
           </svg>
-          Back
+          {t("back")}
         </Link>
       </div>
 
       <div className="flex flex-col justify-center flex-1 w-full max-w-md mx-auto">
         <div className="mb-5 sm:mb-8">
           <h1 className="mb-2 font-semibold text-gray-800 text-title-sm dark:text-white/90 sm:text-title-md">
-            Reset Your Password
+          {t("resetyourpassword")}
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Enter your new password below.
+          {t("enteryourpasswordbelow")}
           </p>
         </div>
 
         {success ? (
           <div className="p-4 mb-5 text-sm text-green-600 bg-green-100 border border-green-400 rounded-lg">
-            Password reset successfully! You can now{" "}
+            {t("passwordresetsuccessfully")}{" "}
             <Link href="/signin" className="text-brand-500 hover:text-brand-600">
-              login
+            {t("loginpass")}
             </Link>.
           </div>
         ) : (
@@ -117,7 +117,7 @@ const ResetPassword = () => {
             <div className="space-y-5">
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                  New Password<span className="text-error-500">*</span>
+                {t("newpass")}<span className="text-error-500">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -133,7 +133,7 @@ const ResetPassword = () => {
 
               <div>
                 <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                  Confirm Password<span className="text-error-500">*</span>
+                {t("confirmpass")}<span className="text-error-500">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -157,7 +157,7 @@ const ResetPassword = () => {
                     loading ? "bg-gray-400 cursor-not-allowed" : "bg-brand-500 hover:bg-brand-600"
                   }`}
                 >
-                  {loading ? "Resetting..." : "Reset Password"}
+                  {loading ? `${t("resetting...")}`  : `${t("resetpass")}`}
                 </button>
               </div>
             </div>

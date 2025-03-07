@@ -1,6 +1,8 @@
 'use client';
 import React, { useState, useEffect } from "react";
 import axios from "axios"; // Import axios for making API requests
+import { useTranslations } from 'next-intl';
+
 type Coin = {
   id: string; // e.g. 'bitcoin'
   symbol: string; // e.g. 'btc'
@@ -22,6 +24,7 @@ const TradeForm: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [coins, setCoins] = useState<Coin[]>([]); // State for storing the top 20 coins
   const [balances, setBalances] = useState<Balances>({}); // User's coin balances
+  const t = useTranslations();
 
   // Fetch top 20 coins from CoinGecko API
   const fetchTopCoins = async () => {
@@ -129,13 +132,13 @@ const TradeForm: React.FC = () => {
               className={`px-4 py-2 rounded-xl w-[200px] cursor-pointer text-white ${orderType === "buy" ? "bg-green-500" : "bg-gray-700"}`}
               onClick={() => handleOrderTypeChange("buy")}
             >
-              Buy
+            {t("trade11")}  
             </div>
             <div
               className={`px-4 py-2 rounded-xl w-[200px] cursor-pointer text-white ${orderType === "sell" ? "bg-red-500" : "bg-gray-700"}`}
               onClick={() => handleOrderTypeChange("sell")}
             >
-              Sell
+             {t("trade12")} 
             </div>
           </div>
 
@@ -144,7 +147,7 @@ const TradeForm: React.FC = () => {
             <div className="space-y-4">
               <div>
                 <label htmlFor="quantity" className="block text-sm text-gray-800 dark:text-white/90">
-                  Amount (USD)
+                {t("trade13")}  (USD)
                 </label>
                 <input
                   type="number"
@@ -161,7 +164,7 @@ const TradeForm: React.FC = () => {
 
               <div>
                 <label htmlFor="coin-select" className="block text-sm text-gray-800 dark:text-white/90">
-                  Select Coin
+                {t("trade14")} 
                 </label>
                 <select
                   id="coin-select"
@@ -184,14 +187,14 @@ const TradeForm: React.FC = () => {
                   </span>
                 )}
                 {loading && <span>Loading price...</span>}
-                {livePrice === 0 && !loading && <span>Unable to fetch price</span>}
+                {livePrice === 0 && !loading && <span>{t("trade17")}</span>}
               </div>
             </div>
           ) : (
             <div className="space-y-4">
               <div>
                 <label htmlFor="quantity" className="block text-sm  text-gray-800 dark:text-white/90">
-                  Amount ({selectedCoin === "bitcoin" ? "BTC" : "ETH"})
+                {t("trade15")}  ({selectedCoin === "bitcoin" ? "BTC" : "ETH"})
                 </label>
                 <input
                   type="number"
@@ -208,7 +211,7 @@ const TradeForm: React.FC = () => {
 
               <div>
                 <label htmlFor="coin-select" className="block text-sm text-gray-800 dark:text-white/90">
-                  Select Coin
+                {t("trade16")} 
                 </label>
                 <select
                   id="coin-select"
@@ -231,7 +234,7 @@ const TradeForm: React.FC = () => {
                   </span>
                 )}
                 {loading && <span>Loading price...</span>}
-                {livePrice === 0 && !loading && <span>Unable to fetch price</span>}
+                {livePrice === 0 && !loading && <span>{t("trade17")}</span>}
               </div>
             </div>
           )}
@@ -243,10 +246,10 @@ const TradeForm: React.FC = () => {
             type="submit"
             className={`w-full py-3 rounded-lg text-white font-semibold  pointer-events-none cursor-not-allowed mt-4 ${orderType === "buy" ? "bg-green-500 opacity-50 hover:bg-green-700" : "bg-red-500 opacity-50 hover:bg-red-700"}`}
           >
-            {orderType === "buy" ? "Buy Order" : "Sell Order"}
+            {orderType === "buy" ? `${t("trade18")}` : `${t("trade19")}`}
           </button>
           <div className="absolute left-1/2 transform -translate-x-1/2 bottom-full mb-2 hidden group-hover:block bg-black text-white text-sm p-2 rounded">
-                        This option is locked now because of the transfer option is locked
+          {t("trade20")}
                       </div>
                     </div>
         </div>

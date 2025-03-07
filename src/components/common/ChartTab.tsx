@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-
+import { useTranslations } from "next-intl";
 const ChartTab: React.FC = () => {
   const [selected, setSelected] = useState<
     "optionOne" | "optionTwo" | "optionThree"
   >("optionOne");
-
+  const t = useTranslations();
   const getButtonClass = (option: "optionOne" | "optionTwo" | "optionThree") =>
     selected === option
       ? "shadow-theme-xs text-gray-900 dark:text-white bg-white dark:bg-gray-800"
@@ -18,7 +18,7 @@ const ChartTab: React.FC = () => {
           "optionOne"
         )}`}
       >
-        Monthly
+        {t("chartmonthly")}
       </button>
 
       <button
@@ -27,7 +27,7 @@ const ChartTab: React.FC = () => {
           "optionTwo"
         )}`}
       >
-        Quarterly
+        {t("chartquartly")} 
       </button>
 
       <button
@@ -36,7 +36,7 @@ const ChartTab: React.FC = () => {
           "optionThree"
         )}`}
       >
-        Annually
+        {t("chartannually")} 
       </button>
     </div>
   );

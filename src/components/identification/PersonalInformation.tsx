@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-
+import { useTranslations } from "next-intl";
 export default function PersonalInformation() {
   const [user, setUser] = useState<{
     name: string;
@@ -12,7 +12,7 @@ export default function PersonalInformation() {
     idnumber: string;
     email: string;
   } | null>(null);
-
+const t = useTranslations();
   useEffect(() => {
     // ✅ Try to load user data from sessionStorage first
     const storedUser = sessionStorage.getItem("user");
@@ -140,14 +140,14 @@ export default function PersonalInformation() {
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <h4 className="text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-6">
-            Personal Information
+            {t("ident9")} 
 
             </h4>
 
             <div className="grid grid-cols-1 gap-4 lg:grid-cols-5 lg:gap-4 ">
               <div>
                 <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Legal Name
+                {t("ident10")} 
                 </p>
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">
                 {user ? `${user.name} ${user.lastname}` : "User"}
@@ -156,7 +156,7 @@ export default function PersonalInformation() {
 
               <div>
                 <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Date of Birth
+                {t("ident11")} 
                 </p>
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">
                 {user?.dob || "1901-10-01"}
@@ -165,7 +165,7 @@ export default function PersonalInformation() {
 
               <div>
                 <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Address
+                {t("ident12")} 
                 </p>
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">
                 {user ? `${user.city}, ${user.state}` : "Not provided"}
@@ -174,7 +174,7 @@ export default function PersonalInformation() {
 
               <div>
                 <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Identification Documents
+                {t("ident13")} 
 
                 </p>
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">
@@ -184,7 +184,7 @@ export default function PersonalInformation() {
               </div>
               <div>
                 <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
-                Email Address
+                {t("ident14")} 
                 </p>
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">
                 {user?.email || "user@example.com"}
