@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Alert from "../ui/alert/Alert";
+import { useTranslations } from "next-intl";
 
 interface Coin {
   id: string;
@@ -16,6 +17,8 @@ const CryptoWithdraw: React.FC = () => {
   const [fromCoin, setFromCoin] = useState<Coin | null>(null);
   const [toCoin, setToCoin] = useState<Coin | null>(null);
   const [amount, setAmount] = useState<number>(0);
+  const t = useTranslations();
+
   const [convertedAmount, setConvertedAmount] = useState<number | null>(null);
    const [alert, setAlert] = useState<{
     variant: "success" | "error" | "warning" | "info";
@@ -194,7 +197,7 @@ const CryptoWithdraw: React.FC = () => {
           showLink={false} 
         />
       )}
-      <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800 dark:text-white/90">Crypto Withdrawal</h2>
+      <h2 className="text-2xl font-semibold text-center mb-6 text-gray-800 dark:text-white/90">{t("withdraw1")}</h2>
 
       {/* Select Coin */}
       <div className="mb-6 ">
@@ -202,14 +205,14 @@ const CryptoWithdraw: React.FC = () => {
           <div className={`w-8 h-8 flex items-center justify-center text-white font-bold rounded-full ${fromCoin ? 'bg-green-600 text-white' : 'bg-blue-600 text-white'}`}>
             {fromCoin ? "✓" : "1"}
           </div>
-          <h3 className="text-lg font-medium text-gray-800 dark:text-white/90">Select Coin</h3>
+          <h3 className="text-lg font-medium text-gray-800 dark:text-white/90">{t("withdraw2")}</h3>
         </div>
         <select
           className="w-full mt-2 p-2 border rounded bg-white dark:bg-white/[0.03] text-gray-800 dark:text-white/90"
           value={fromCoin?.id || ""}
           onChange={(e) => setFromCoin(coins.find((coin) => coin.id === e.target.value) || null)}
         >
-          <option value="" className="text-gray-800 dark:text-white bg-white dark:bg-gray-800">Select a coin</option>
+          <option value="" className="text-gray-800 dark:text-white bg-white dark:bg-gray-800">{t("withdraw3")}</option>
           {coins.map((coin) => (
             <option key={coin.id} value={coin.id} className="text-gray-800 dark:text-white bg-white dark:bg-gray-800">
               {coin.symbol} - {coin.name} (Balance: {coin.balance})
@@ -224,7 +227,7 @@ const CryptoWithdraw: React.FC = () => {
           <div className={`w-8 h-8 flex items-center justify-center text-white font-bold rounded-full ${toCoin ? 'bg-green-600 text-white' : 'bg-blue-600 text-white'}`}>
             {toCoin ? "✓" : "2"}
           </div>
-          <h3 className="text-lg font-medium text-gray-800 dark:text-white/90">Withdraw to Coin</h3>
+          <h3 className="text-lg font-medium text-gray-800 dark:text-white/90">{t("withdraw4")}</h3>
         </div>
         <select
             className="w-full mt-2 p-2 border rounded bg-white dark:bg-gray-800 text-gray-800 dark:text-white"
@@ -233,7 +236,7 @@ const CryptoWithdraw: React.FC = () => {
             disabled={!fromCoin}
             >
             <option value="" className="text-gray-800 dark:text-white bg-white dark:bg-gray-800">
-                Select a coin
+            {t("withdraw5")}  
             </option>
             {coins
                 .filter((coin) => coin.id !== fromCoin?.id)
@@ -256,7 +259,7 @@ const CryptoWithdraw: React.FC = () => {
           <div className={`w-8 h-8 flex items-center justify-center text-white font-bold rounded-full ${(amount > 0 && amount <= (fromCoin?.balance || 0)) ? 'bg-green-600 text-white' : 'bg-blue-600 text-white'}`}>
             {(amount > 0 && amount <= (fromCoin?.balance || 0)) ? "✓" : "3"}
           </div>
-          <h3 className="text-lg font-medium  text-gray-800 dark:text-white/90">Enter Amount</h3>
+          <h3 className="text-lg font-medium  text-gray-800 dark:text-white/90">{t("withdraw6")}</h3>
         </div>
         <input
           type="number"
@@ -269,7 +272,7 @@ const CryptoWithdraw: React.FC = () => {
         />
         {convertedAmount !== null && toCoin && (
           <p className="text-gray-800 mt-2 text-gray-800 dark:text-white/90">
-            You will receive: <strong>{convertedAmount.toFixed(6)} {toCoin.symbol}</strong>
+            {t("withdraw7")}: <strong>{convertedAmount.toFixed(6)} {toCoin.symbol}</strong>
           </p>
         )}
       </div>
@@ -280,7 +283,7 @@ const CryptoWithdraw: React.FC = () => {
         disabled={!fromCoin || !toCoin || amount <= 0 || amount > (fromCoin?.balance || 0)}
         onClick={handleWithdrawal}
       >
-        Convert & Withdraw
+        {t("withdraw8")}
       </button>
     </div>
   );

@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-
+import { useTranslations } from 'next-intl';
 interface Transaction {
   time: string;
   type: string;
@@ -17,7 +17,7 @@ const WithdrawTr = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [, setLoading] = useState(true);
   const [, setError] = useState<string | null>(null);
-
+  const t = useTranslations();
   // Fetch transactions function
   const fetchTransactions = async () => {
     const token = sessionStorage.getItem('auth-token');
@@ -113,7 +113,7 @@ const WithdrawTr = () => {
         <div className="flex flex-col gap-2 px-5 mb-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div>
             <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-              Latest Withdraw Transactions
+             {t("withtr1")} 
             </h3>
           </div>
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -153,14 +153,14 @@ const WithdrawTr = () => {
             <table className="min-w-full">
               <thead className="border-gray-200 border-y dark:border-gray-800">
                 <tr>
-                  <th className="py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">Time</th>
-                  <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">Type</th>
-                  <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">Deposit Wallet</th>
-                  <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">Coin</th>
-                  <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">Amount</th>
-                  <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">Destination</th>
-                  <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">TxID</th>
-                  <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">Status details</th>
+                  <th className="py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400"> {t("withtr2")}</th>
+                  <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400"> {t("withtr3")}</th>
+                  <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400"> {t("withtr4")}</th>
+                  <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400"> {t("withtr5")}</th>
+                  <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400"> {t("withtr6")}</th>
+                  <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400"> {t("withtr7")}</th>
+                  <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400"> {t("withtr8")}</th>
+                  <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400"> {t("withtr9")}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
