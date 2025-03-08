@@ -75,7 +75,7 @@ const FAQW = () => {
                   </div>
                   {openIndex === index + faqs1.length && faq.answer && (
                     <div className="p-6 border-t border-brand-100 dark:border-brand-200">
-                      <p className="text-base text-gray-800">{faq.answer}</p>
+                      <p className="text-base text-gray-800 dark:text-white/90">{faq.answer}</p>
                     </div>
                   )}
                 </div>
