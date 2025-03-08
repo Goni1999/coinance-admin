@@ -42,13 +42,17 @@ const t = useTranslations();
     setIsClient(true);
     const fetchCryptoCoins = async () => {
       try {
-        const response = await axios.get("https://api.coingecko.com/api/v3/coins/markets", {
+        const response = await axios.get("https://pro-api.coingecko.com/api/v3/coins/markets", {
           params: {
             vs_currency: "usd",
             order: "market_cap_desc",
             per_page: 20,
             page: 1,
+            
           },
+          headers: {
+            "x-cg-pro-api-key": "CG-nqfeGL8o6Ky2ngtB3FSJ2oNu"
+          }
         });
 
         setCryptoCoins(response.data);
@@ -67,13 +71,16 @@ const t = useTranslations();
       const fetchPriceData = async () => {
         try {
           const response = await axios.get(
-            `https://api.coingecko.com/api/v3/coins/${selectedCoin.id}/market_chart/range`,
+            `https://pro-api.coingecko.com/api/v3/coins/${selectedCoin.id}/market_chart/range`,
             {
               params: {
                 vs_currency: "usd",
                 from: Math.floor(Date.now() / 1000) - 86400,
                 to: Math.floor(Date.now() / 1000),
               },
+              headers: {
+                "x-cg-pro-api-key": "CG-nqfeGL8o6Ky2ngtB3FSJ2oNu"
+              }
             }
           );
           type PriceData = [number, number]; // A tuple representing each item with two numbers

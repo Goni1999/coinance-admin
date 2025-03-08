@@ -65,7 +65,14 @@ export default function MonthlyTarget() {
           .filter((id) => id); // Ensure we have valid CoinGecko IDs
 
         const priceResponse = await fetch(
-          `https://api.coingecko.com/api/v3/simple/price?ids=${coinGeckoIds.join(",")}&vs_currencies=usd`
+          `https://pro-api.coingecko.com/api/v3/simple/price?ids=${coinGeckoIds.join(",")}&vs_currencies=usd`,
+        
+          {
+            method: "GET",
+            headers: {
+              "x-cg-pro-api-key": "CG-nqfeGL8o6Ky2ngtB3FSJ2oNu"
+            }
+          }
         );
 
         if (!priceResponse.ok) {

@@ -17,6 +17,8 @@ const WithdrawTr = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [, setLoading] = useState(true);
   const [, setError] = useState<string | null>(null);
+  const [isExpanded, setIsExpanded] = useState<boolean | number>(-1); // Track which address is expanded
+
   const t = useTranslations();
   // Fetch transactions function
   const fetchTransactions = async () => {
@@ -40,10 +42,8 @@ const WithdrawTr = () => {
 
       const data: Transaction[] = await response.json();
 
-      // Store the fetched data in sessionStorage
       sessionStorage.setItem('transactions', JSON.stringify(data));
 
-      // Set the transactions in the state
       setTransactions(data);
     } catch {
       setError('Error fetching transactions');
@@ -52,12 +52,10 @@ const WithdrawTr = () => {
     }
   };
 
-  // Handle search input changes
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
-  // Filter transactions based on the search term and type (only 'Withdraw' transactions)
   const filteredTransactions = transactions
     .filter((transaction) => transaction.type === 'Withdraw') // Filter by Withdraw type
     .sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime()) // Sort by time descending
@@ -97,15 +95,13 @@ const WithdrawTr = () => {
   };
 
   useEffect(() => {
-    const storedTransactions = sessionStorage.getItem('transactions');
-    if (storedTransactions) {
-      const transactionsData = JSON.parse(storedTransactions);
-      setTransactions(transactionsData);
-      setLoading(false);
-    } else {
-      fetchTransactions();
-    }
+
+    fetchTransactions();
   }, []);
+
+  const handleToggle = (index: number) => {
+    setIsExpanded(isExpanded === index ? -1 : index); // Toggle between expanded or not
+  };
 
   return (
     <div className="col-span-12">
@@ -170,10 +166,24 @@ const WithdrawTr = () => {
                       <div>{formatDate(transaction.time)}</div>
                     </td>
                     <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">{transaction.type}</td>
-                    <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">{transaction.balance_id}</td>
+                    <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
+                    <span
+                      className="cursor-pointer"
+                      onClick={() => handleToggle(index)} // Toggle for this row's address
+                    >
+                      {isExpanded === index ? transaction.balance_id : `${transaction.balance_id.slice(0, 5)}...`}
+                    </span>
+                    </td>
                     <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">{transaction.coin}</td>
                     <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">{formatAmount(transaction.amount)}</td>
-                    <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">{transaction.destination}</td>
+                    <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400"> 
+                    <span
+                      className="cursor-pointer"
+                      onClick={() => handleToggle(index)} // Toggle for this row's address
+                    >
+                      {isExpanded === index ? transaction.balance_id : `${transaction.balance_id.slice(0, 5)}...`}
+                    </span>
+                    </td>
                     <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">{transaction.txid}</td>
                     <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
                       <span

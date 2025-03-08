@@ -21,7 +21,14 @@ const Watchlist = () => {
     // Fetch the coin data from the API
     const fetchCoins = async () => {
       try {
-        const response = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1');
+        const response = await fetch('https://pro-api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1',
+          {
+            method: "GET",
+            headers: {
+              "x-cg-pro-api-key": "CG-nqfeGL8o6Ky2ngtB3FSJ2oNu"
+            }
+          }
+        );
         const data: { // Define the shape of the fetched data here
           id: string;
           symbol: string;

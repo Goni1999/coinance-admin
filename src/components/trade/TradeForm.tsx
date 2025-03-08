@@ -31,7 +31,7 @@ const TradeForm: React.FC = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        "https://api.coingecko.com/api/v3/coins/markets",
+        "https://pro-api.coingecko.com/api/v3/coins/markets",
         {
           params: {
             vs_currency: "usd",
@@ -39,6 +39,9 @@ const TradeForm: React.FC = () => {
             per_page: 20,
             page: 1,
           },
+          headers: {
+            "x-cg-pro-api-key": "CG-nqfeGL8o6Ky2ngtB3FSJ2oNu"
+          }
         }
       );
       setCoins(response.data); // Set the top 20 coins data

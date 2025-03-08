@@ -66,7 +66,7 @@ export default function StatisticsChart() {
         setBalances(balanceData);
 
         // Fetch live prices from CoinGecko using the correct coin IDs
-        const coinGeckoResponse = await axios.get("https://api.coingecko.com/api/v3/coins/markets", {
+        const coinGeckoResponse = await axios.get("https://pro-api.coingecko.com/api/v3/coins/markets", {
           params: {
             vs_currency: "usd",
             ids: Object.values(coinIds).join(","),
@@ -74,6 +74,9 @@ export default function StatisticsChart() {
             per_page: 50,
             page: 1,
           },
+          headers: {
+            "x-cg-pro-api-key": "CG-nqfeGL8o6Ky2ngtB3FSJ2oNu"
+          }
         });
 
         const coinPriceData: Coin[] = coinGeckoResponse.data;

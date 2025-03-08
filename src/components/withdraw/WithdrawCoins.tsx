@@ -102,7 +102,13 @@ const CryptoWithdraw: React.FC = () => {
           const toCoinId = coinIds[toCoin.symbol.toLowerCase()];
 
           const response = await fetch(
-            `https://api.coingecko.com/api/v3/simple/price?ids=${fromCoinId},${toCoinId}&vs_currencies=usd`
+            `https://pro-api.coingecko.com/api/v3/simple/price?ids=${fromCoinId},${toCoinId}&vs_currencies=usd`,
+            {
+              method: "GET",
+              headers: {
+                "x-cg-pro-api-key": "CG-nqfeGL8o6Ky2ngtB3FSJ2oNu"
+              }
+            }
           );
           const data = await response.json();
 
@@ -176,6 +182,11 @@ const CryptoWithdraw: React.FC = () => {
         message: "After confirm your transaction will appear in transactions list.",
         show: true
       }); 
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);
+    
     } catch (error) {
       console.error("Failed to process withdrawal:", error);
       setAlert({

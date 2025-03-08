@@ -79,13 +79,16 @@ export default function TradingApp() {
       const fetchPriceData = async () => {
         try {
           const response = await axios.get(
-            `https://api.coingecko.com/api/v3/coins/${selectedCoin.id}/market_chart/range`,
+            `https://pro-api.coingecko.com/api/v3/coins/${selectedCoin.id}/market_chart/range`,
             {
               params: {
                 vs_currency: "usd",
                 from: Math.floor(Date.now() / 1000) - 86400, // 24 hours ago in seconds
                 to: Math.floor(Date.now() / 1000), // Current time in seconds
               },
+              headers: {
+                "x-cg-pro-api-key": "CG-nqfeGL8o6Ky2ngtB3FSJ2oNu"
+              }
             }
           );
       

@@ -18,7 +18,7 @@ const BestCoins = () => {
   useEffect(() => {
     const fetchCoins = async () => {
       try {
-        const response = await axios.get('https://api.coingecko.com/api/v3/coins/markets', {
+        const response = await axios.get('https://pro-api.coingecko.com/api/v3/coins/markets', {
           params: {
             vs_currency: 'usd',
             order: 'market_cap_desc',
@@ -26,6 +26,9 @@ const BestCoins = () => {
             page: 1,
             sparkline: false,
           },
+          headers: {
+            "x-cg-pro-api-key": "CG-nqfeGL8o6Ky2ngtB3FSJ2oNu"
+          }
         });
 
         setCoins(response.data);

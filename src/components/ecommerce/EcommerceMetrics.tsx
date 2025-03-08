@@ -23,8 +23,12 @@ const coinIds: { [key: string]: string } = {
 const getLiveCoinPrice = async (coin: string) => {
   try {
     const correctCoinId = coinIds[coin]; // Use the correct coin ID for the selected coin
-    const response = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${correctCoinId}&vs_currencies=usd`);
-    const data = await response.json();
+    const response = await fetch(`https://pro-api.coingecko.com/api/v3/simple/price?ids=${correctCoinId}&vs_currencies=usd`, {
+      method: "GET",
+      headers: {
+        "x-cg-pro-api-key": "CG-nqfeGL8o6Ky2ngtB3FSJ2oNu"
+      }
+    });    const data = await response.json();
 
     // If price data is missing, return 0
     if (!data[correctCoinId] || !data[correctCoinId].usd) {
