@@ -111,7 +111,7 @@ const Referral = () => {
           <div className="font-bold text-gray-500 dark:text-gray-400 text-lg mb-2">{t("ref4")}</div>
           <input
             type="text"
-            value={`https://www.dashboar.capital-trust.eu/CPA_${user?.id}001QNLQ8NZ`}
+            value={`https://www.dashboard.capital-trust.eu/CPA_${user?.id}001QNLQ8NZ`}
             className="w-full p-3 border border-gray-300 rounded-md"
             readOnly
           />

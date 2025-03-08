@@ -393,10 +393,10 @@ export default function SignUpForm() {
               </Label>
               <Input
                 type="text"
-                id="idnumber"
-                name="idnumber"
+                id="card_id"
+                name="card_id"
                 placeholder="Enter your id number"
-                value={formData.zip_code}
+                value={formData.card_id}
                 onChange={handleChange}
               />
             </div>
