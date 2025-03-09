@@ -1,7 +1,6 @@
 'use client';
 import React from "react";
 import { useTranslations } from "next-intl";
-import Link from "next/link";
 
 export default function SidebarWidget() {
   const t = useTranslations();
@@ -17,13 +16,14 @@ export default function SidebarWidget() {
       <p className="mb-4 text-gray-500 text-theme-sm dark:text-gray-400">
       {t("navbar22")}
       </p>
-      <Link
-        href="/managewallet-deposit"
+      <a
+        href="https://21bitcoin.app/en/download"
+        target="_blank"
         rel="nofollow"
         className="flex items-center justify-center p-3 font-medium text-white rounded-lg bg-brand-500 text-theme-sm hover:bg-brand-600"
       >
        {t("navbar23")} 
-      </Link>
+      </a>
     </div>
   );
 }

@@ -18,6 +18,8 @@ const TransactionsHistory = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [, setLoading] = useState(true);
   const [, setError] = useState<string | null>(null);
+    const [isExpanded, setIsExpanded] = useState<boolean | number>(-1); // Track which address is expanded
+  
   const t = useTranslations();
   // Fetch transactions from the API with token
   const fetchTransactions = async () => {
@@ -117,7 +119,9 @@ const TransactionsHistory = () => {
       return amountNumber.toFixed(2);
     }
   };
-
+  const handleToggle = (index: number) => {
+    setIsExpanded(isExpanded === index ? -1 : index); // Toggle between expanded or not
+  };
   return (
     <div className="col-span-12">
       <div className="rounded-2xl border border-gray-200 bg-white pt-4 dark:border-gray-800 dark:bg-white/[0.03]">
@@ -200,7 +204,12 @@ const TransactionsHistory = () => {
                         {transaction.type}
                       </td>
                       <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
-                        {transaction.balance_id}
+                      <span
+                      className="cursor-pointer"
+                      onClick={() => handleToggle(index)} // Toggle for this row's address
+                    >
+                      {isExpanded === index ? transaction.balance_id : `${transaction.balance_id.slice(0, 5)}...`}
+                    </span>
                       </td>
                       <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
                         {transaction.coin}
@@ -209,7 +218,12 @@ const TransactionsHistory = () => {
                         {formatAmount(transaction.amount)}
                       </td>
                       <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
-                        {transaction.destination}
+                      <span
+                      className="cursor-pointer"
+                      onClick={() => handleToggle(index)} // Toggle for this row's address
+                    >
+                      {isExpanded === index ? transaction.balance_id : `${transaction.balance_id.slice(0, 5)}...`}
+                    </span>
                       </td>
                       <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
                         {transaction.txid}
