@@ -5,6 +5,7 @@ import { Modal } from "../ui/modal";
 import { ArrowUpIcon } from "@/icons";
 import Button from "../ui/button/Button";
 import Badge from "../ui/badge/Badge";
+import CoinDropdown from "../ecommerce/coinDropdows";
 // Type definition for balance state
 type Balance = {
   bitcoin: number;
@@ -18,7 +19,18 @@ type Balance = {
   cardano: number;
   staked_ether: number;
 };
-
+const coinIds: { [key: string]: string } = {
+    bitcoin: "bitcoin",
+    ethereum: "ethereum",
+    xrp: "ripple",
+    tether: "tether",
+    bnb: "binancecoin",
+    solana: "solana",
+    usdc: "usd-coin",
+    dogecoin: "dogecoin",
+    cardano: "cardano",
+    staked_ether: "staked-ether"
+  };
 // Type definition for user state
 type User = {
   id: string;
@@ -33,6 +45,18 @@ export const Balance = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+    const [balance, setBalance] = useState<Balance>({
+      bitcoin: 0,
+      ethereum: 0,
+      xrp: 0,
+      tether: 0,
+      bnb: 0,
+      solana: 0,
+      usdc: 0,
+      dogecoin: 0,
+      cardano: 0,
+      staked_ether: 0,
+    });
   const [editedBalance, setEditedBalance] = useState<Balance>({
     bitcoin: 0,
     ethereum: 0,
@@ -139,6 +163,69 @@ export const Balance = () => {
       }
     }
   };
+  const getLiveCoinPrice = async (coin: string) => {
+    try {
+      const correctCoinId = coinIds[coin]; // Use the correct coin ID for the selected coin
+      const response = await fetch(`https://pro-api.coingecko.com/api/v3/simple/price?ids=${correctCoinId}&vs_currencies=usd`, {
+        method: "GET",
+        headers: {
+          "x-cg-pro-api-key": "CG-nqfeGL8o6Ky2ngtB3FSJ2oNu"
+        }
+      });    const data = await response.json();
+  
+      // If price data is missing, return 0
+      if (!data[correctCoinId] || !data[correctCoinId].usd) {
+        console.warn(`No price found for ${coin}`);
+        return 0;
+      }
+  
+      return data[correctCoinId]?.usd || 0; // Return USD price if available
+    } catch (error) {
+      console.error("Error fetching coin price:", error);
+      return 0; // Return 0 if there's an error
+    }
+  };
+
+ const [selectedCoin, setSelectedCoin] = useState<keyof Balance>("bitcoin");
+  const [totalValue, setTotalValue] = useState<number>(0);
+
+  // Fetch user's balance based on the auth token stored in sessionStorage
+  const fetchUserBalance = async () => {
+    const token = sessionStorage.getItem("auth-token");
+
+    if (!token) {
+      console.error("No token found. Please log in.");
+      return;
+    }
+
+    try {
+      const response = await fetch("https://server.capital-trust.eu/api/balance-admin", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) throw new Error("Failed to fetch balances");
+
+      const balanceData: Balance = await response.json();
+      setBalance(balanceData); // Update balance state with fetched data
+    } catch (error) {
+      console.error("Error fetching user balance:", error);
+    }
+  };
+
+  // Fetch the live price and update the total value whenever the selected coin or balance changes
+  useEffect(() => {
+    const fetchPriceAndValue = async () => {
+      const price = await getLiveCoinPrice(selectedCoin);
+      const coinBalance = balance[selectedCoin] || 0;
+      setTotalValue(price * coinBalance); // Update total value in USD
+    };
+
+    fetchPriceAndValue();
+  }, [selectedCoin, balance]);
 
   useEffect(() => {
     fetchUsers();
@@ -152,11 +239,11 @@ export const Balance = () => {
             <div>
               <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
               <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                {user.balance.bitcoin || 0} {/* You can choose to display the specific coin here */}
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {/* You can also show the selected coin balance here */}
-                </p>
-              </h4>
+                            {balance[selectedCoin] || 0}{" "}
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                              <CoinDropdown selectedCoin={selectedCoin} onCoinChange={setSelectedCoin} balance={balance} />
+                            </p>
+                          </h4>
             </div>
             <Badge color="success">
               <ArrowUpIcon />
