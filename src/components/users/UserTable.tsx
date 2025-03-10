@@ -267,7 +267,7 @@ const token = sessionStorage.getItem("auth-token");
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-      <Button size="sm" className="ml:4 inline-flex items-center mt-4 gap-2 rounded-lg border border-gray-300 bg-white px-7 py-2.5 text-theme-sm font-medium text-gray-700 text-gray-800 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200" onClick={() => openModal1()}>
+      <Button size="sm" className="ml-4 inline-flex items-center mt-4 gap-2 rounded-lg border border-gray-300 bg-white px-7 py-2.5 text-theme-sm font-medium text-gray-800 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200" onClick={() => openModal1()}>
                      + Add user
                     </Button>
       <div className="max-w-full overflow-x-auto">
@@ -322,43 +322,43 @@ const token = sessionStorage.getItem("auth-token");
             <form className="flex flex-col">
               <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-4">
                 <div>
-                  <label>First Name</label>
+                  <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" >First Name</label>
                   <Input type="text" name="first_name" value={editedUser?.first_name || ""} onChange={handleChange} />
                 </div>
                 <div>
-                  <label>Last Name</label>
+                  <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" >Last Name</label>
                   <Input type="text" name="last_name" value={editedUser?.last_name || ""} onChange={handleChange} />
                 </div>
                 <div>
-                  <label>Birthday</label>
+                  <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" >Birthday</label>
                   <Input type="text" name="date_of_birth" value={editedUser?.date_of_birth || ""} onChange={handleChange} />
                 </div>
                 <div>
-                  <label>Email</label>
+                  <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" >Email</label>
                   <Input type="email" name="email" value={editedUser?.email || ""} onChange={handleChange} />
                 </div>
                 <div>
-                  <label>Phone</label>
+                  <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" >Phone</label>
                   <Input type="text" name="phone" value={editedUser?.phone || ""} onChange={handleChange} />
                 </div>
                 <div>
-                  <label>Address</label>
+                  <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" >Address</label>
                   <Input type="text" name="address" value={editedUser?.address || ""} onChange={handleChange} />
                 </div>
                 <div>
-                  <label>City</label>
+                  <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" >City</label>
                   <Input type="text" name="city" value={editedUser?.city || ""} onChange={handleChange} />
                 </div>
                 <div>
-                  <label>State</label>
+                  <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" >State</label>
                   <Input type="text" name="state" value={editedUser?.state || ""} onChange={handleChange} />
                 </div>
                 <div>
-                  <label>Zip Code</label>
+                  <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" >Zip Code</label>
                   <Input type="text" name="zip_code" value={editedUser?.zip_code || ""} onChange={handleChange} />
                 </div>
                 <div>
-                        <label>Role</label>
+                        <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" >Role</label>
                         <select
                             name="role"
                             value={editedUser?.role || ""}
@@ -371,42 +371,42 @@ const token = sessionStorage.getItem("auth-token");
                         </select>
                         </div>
                 <div>
-                  <label>Gender</label>
+                  <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" >Gender</label>
                   <Input type="text" name="gender" value={editedUser?.gender || ""} onChange={handleChange} />
                 </div>
                 <div>
-                  <label>Card id</label>
+                  <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" >Card id</label>
                   <Input type="text" name="card_id" value={editedUser?.card_id || ""} onChange={handleChange} />
                 </div>
               
               
 
                 <div>
-                  <label>ID type</label>
+                  <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" >ID type</label>
                   <Input type="text" name="identification_documents_type" value={editedUser?.identification_documents_type || ""} onChange={handleChange} />
                 </div>
                 <div>
-                  <label>Facebook</label>
+                  <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" >Facebook</label>
                   <Input type="text" name="facebook_link" value={editedUser?.facebook_link || ""} onChange={handleChange} />
                 </div>
                 <div>
-                  <label>LinkedIn</label>
+                  <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" >LinkedIn</label>
                   <Input type="text" name="linkedin_link" value={editedUser?.linkedin_link || ""} onChange={handleChange} />
                 </div>
                 <div>
-                  <label>Instagram</label>
+                  <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" >Instagram</label>
                   <Input type="text" name="instagram_link" value={editedUser?.instagram_link || ""} onChange={handleChange} />
                 </div>
                 <div>
-                  <label>X - Twitter</label>
+                  <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" >X - Twitter</label>
                   <Input type="text" name="xcom_link" value={editedUser?.xcom_link || ""} onChange={handleChange} />
                 </div>
               </div>
               <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
-                <Button size="sm" variant="outline" onClick={closeModal}>
+                <Button className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400"  size="sm" variant="outline" onClick={closeModal}>
                   Close
                 </Button>
-                <Button size="sm" onClick={handleSave}>
+                <Button className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400"  size="sm" onClick={handleSave}>
                   Save Changes
                 </Button>
               </div>
