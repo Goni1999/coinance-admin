@@ -29,7 +29,6 @@ type User = {
 };
 
 export const Balance = () => {
-  const t = useTranslations();
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
