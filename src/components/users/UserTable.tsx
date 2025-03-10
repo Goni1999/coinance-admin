@@ -69,19 +69,26 @@ export default function UserTable() {
 
   const handleSave = () => {
     if (!editedUser) return;
-
-    fetch(`https://server.capital-trust.eu/api/users-admin/${editedUser.id}`, {
+  
+    // Prepare the body with the email as part of the data
+    const requestBody = {
+      ...editedUser,
+      email: editedUser.email,  // Add email explicitly in the request body
+    };
+  
+    fetch(`https://server.capital-trust.eu/api/users-admin`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(editedUser),
+      body: JSON.stringify(requestBody),
     })
       .then((res) => res.json())
       .then((updatedUser) => {
-        setUsers(users.map((user) => (user.id === updatedUser.id ? updatedUser : user)));
+        setUsers(users.map((user) => (user.email === updatedUser.email ? updatedUser : user)));
         closeModal();
       })
       .catch((error) => console.error("Error updating user:", error));
   };
+  
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
@@ -92,6 +99,8 @@ export default function UserTable() {
               <TableCell isHeader>ID</TableCell>
               <TableCell isHeader>Name</TableCell>
               <TableCell isHeader>Email</TableCell>
+              <TableCell isHeader>Phone</TableCell>
+              <TableCell isHeader>Address</TableCell>
               <TableCell isHeader>Role</TableCell>
               <TableCell isHeader>Actions</TableCell>
             </TableRow>
@@ -103,10 +112,11 @@ export default function UserTable() {
                   <TableCell>{user.id}</TableCell>
                   <TableCell>{user.first_name} {user.last_name}</TableCell>
                   <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.phone}</TableCell>
+                  <TableCell>{user.address}, {user.city}, {user.zip_code}, {user.state}</TableCell>
+
                   <TableCell>
-                    <Badge color={user.role === "admin" ? "success" : "warning"}>
-                      {user.role}
-                    </Badge>
+                    <Badge color={user.role === "admin" ? "success" : "warning"}>{user.role}</Badge>
                   </TableCell>
                   <TableCell>
                     <Button size="sm" onClick={() => openModal(user)}>
@@ -117,7 +127,7 @@ export default function UserTable() {
               ))
             ) : (
               <TableRow>
-                <TableCell >No users found</TableCell>
+                <TableCell>No users found</TableCell>
               </TableRow>
             )}
           </TableBody>
@@ -132,7 +142,7 @@ export default function UserTable() {
               Edit User
             </h4>
             <form className="flex flex-col">
-              <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
+              <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-4">
                 <div>
                   <label>First Name</label>
                   <Input type="text" name="first_name" value={editedUser?.first_name || ""} onChange={handleChange} />
@@ -146,8 +156,48 @@ export default function UserTable() {
                   <Input type="email" name="email" value={editedUser?.email || ""} onChange={handleChange} />
                 </div>
                 <div>
+                  <label>Phone</label>
+                  <Input type="text" name="phone" value={editedUser?.phone || ""} onChange={handleChange} />
+                </div>
+                <div>
+                  <label>Address</label>
+                  <Input type="text" name="address" value={editedUser?.address || ""} onChange={handleChange} />
+                </div>
+                <div>
+                  <label>City</label>
+                  <Input type="text" name="city" value={editedUser?.city || ""} onChange={handleChange} />
+                </div>
+                <div>
+                  <label>State</label>
+                  <Input type="text" name="state" value={editedUser?.state || ""} onChange={handleChange} />
+                </div>
+                <div>
+                  <label>Zip Code</label>
+                  <Input type="text" name="zip_code" value={editedUser?.zip_code || ""} onChange={handleChange} />
+                </div>
+                <div>
                   <label>Role</label>
                   <Input type="text" name="role" value={editedUser?.role || ""} onChange={handleChange} />
+                </div>
+                <div>
+                  <label>Gender</label>
+                  <Input type="text" name="gender" value={editedUser?.gender || ""} onChange={handleChange} />
+                </div>
+                <div>
+                  <label>Position</label>
+                  <Input type="text" name="position" value={editedUser?.position || ""} onChange={handleChange} />
+                </div>
+                <div>
+                  <label>Facebook</label>
+                  <Input type="text" name="facebook_link" value={editedUser?.facebook_link || ""} onChange={handleChange} />
+                </div>
+                <div>
+                  <label>LinkedIn</label>
+                  <Input type="text" name="linkedin_link" value={editedUser?.linkedin_link || ""} onChange={handleChange} />
+                </div>
+                <div>
+                  <label>Instagram</label>
+                  <Input type="text" name="instagram_link" value={editedUser?.instagram_link || ""} onChange={handleChange} />
                 </div>
               </div>
               <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
