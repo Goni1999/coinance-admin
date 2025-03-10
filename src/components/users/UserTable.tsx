@@ -220,7 +220,7 @@ const token = sessionStorage.getItem("auth-token");
       try {
         const response = await fetch('https://server.capital-trust.eu/auth/register-admin', {
           method: 'POST',
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(formData),
         });
         
