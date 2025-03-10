@@ -117,10 +117,10 @@ export default function UserTable() {
               <TableCell isHeader>Actions</TableCell>
             </TableRow>
           </TableHeader>
-          <TableBody>
+          <TableBody className="text-center">
             {users.length > 0 ? (
               users.map((user) => (
-                <TableRow key={user.id}>
+                <TableRow  key={user.id}>
                   <TableCell>{user.id}</TableCell>
                   <TableCell>{user.first_name} {user.last_name}</TableCell>
                   <TableCell>{user.email}</TableCell>
@@ -213,6 +213,21 @@ export default function UserTable() {
                   <Input type="text" name="card_id" value={editedUser?.card_id || ""} onChange={handleChange} />
                 </div>
                 <div>
+                  <label>Role</label>
+                  <select
+                    name="role"
+                    value={editedUser?.role || ""}
+                    onChange={handleChange}
+                  >
+                    <option value="unverified">Unverified</option>
+                    <option value="emailverified">Email Verified</option>
+                    <option value="pending">Pending</option>
+                    <option value="user">User</option>
+                  </select>
+                </div>
+
+                {/* Radio Buttons for 2FA */}
+                <div>
                   <label>2FA</label>
                   <div className="flex gap-4">
                     <label>
@@ -236,34 +251,7 @@ export default function UserTable() {
                       No
                     </label>
                   </div>
-                </div>
-
-                {/* Radio Buttons for KYC Verification */}
-                <div>
-                  <label>KYC Verification</label>
-                  <div className="flex gap-4">
-                    <label>
-                      <input
-                        type="radio"
-                        name="kyc_verification"
-                        value="true"
-                        checked={editedUser?.kyc_verification === true}
-                        onChange={handleChange}
-                      />
-                      Yes
-                    </label>
-                    <label>
-                      <input
-                        type="radio"
-                        name="kyc_verification"
-                        value="false"
-                        checked={editedUser?.kyc_verification === false}
-                        onChange={handleChange}
-                      />
-                      No
-                    </label>
                   </div>
-                </div>
 
                 <div>
                   <label>ID type</label>
