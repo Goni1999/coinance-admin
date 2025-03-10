@@ -61,18 +61,21 @@ export default function UserTable() {
     setSelectedUser(null);
   };
 
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     if (editedUser) {
       const { name, value, type } = e.target;
       let newValue: unknown;
-
-      // Check if the event target is an input element of type checkbox
-      if (type === "checkbox") {
-        newValue = (e.target as HTMLInputElement).checked; // Type assertion to HTMLInputElement
+  
+      // For radio buttons or checkboxes, handle them as booleans
+      if (type === "radio" || type === "checkbox") {
+        newValue = value === "true"; // Convert "true" or "false" strings to boolean
+      } else if (type === "select-one") {
+        newValue = value; // For select dropdowns
       } else {
-        newValue = value; // Use value for text or select elements
-      }      setEditedUser({ ...editedUser, [e.target.name]: e.target.value, [name]: newValue });
+        newValue = value; // For text inputs
+      }
+  
+      setEditedUser({ ...editedUser, [name]: newValue });
     }
   };
   
@@ -190,9 +193,18 @@ export default function UserTable() {
                   <Input type="text" name="zip_code" value={editedUser?.zip_code || ""} onChange={handleChange} />
                 </div>
                 <div>
-                  <label>Role</label>
-                  <Input type="text" name="role" value={editedUser?.role || ""} onChange={handleChange} />
-                </div>
+                        <label>Role</label>
+                        <select
+                            name="role"
+                            value={editedUser?.role || ""}
+                            onChange={handleChange}
+                        >
+                            <option value="unverified">Unverified</option>
+                            <option value="emailverified">Email Verified</option>
+                            <option value="pending">Pending</option>
+                            <option value="user">User</option>
+                        </select>
+                        </div>
                 <div>
                   <label>Gender</label>
                   <Input type="text" name="gender" value={editedUser?.gender || ""} onChange={handleChange} />
@@ -202,29 +214,57 @@ export default function UserTable() {
                   <Input type="text" name="card_id" value={editedUser?.card_id || ""} onChange={handleChange} />
                 </div>
                 <div>
-                  <label>Position</label>
-                  <Input type="text" name="position" value={editedUser?.position || ""} onChange={handleChange} />
-                </div>
+                <label>2FA</label>
                 <div>
-                    <label>2FA</label>
+                    <label>
                     <input
-                        type="checkbox"
+                        type="radio"
                         name="two_factor_enabled"
-                        checked={editedUser?.two_factor_enabled || false} // Convert boolean to string
+                        value="true"
+                        checked={editedUser?.two_factor_enabled === true}
                         onChange={handleChange}
                     />
+                    Yes
+                    </label>
+                    <label>
+                    <input
+                        type="radio"
+                        name="two_factor_enabled"
+                        value="false"
+                        checked={editedUser?.two_factor_enabled === false}
+                        onChange={handleChange}
+                    />
+                    No
+                    </label>
+                </div>
                 </div>
 
                 <div>
-                    <label>KYC</label>
+                <label>KYC Verification</label>
+                <div>
+                    <label>
                     <input
-                    type="checkbox"
-                    name="kyc_verification"
-                    checked={editedUser?.kyc_verification || false}
-                    onChange={handleChange}
-                />
-
+                        type="radio"
+                        name="kyc_verification"
+                        value="true"
+                        checked={editedUser?.kyc_verification === true}
+                        onChange={handleChange}
+                    />
+                    Verified
+                    </label>
+                    <label>
+                    <input
+                        type="radio"
+                        name="kyc_verification"
+                        value="false"
+                        checked={editedUser?.kyc_verification === false}
+                        onChange={handleChange}
+                    />
+                    Not Verified
+                    </label>
                 </div>
+                </div>
+
                 <div>
                   <label>ID type</label>
                   <Input type="text" name="identification_documents_type" value={editedUser?.identification_documents_type || ""} onChange={handleChange} />
