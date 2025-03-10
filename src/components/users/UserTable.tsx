@@ -255,7 +255,7 @@ const token = sessionStorage.getItem("auth-token");
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-      <Button size="sm" className="inline-flex items-center mt-4 gap-2 rounded-lg border border-gray-300 bg-white px-7 py-2.5 text-theme-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200" onClick={() => openModal1()}>
+      <Button size="sm" className="ml:4 inline-flex items-center mt-4 gap-2 rounded-lg border border-gray-300 bg-white px-7 py-2.5 text-theme-sm font-medium text-gray-700 text-gray-800 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200" onClick={() => openModal1()}>
                      + Add user
                     </Button>
       <div className="max-w-full overflow-x-auto">
@@ -406,7 +406,7 @@ const token = sessionStorage.getItem("auth-token");
          {/* Edit Modal */}
          {isModalOpen1 && (
         <Modal isOpen={isModalOpen1} onClose={closeModal1} className="max-w-[700px] m-4">
-          <div className="relative w-full p-4 overflow-y-auto bg-white no-scrollbar rounded-3xl dark:bg-gray-900 lg:p-11">
+          <div className="relative w-full  p-4 pt-[900px] overflow-y-auto lg:pt-[500px] bg-white no-scrollbar rounded-3xl dark:bg-gray-900 lg:p-11">
           {alert.show && (
         <Alert
           variant={alert.variant}
