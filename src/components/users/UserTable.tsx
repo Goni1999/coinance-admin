@@ -212,46 +212,8 @@ export default function UserTable() {
                   <label>Card id</label>
                   <Input type="text" name="card_id" value={editedUser?.card_id || ""} onChange={handleChange} />
                 </div>
-                <div>
-                  <label>Role</label>
-                  <select
-                    name="role"
-                    value={editedUser?.role || ""}
-                    onChange={handleChange}
-                  >
-                    <option value="unverified">Unverified</option>
-                    <option value="emailverified">Email Verified</option>
-                    <option value="pending">Pending</option>
-                    <option value="user">User</option>
-                  </select>
-                </div>
-
-                {/* Radio Buttons for 2FA */}
-                <div>
-                  <label>2FA</label>
-                  <div className="flex gap-4">
-                    <label>
-                      <input
-                        type="radio"
-                        name="two_factor_enabled"
-                        value="true"
-                        checked={editedUser?.two_factor_enabled === true}
-                        onChange={handleChange}
-                      />
-                      Yes
-                    </label>
-                    <label>
-                      <input
-                        type="radio"
-                        name="two_factor_enabled"
-                        value="false"
-                        checked={editedUser?.two_factor_enabled === false}
-                        onChange={handleChange}
-                      />
-                      No
-                    </label>
-                  </div>
-                  </div>
+              
+              
 
                 <div>
                   <label>ID type</label>
