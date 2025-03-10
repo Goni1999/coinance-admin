@@ -163,7 +163,7 @@ export default function UserTable() {
                 </div>
                 <div>
                   <label>Birthday</label>
-                  <Input type="email" name="date_of_birth" value={editedUser?.date_of_birth || ""} onChange={handleChange} />
+                  <Input type="text" name="date_of_birth" value={editedUser?.date_of_birth || ""} onChange={handleChange} />
                 </div>
                 <div>
                   <label>Email</label>
