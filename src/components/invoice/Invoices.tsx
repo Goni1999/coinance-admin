@@ -138,7 +138,7 @@ const t = useTranslations();
                   <span className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-400">{t("inv4")}</span>
                   <h5 className="mb-2 text-base font-semibold text-gray-800 dark:text-white/90">Capital Trust</h5>
                   <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
-                    NY City, USA
+                  123 Crypto Lane, Blockchain City, USA
                   </p>
                   <span className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">{t("inv5")}:</span>
                   <span className="block text-sm text-gray-500 dark:text-gray-400">{formatDate(selectedInvoice.issued_date)}</span>
