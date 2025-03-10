@@ -65,8 +65,14 @@ export default function UserTable() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (editedUser) {
       const { name, value, type, checked } = e.target;
-      const newValue = type === "checkbox" ? checked : value; // For checkbox, use `checked` instead of `value`
-      setEditedUser({ ...editedUser, [e.target.name]: e.target.value, [name]: newValue });
+      let newValue: any;
+
+      // Check if the event target is an input element of type checkbox
+      if (type === "checkbox") {
+        newValue = (e.target as HTMLInputElement).checked; // Type assertion to HTMLInputElement
+      } else {
+        newValue = value; // Use value for text or select elements
+      }      setEditedUser({ ...editedUser, [e.target.name]: e.target.value, [name]: newValue });
     }
   };
   
@@ -201,25 +207,28 @@ export default function UserTable() {
                 </div>
                 <div>
                     <label>2FA</label>
-                    <Input
-                        type="text"
+                    <input
+                        type="checkbox"
                         name="two_factor_enabled"
-                        value={editedUser?.two_factor_enabled ? "true" : "false"} // Convert boolean to string
+                        checked={editedUser?.two_factor_enabled || false} // Convert boolean to string
                         onChange={handleChange}
                     />
                 </div>
 
                 <div>
                     <label>KYC</label>
-                    <Input
-                            type="text"
-                            name="kyc_verification"
-                            value={editedUser?.kyc_verification ? "true" : "false"} // Convert boolean to string
-                            onChange={handleChange}
-                            />
+                    <input
+                    type="checkbox"
+                    name="kyc_verification"
+                    checked={editedUser?.kyc_verification || false}
+                    onChange={handleChange}
+                />
 
                 </div>
-            
+                <div>
+                  <label>ID type</label>
+                  <Input type="text" name="identification_documents_type" value={editedUser?.identification_documents_type || ""} onChange={handleChange} />
+                </div>
                 <div>
                   <label>Facebook</label>
                   <Input type="text" name="facebook_link" value={editedUser?.facebook_link || ""} onChange={handleChange} />
