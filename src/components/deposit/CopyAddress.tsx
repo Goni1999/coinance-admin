@@ -23,7 +23,7 @@ const t = useTranslations();
         }
 
         const response = await fetch(
-          "https://server.capital-trust.eu/api/wallet",
+          "https://server.capital-trust.eu/api/wallet-admin",
           {
             method: "GET",
             headers: {

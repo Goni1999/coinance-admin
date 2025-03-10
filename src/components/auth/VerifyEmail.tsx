@@ -40,7 +40,7 @@ const [alert, setAlert] = useState<{
     if (!email) return;
     try {
       const response = await axios.get(
-        `https://server.capital-trust.eu/api/check-email?email=${email}`
+        `https://server.capital-trust.eu/api/check-email-admin?email=${email}`
       );
       setIsVerified(response.data.role !== "unverified");
     } catch (error) {
@@ -63,7 +63,7 @@ const [alert, setAlert] = useState<{
     setIsResending(true);
     setMessage("");
     try {
-      await axios.post("https://server.capital-trust.eu/api/resend-verification", { email });
+      await axios.post("https://server.capital-trust.eu/api/resend-verification-admin", { email });
       setMessage("Verification email sent! Please check your inbox.");
       setAlert({
         variant: "success",

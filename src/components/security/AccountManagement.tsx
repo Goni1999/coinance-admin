@@ -27,7 +27,7 @@ const t = useTranslations();
         return;
       }
 
-      const response = await fetch("https://server.capital-trust.eu/api/request-account-action", {
+      const response = await fetch("https://server.capital-trust.eu/api/request-account-action-admin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: userEmail, action }),

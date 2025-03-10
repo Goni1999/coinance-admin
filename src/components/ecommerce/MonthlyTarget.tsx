@@ -41,7 +41,7 @@ export default function MonthlyTarget() {
     async function fetchBalanceAndPrices() {
       try {
         // Fetch user balance from the API
-        const balanceResponse = await fetch("https://server.capital-trust.eu/api/profit", {
+        const balanceResponse = await fetch("https://server.capital-trust.eu/api/profit-admin", {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("auth-token")}`, // Token from sessionStorage
           },

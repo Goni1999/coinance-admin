@@ -19,7 +19,7 @@ const t = useTranslations();
 
     const checkUserRole = async () => {
       try {
-        const { data } = await axios.get("https://server.capital-trust.eu/api/check-user-role", {
+        const { data } = await axios.get("https://server.capital-trust.eu/api/check-user-role-admin", {
           headers: { Authorization: `Bearer ${token}` },
         });
 

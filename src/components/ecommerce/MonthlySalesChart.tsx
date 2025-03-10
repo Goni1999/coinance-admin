@@ -134,7 +134,7 @@ export default function MonthlySalesChart() {
           throw new Error("No token found. Please log in.");
         }
 
-        const response = await fetch("https://server.capital-trust.eu/api/transactions", {
+        const response = await fetch("https://server.capital-trust.eu/api/transactions-admin", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,

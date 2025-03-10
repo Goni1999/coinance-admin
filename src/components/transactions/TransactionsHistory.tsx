@@ -33,7 +33,7 @@ const [isExpanded, setIsExpanded] = useState<boolean | number>(-1); // Track whi
     }
   
     try {
-      const response = await fetch("https://server.capital-trust.eu/api/transactions", {
+      const response = await fetch("https://server.capital-trust.eu/api/transactions-admin", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

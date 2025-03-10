@@ -90,7 +90,7 @@ export const TotalValue = () => {
       }
   
       try {
-        const response = await fetch("https://server.capital-trust.eu/api/balance", {
+        const response = await fetch("https://server.capital-trust.eu/api/balance-admin", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,

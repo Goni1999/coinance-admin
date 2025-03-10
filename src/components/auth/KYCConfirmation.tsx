@@ -53,7 +53,7 @@ useEffect(() => {
     }
   
     try {
-      const response = await fetch("https://server.capital-trust.eu/api/get-user-data", {
+      const response = await fetch("https://server.capital-trust.eu/api/get-user-data-admin", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -83,7 +83,7 @@ useEffect(() => {
 
   const checkUserRole = async (token: string) => {
     try {
-      const { data } = await axios.get("https://server.capital-trust.eu/api/check-user-role", {
+      const { data } = await axios.get("https://server.capital-trust.eu/api/check-user-role-admin", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -172,7 +172,7 @@ useEffect(() => {
       const headers = { Authorization: `Bearer ${token}` };
   
       await axios.post(
-        "https://server.capital-trust.eu/auth/save-kyc",
+        "https://server.capital-trust.eu/auth/save-kyc-admin",
         { urls: uploadedUrls, idType: selectedIdType },
         { headers }
       );

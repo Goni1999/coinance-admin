@@ -30,7 +30,7 @@ const Referral = () => {
         }
 
         // If no user data found, fetch from API
-        const response = await fetch("https://server.capital-trust.eu/api/get-user-data", {
+        const response = await fetch("https://server.capital-trust.eu/api/get-user-data-admin", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,

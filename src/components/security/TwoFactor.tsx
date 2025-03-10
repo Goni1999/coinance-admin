@@ -42,7 +42,7 @@ const TwoFactor: React.FC = () => {
               return;
             }
     
-            const response = await fetch("https://server.capital-trust.eu/api/get-user-data", {
+            const response = await fetch("https://server.capital-trust.eu/api/get-user-data-admin", {
               method: "GET",
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -101,7 +101,7 @@ const TwoFactor: React.FC = () => {
       const userEmail = sessionStorage.getItem("userEmail"); // Retrieve unmasked email
 
       const jsonBody = JSON.stringify({ email: userEmail });
-      const response = await fetch("https://server.capital-trust.eu/api/request-password-reset", {
+      const response = await fetch("https://server.capital-trust.eu/api/request-password-reset-admin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: jsonBody,

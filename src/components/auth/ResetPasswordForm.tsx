@@ -40,7 +40,7 @@ const ForgotPassword = () => {
 
     try {
       const jsonBody = JSON.stringify({ email });  // Use the email from state
-      const response = await fetch("https://server.capital-trust.eu/api/request-password-reset", {
+      const response = await fetch("https://server.capital-trust.eu/api/request-password-reset-admin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: jsonBody,

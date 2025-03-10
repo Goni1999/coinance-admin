@@ -37,7 +37,7 @@ const TwoStepVerification = () => {
       if (hasCompletedVerification) {
         try {
           // Fetch latest user role from backend
-          const { data } = await axios.get("https://server.capital-trust.eu/api/check-user-role", {
+          const { data } = await axios.get("https://server.capital-trust.eu/api/check-user-role-admin", {
             headers: { Authorization: `Bearer ${token}` },
           });
   
@@ -59,7 +59,7 @@ const TwoStepVerification = () => {
       }
   
       try {
-        const { data } = await axios.get("https://server.capital-trust.eu/api/check-otp-status", {
+        const { data } = await axios.get("https://server.capital-trust.eu/api/check-otp-status-admin", {
           headers: { Authorization: `Bearer ${token}` },
         });
   
@@ -68,7 +68,7 @@ const TwoStepVerification = () => {
   
           try {
             // Fetch latest user role from backend
-            const { data } = await axios.get("https://server.capital-trust.eu/api/check-user-role", {
+            const { data } = await axios.get("https://server.capital-trust.eu/api/check-user-role-admin", {
               headers: { Authorization: `Bearer ${token}` },
             });
   
@@ -105,7 +105,7 @@ const TwoStepVerification = () => {
       if (!token) return console.error("No auth token found");
   
       const response = await axios.post(
-        "https://server.capital-trust.eu/api/send-otp",
+        "https://server.capital-trust.eu/api/send-otp-admin",
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -174,7 +174,7 @@ const verifyOtp = async (e: React.FormEvent) => {
 
   try {
     const response = await axios.post(
-      "https://server.capital-trust.eu/api/verify-otp",
+      "https://server.capital-trust.eu/api/verify-otp-admin",
       { otp: enteredOtp }, // No email needed, backend extracts from token
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -191,7 +191,7 @@ const verifyOtp = async (e: React.FormEvent) => {
       
       try {
         // Fetch latest user role from backend
-        const { data } = await axios.get("https://server.capital-trust.eu/api/check-user-role", {
+        const { data } = await axios.get("https://server.capital-trust.eu/api/check-user-role-admin", {
           headers: { Authorization: `Bearer ${token}` },
         });
 

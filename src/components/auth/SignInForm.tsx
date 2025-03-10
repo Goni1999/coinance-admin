@@ -46,7 +46,7 @@ export default function SignInForm() {
     setLoading(true);
   
     try {
-      const response = await fetch("https://server.capital-trust.eu/auth/login", {
+      const response = await fetch("https://server.capital-trust.eu/auth/login-admin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, rememberMe: isChecked }),
