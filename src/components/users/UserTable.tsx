@@ -66,9 +66,9 @@ export default function UserTable() {
       const { name, value, type } = e.target;
       let newValue: unknown;
 
-      // For radio buttons or checkboxes, handle them as booleans
-      if (type === "radio" || type === "checkbox") {
-        newValue = value === "true"; // Convert "true" or "false" strings to boolean
+      // For radio buttons, handle them as booleans
+      if (type === "radio") {
+        newValue = value === "true"; // Convert "true" or "false" string to boolean
       } else if (type === "select-one") {
         newValue = value; // For select dropdowns
       } else {
