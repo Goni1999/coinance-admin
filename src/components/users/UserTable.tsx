@@ -64,8 +64,8 @@ export default function UserTable() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (editedUser) {
-      const { name, value, type, checked } = e.target;
-      let newValue: any;
+      const { name, value, type } = e.target;
+      let newValue: unknown;
 
       // Check if the event target is an input element of type checkbox
       if (type === "checkbox") {
