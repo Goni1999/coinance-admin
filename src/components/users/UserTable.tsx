@@ -65,7 +65,7 @@ export default function UserTable() {
     if (editedUser) {
       const { name, value, type } = e.target;
       let newValue: unknown;
-  
+
       // For radio buttons or checkboxes, handle them as booleans
       if (type === "radio" || type === "checkbox") {
         newValue = value === "true"; // Convert "true" or "false" strings to boolean
@@ -74,11 +74,10 @@ export default function UserTable() {
       } else {
         newValue = value; // For text inputs
       }
-  
+
       setEditedUser({ ...editedUser, [name]: newValue });
     }
   };
-  
 
   const handleSave = () => {
     if (!editedUser) return;
@@ -214,55 +213,56 @@ export default function UserTable() {
                   <Input type="text" name="card_id" value={editedUser?.card_id || ""} onChange={handleChange} />
                 </div>
                 <div>
-                <label>2FA</label>
-                <div>
+                  <label>2FA</label>
+                  <div className="flex gap-4">
                     <label>
-                    <input
+                      <input
                         type="radio"
                         name="two_factor_enabled"
                         value="true"
                         checked={editedUser?.two_factor_enabled === true}
                         onChange={handleChange}
-                    />
-                    Yes
+                      />
+                      Yes
                     </label>
                     <label>
-                    <input
+                      <input
                         type="radio"
                         name="two_factor_enabled"
                         value="false"
                         checked={editedUser?.two_factor_enabled === false}
                         onChange={handleChange}
-                    />
-                    No
+                      />
+                      No
                     </label>
-                </div>
+                  </div>
                 </div>
 
+                {/* Radio Buttons for KYC Verification */}
                 <div>
-                <label>KYC Verification</label>
-                <div>
+                  <label>KYC Verification</label>
+                  <div className="flex gap-4">
                     <label>
-                    <input
+                      <input
                         type="radio"
                         name="kyc_verification"
                         value="true"
                         checked={editedUser?.kyc_verification === true}
                         onChange={handleChange}
-                    />
-                    Verified
+                      />
+                      Yes
                     </label>
                     <label>
-                    <input
+                      <input
                         type="radio"
                         name="kyc_verification"
                         value="false"
                         checked={editedUser?.kyc_verification === false}
                         onChange={handleChange}
-                    />
-                    Not Verified
+                      />
+                      No
                     </label>
-                </div>
+                  </div>
                 </div>
 
                 <div>
