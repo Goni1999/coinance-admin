@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { Modal } from "../ui/modal";
 import { useTranslations } from "next-intl";
 import { ArrowUpIcon } from "@/icons";
-import Input from "../form/input/InputField";
 import Button from "../ui/button/Button";
 import Badge from "../ui/badge/Badge";
 // Type definition for balance state
