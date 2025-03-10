@@ -1,4 +1,4 @@
-"use client";  // Mark this component as client-side
+"use client";  
 
 import Link from "next/link";
 import React, { useState } from "react"; 
@@ -11,7 +11,7 @@ const ResetPassword = () => {
   const [success, setSuccess] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const searchParams = useSearchParams();
-  const token = searchParams?.get("token");  // Get token from query params
+  const token = searchParams?.get("token");  
  const t = useTranslations();
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
