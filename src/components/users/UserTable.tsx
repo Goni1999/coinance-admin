@@ -1,4 +1,3 @@
-'use client';
 import React, { useEffect, useState } from "react";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../ui/table";
 import Badge from "../ui/badge/Badge";
@@ -40,7 +39,13 @@ export default function UserTable() {
   useEffect(() => {
     fetch("https://server.capital-trust.eu/api/users-admin")
       .then((res) => res.json())
-      .then((data) => setUsers(data))
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setUsers(data); // Ensure that data is an array before updating the state
+        } else {
+          console.error("Expected an array, but got:", data);
+        }
+      })
       .catch((error) => console.error("Error fetching users:", error));
   }, []);
 
@@ -91,23 +96,29 @@ export default function UserTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.id}</TableCell>
-                <TableCell>{user.first_name} {user.last_name}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>
-                  <Badge color={user.role === "admin" ? "success" : "warning"}>
-                    {user.role}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  <Button size="sm" onClick={() => openModal(user)}>
-                    Edit
-                  </Button>
-                </TableCell>
+            {users.length > 0 ? (
+              users.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell>{user.id}</TableCell>
+                  <TableCell>{user.first_name} {user.last_name}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>
+                    <Badge color={user.role === "admin" ? "success" : "warning"}>
+                      {user.role}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Button size="sm" onClick={() => openModal(user)}>
+                      Edit
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell >No users found</TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </div>
