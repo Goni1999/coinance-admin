@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Modal } from "../ui/modal";
-import { useTranslations } from "next-intl";
+// import { useTranslations } from "next-intl";
 import { ArrowUpIcon } from "@/icons";
 import Button from "../ui/button/Button";
 import Badge from "../ui/badge/Badge";
@@ -29,6 +29,7 @@ type User = {
 };
 
 export const Balance = () => {
+//  const t = useTranslations();
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
