@@ -1,11 +1,18 @@
 'use client';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, ChangeEvent } from "react";
 import { Table, TableBody, TableCell, TableHeader, TableRow } from "../ui/table";
 import Badge from "../ui/badge/Badge";
 import { Modal } from "../ui/modal";
 import Input from "../form/input/InputField";
 import Button from "../ui/button/Button";
-
+import { useTranslations } from "next-intl";
+import Label from "../form/Label";
+import { useRouter } from "next/navigation";
+import Alert from "../../components/ui/alert/Alert";
+import Radio from "../form/input/Radio";
+import { EyeCloseIcon, EyeIcon } from "@/icons";
+import Select from "../form/Select";
+import Checkbox from "../form/input/Checkbox";
 interface User {
   id: string;
   first_name: string;
@@ -31,13 +38,42 @@ interface User {
   gender: string | null;
 }
 
+
 export default function UserTable() {
   const [users, setUsers] = useState<User[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [editedUser, setEditedUser] = useState<User | null>(null);
+  const [isModalOpen1, setIsModalOpen1] = useState(false);
+  const t = useTranslations();
+  const router = useRouter();
+const [showPassword, setShowPassword] = useState(false);
+const [isChecked, setIsChecked] = useState(false);
+const [formData, setFormData] = useState({
+  first_name: '',
+  last_name: '',
+  email: '',
+  phone: '',
+  password: '',
+  confirmPassword: '',
+  birthday: '',
+  gender: '',
+  address: '',
+  city: '',
+  state: '',
+  zip_code: '',
+  identification_documents_type: '',
+  card_id: '',
+  position: '',
+});
+const token = sessionStorage.getItem("auth-token");
+
 
   useEffect(() => {
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
     fetch("https://server.capital-trust.eu/api/users-admin")
       .then((res) => res.json())
       .then((data) => {
@@ -56,6 +92,11 @@ export default function UserTable() {
     setIsModalOpen(true);
   };
 
+  const openModal1 = () => {
+  };
+  const closeModal1 = () => {
+    setIsModalOpen1(false);
+  };
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedUser(null);
@@ -101,9 +142,120 @@ export default function UserTable() {
       .catch((error) => console.error("Error updating user:", error));
   };
   
+  
+    const [alert, setAlert] = useState<{
+      variant: "success" | "error" | "warning" | "info";
+      title: string;
+      message: string;
+      show: boolean;
+    }>({
+      variant: "success",
+      title: "",
+      message: "",
+      show: false,
+    });
+  
+    const options = [
+      { value: "id_card", label: "ID Card" },
+      { value: "passport", label: "Passport" },
+      { value: "driving_license", label: "Driving License" }
+    ];
+    
+    const handleChange1 = (e: ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: value,
+      }));
+    };
+  
+    const handleSelectChange = (value: string) => {
+      setFormData((prevData) => ({
+        ...prevData,
+        identification_documents_type: value,
+      }));
+    };
+  
+    // Handle checkbox change
+    const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
+      setIsChecked(e.target.checked);
+    };
+  
+    const handleRadioChange = (value: string) => {
+      setFormData((prevData) => ({
+        ...prevData,
+        gender: value, // Directly set the selected gender
+      }));
+    };
+    
+    
+  
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+  
+      for (const key in formData) {
+        if (formData[key as keyof typeof formData].trim() === "") {
+          setAlert({
+            variant: "error",
+            title: "Fields empty",
+            message: "Please fill all fields!",
+            show: true
+          });
+          return;
+        }
+      }
+  
+      if (formData.password !== formData.confirmPassword) {
+         setAlert({
+        variant: "error",
+        title: "Password Mismatch",
+        message: "Passwords do not match. Please try again.",
+        show: true
+      });
+        return;
+      }
+  
+      try {
+        const response = await fetch('https://server.capital-trust.eu/auth/register-admin', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` },
+          body: JSON.stringify(formData),
+        });
+        
+        if (response.ok) {
+          setAlert({
+            variant: "success",
+            title: "Registred successfully",
+            message: "You can login now!",
+            show: true,
+          });
+          router.push("/users");
+        } else {
+          const result = await response.json();
+          console.error(result);
+          setAlert({
+            variant: "error",
+            title: "Error registering.",
+            message: "Please try again.",
+            show: true
+          });
+        }
+      } catch (error) {
+        console.error('Error submitting form:', error);
+        setAlert({
+          variant: "error",
+          title: "Network error.",
+          message: "Please try again later.",
+          show: true
+        });
+      }
+    };
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+      <Button size="sm" onClick={() => openModal1()}>
+                      Edit
+                    </Button>
       <div className="max-w-full overflow-x-auto">
         <Table>
           <TableHeader className="border-b text-center   border-gray-100 dark:border-white/[0.05]">
@@ -245,6 +397,302 @@ export default function UserTable() {
                 </Button>
               </div>
             </form>
+          </div>
+        </Modal>
+      )}
+
+         {/* Edit Modal */}
+         {isModalOpen1 && (
+        <Modal isOpen={isModalOpen1} onClose={closeModal1} className="max-w-[700px] m-4">
+          <div className="relative w-full p-4 overflow-y-auto bg-white no-scrollbar rounded-3xl dark:bg-gray-900 lg:p-11">
+          {alert.show && (
+        <Alert
+          variant={alert.variant}
+          title={alert.title}
+          message={alert.message}
+          showLink={false} 
+        />
+      )}
+            <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
+              Add User
+            </h4>
+            <form onSubmit={handleSubmit}>
+          <div className="space-y-5">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+              {/* First Name */}
+              <div className="sm:col-span-1">
+                <Label>
+                {t("signupfn")}<span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  type="text"
+                  id="first_name"
+                  name="first_name"
+                  placeholder="Enter your first name"
+                  value={formData.first_name}
+                  onChange={handleChange1}
+                />
+              </div>
+
+              {/* Last Name */}
+              <div className="sm:col-span-1">
+                <Label>
+                {t("signupln")}<span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  type="text"
+                  id="last_name"
+                  name="last_name"
+                  placeholder="Enter your last name"
+                  value={formData.last_name}
+                  onChange={handleChange1}
+                />
+              </div>
+            </div>
+
+            {/* Phone */}
+            <div>
+              <Label>
+              {t("signupphone")}<span className="text-red-500">*</span>
+              </Label>
+              <Input
+                type="text"
+                id="phone"
+                name="phone"
+                placeholder="Enter your phone number"
+                value={formData.phone}
+                onChange={handleChange1}
+              />
+            </div>
+
+
+            {/* Email */}
+            <div>
+              <Label>
+              {t("signupemail")}<span className="text-red-500">*</span>
+              </Label>
+              <Input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleChange1}
+              />
+            </div>
+            <Label>
+            {t("gender")}<span className="text-red-500">*</span>
+              </Label>
+            <div className="grid grid-cols-3 gap-5 sm:grid-cols-">
+              
+             < Radio id="male" name="gender" value="Male" checked={formData.gender === "Male"} onChange={handleRadioChange} label="Male" />
+          <Radio id="female" name="gender" value="Female" checked={formData.gender === "Female"} onChange={handleRadioChange} label="Female" />
+          <Radio id="other" name="gender" value="Other" checked={formData.gender === "Other"} onChange={handleRadioChange} label="Other" />
+            </div>
+         
+           {/* Birthday */}
+           <div>
+              <Label>
+              {t("bday")}<span className="text-red-500">*</span>
+              </Label>
+              <Input
+                type="date"
+                id="birthday"
+                name="birthday"
+                value={formData.birthday}
+                onChange={handleChange1}
+              />
+            </div>
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+
+            {/* Password */}
+            <div className="sm:col-span-1">
+              <Label>
+              {t("pass")}<span className="text-red-500">*</span>
+              </Label>
+              <div className="relative">
+                <Input
+                  placeholder="Enter your password"
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange1}
+                />
+                <span
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+                >
+                  {showPassword ? (
+                    <EyeIcon className="fill-gray-500 dark:fill-gray-400" />
+                  ) : (
+                    <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400" />
+                  )}
+                </span>
+              </div>
+            </div>
+
+           {/* Password */}
+           <div className="sm:col-span-1">
+              <Label>
+              {t("cpass")}<span className="text-red-500">*</span>
+              </Label>
+              <div className="relative">
+                <Input
+                  placeholder="Enter your password"
+                  type={showPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange1}
+                
+                />
+                <span
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
+                >
+                  {showPassword ? (
+                    <EyeIcon className="fill-gray-500 dark:fill-gray-400" />
+                  ) : (
+                    <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400" />
+                  )}
+                </span>
+              </div>
+            </div>
+          </div>
+            {/* Address */}
+            <div>
+              <Label>
+              {t("address")}<span className="text-red-500">*</span>
+              </Label>
+              <Input
+                type="text"
+                id="address"
+                name="address"
+                placeholder="Enter your address"
+                value={formData.address}
+                onChange={handleChange1}
+              />
+            </div>
+
+            {/* City */}
+            <div>
+              <Label>
+              {t("city")}<span className="text-red-500">*</span>
+              </Label>
+              <Input
+                type="text"
+                id="city"
+                name="city"
+                placeholder="Enter your city"
+                value={formData.city}
+                onChange={handleChange1}
+              />
+            </div>
+             {/* Zip Code */}
+             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+
+                {/* Password */}
+                <div className="sm:col-span-1">
+                <Label>
+                {t("zipcode")}<span className="text-red-500">*</span>
+              </Label>
+              <Input
+                type="text"
+                id="zip_code"
+                name="zip_code"
+                placeholder="Enter your zip code"
+                value={formData.zip_code}
+                onChange={handleChange1}
+              />
+            </div>
+            {/* State */}
+                <div className="sm:col-span-1">
+              <Label>
+              {t("state")}<span className="text-red-500">*</span>
+              </Label>
+              <Input
+                type="text"
+                id="state"
+                name="state"
+                placeholder="Enter your state"
+                value={formData.state}
+                onChange={handleChange1}
+              />
+            </div>
+            </div>
+           
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+
+            {/* ID Document Type */}
+            <div className="sm:col-span-1">
+              <Label>
+              {t("idtype")}<span className="text-red-500">*</span>
+              </Label>
+              <Select options={options} onChange={handleSelectChange}  />
+
+            </div>
+            <div className="sm:col-span-1">
+                <Label>
+                {t("idnumber")}<span className="text-red-500">*</span>
+              </Label>
+              <Input
+                type="text"
+                id="card_id"
+                name="card_id"
+                placeholder="Enter your id number"
+                value={formData.card_id}
+                onChange={handleChange1}
+              />
+            </div>
+                  </div>
+            
+            
+            {/* Position */}
+            <div>
+              <Label>
+              {t("position")}<span className="text-red-500">*</span>
+              </Label>
+              <Input
+                type="text"
+                id="position"
+                name="position"
+                placeholder="Enter your position"
+                value={formData.position}
+                onChange={handleChange1}
+              />
+            </div>
+
+           
+
+            {/* Checkbox for Terms and Conditions */}
+            <div className="flex items-center gap-3">
+              <Checkbox
+                className="w-5 h-5"
+                checked={isChecked}
+                onChange={handleCheckboxChange}
+              />
+              <p className="inline-block font-normal text-gray-500 dark:text-gray-400">
+              {t("youagree")} {" "}
+                <span className="text-gray-800 dark:text-white/90">
+                {t("termsandconditions")} 
+                </span>{" "}
+                {t("andour")}{" "}
+                <span className="text-gray-800 dark:text-white">
+                {t("privacypolicy")}Privacy Policy
+                </span>
+              </p>
+            </div>
+
+            {/* Submit Button */}
+            <div>
+              <button
+                type="submit"
+                className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600"
+              >
+                Add user
+              </button>
+            </div>
+          </div>
+        </form>
           </div>
         </Modal>
       )}
