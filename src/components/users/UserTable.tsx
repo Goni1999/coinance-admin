@@ -93,6 +93,8 @@ const token = sessionStorage.getItem("auth-token");
   };
 
   const openModal1 = () => {
+    setIsModalOpen1(true);
+
   };
   const closeModal1 = () => {
     setIsModalOpen1(false);
