@@ -61,11 +61,15 @@ export default function UserTable() {
     setSelectedUser(null);
   };
 
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (editedUser) {
-      setEditedUser({ ...editedUser, [e.target.name]: e.target.value });
+      const { name, value, type, checked } = e.target;
+      const newValue = type === "checkbox" ? checked : value; // For checkbox, use `checked` instead of `value`
+      setEditedUser({ ...editedUser, [e.target.name]: e.target.value, [name]: newValue });
     }
   };
+  
 
   const handleSave = () => {
     if (!editedUser) return;
@@ -208,11 +212,12 @@ export default function UserTable() {
                 <div>
                     <label>KYC</label>
                     <Input
-                        type="text"
-                        name="kyc_verification"
-                        value={editedUser?.kyc_verification ? "true" : "false"} // Convert boolean to string
-                        onChange={handleChange}
-                    />
+                            type="text"
+                            name="kyc_verification"
+                            value={editedUser?.kyc_verification ? "true" : "false"} // Convert boolean to string
+                            onChange={handleChange}
+                            />
+
                 </div>
             
                 <div>
