@@ -199,8 +199,10 @@ const verifyOtp = async (e: React.FormEvent) => {
           router.push("/pending");
         } else if (data.role === "emailverified") {
           router.push("/kyc_verification");
-        } else {
+        } else if (data.role === "admin") {
           router.push("/");
+        }else {
+          router.push("/signin");
         }
         return;
       } catch (error) {
