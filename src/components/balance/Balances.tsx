@@ -229,6 +229,8 @@ export const Balance = () => {
 
   useEffect(() => {
     fetchUsers();
+    fetchUserBalance();
+
   }, []);
 
   return (
@@ -246,9 +248,9 @@ export const Balance = () => {
                           </h4>
             </div>
             <Badge color="success">
-              <ArrowUpIcon />
-              ${user.balance.bitcoin ? user.balance.bitcoin.toFixed(2) : "Unavailable"}
-            </Badge>
+            <ArrowUpIcon />
+            ${totalValue > 0 ? totalValue.toFixed(2) : "Unavailable"} {/* Show the total value or "Unavailable" */}
+          </Badge>
           </div>
 
           {/* Edit Button */}
