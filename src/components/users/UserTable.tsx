@@ -74,7 +74,13 @@ const token = sessionStorage.getItem("auth-token");
       router.push("/signin");
       return;
     }
-    fetch("https://server.capital-trust.eu/api/users-admin")
+    fetch(`https://server.capital-trust.eu/api/users-admin`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },    })
+    
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
