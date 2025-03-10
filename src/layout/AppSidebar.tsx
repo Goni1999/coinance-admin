@@ -39,6 +39,20 @@ const navItems: NavItem[] = [
     path: "/",
   },
   {
+    icon: <UserCircleIcon />,
+    name: "Clients",
+    subItems: [
+      { name: "Users", path: "/users", pro: false },
+      { name: "Balances", path: "/balance", pro: false },
+      { name: "Transactions", path: "/user-transactions", pro: false },
+      { name: "Invoices", path: "/user-invoices", pro: false },
+      { name: "Investments", path: "/investments", pro: false },
+      { name: "Enquiries", path: "/enquiries", pro: false },
+      { name: "Raports", path: "/raports", pro: false },
+
+    ],
+  },
+  {
     icon: <WalletIcon />,
     name: t('navbar2'),
     subItems: [
