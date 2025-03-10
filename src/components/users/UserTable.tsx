@@ -108,13 +108,13 @@ export default function UserTable() {
         <Table>
           <TableHeader className="border-b text-center   border-gray-100 dark:border-white/[0.05]">
             <TableRow>
-              <TableCell className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400" isHeader >ID</TableCell>
-              <TableCell className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400" isHeader>Name</TableCell>
-              <TableCell className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400" isHeader>Email</TableCell>
-              <TableCell className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400" isHeader>Phone</TableCell>
-              <TableCell className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400" isHeader>Address</TableCell>
-              <TableCell className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400" isHeader>Role</TableCell>
-              <TableCell className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400" isHeader>Actions</TableCell>
+              <TableCell className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" isHeader >ID</TableCell>
+              <TableCell className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" isHeader>Name</TableCell>
+              <TableCell className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" isHeader>Email</TableCell>
+              <TableCell className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" isHeader>Phone</TableCell>
+              <TableCell className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" isHeader>Address</TableCell>
+              <TableCell className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" isHeader>Role</TableCell>
+              <TableCell className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400" isHeader>Actions</TableCell>
             </TableRow>
           </TableHeader>
           <TableBody className="text-center">
