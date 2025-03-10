@@ -108,24 +108,24 @@ export default function UserTable() {
         <Table>
           <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
             <TableRow>
-              <TableCell isHeader>ID</TableCell>
-              <TableCell isHeader>Name</TableCell>
-              <TableCell isHeader>Email</TableCell>
-              <TableCell isHeader>Phone</TableCell>
-              <TableCell isHeader>Address</TableCell>
-              <TableCell isHeader>Role</TableCell>
-              <TableCell isHeader>Actions</TableCell>
+              <TableCell className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400" isHeader >ID</TableCell>
+              <TableCell className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400" isHeader>Name</TableCell>
+              <TableCell className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400" isHeader>Email</TableCell>
+              <TableCell className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400" isHeader>Phone</TableCell>
+              <TableCell className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400" isHeader>Address</TableCell>
+              <TableCell className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400" isHeader>Role</TableCell>
+              <TableCell className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400" isHeader>Actions</TableCell>
             </TableRow>
           </TableHeader>
           <TableBody className="text-center">
             {users.length > 0 ? (
               users.map((user) => (
                 <TableRow  key={user.id}>
-                  <TableCell>{user.id}</TableCell>
-                  <TableCell>{user.first_name} {user.last_name}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.phone}</TableCell>
-                  <TableCell>{user.address}, {user.city}, {user.zip_code}, {user.state}</TableCell>
+                  <TableCell className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">{user.id}</TableCell>
+                  <TableCell className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">{user.first_name} {user.last_name}</TableCell>
+                  <TableCell className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">{user.email}</TableCell>
+                  <TableCell className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">{user.phone}</TableCell>
+                  <TableCell className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">{user.address}, {user.city}, {user.zip_code}, {user.state}</TableCell>
 
                   <TableCell>
                     <Badge color={user.role === "admin" ? "success" : "warning"}>{user.role}</Badge>
