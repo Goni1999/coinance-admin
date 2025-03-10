@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(userData);
 
     // ✅ Redirect based on role
-    if (userData.role === "user") {
+    if (userData.role === "admin") {
       router.push(`/${locale}/`);
     } else if (userData.role === "pending") {
       router.push(`/${locale}/pending`);

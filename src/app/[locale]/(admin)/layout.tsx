@@ -18,7 +18,7 @@ export default function AdminLayout({
 
   useEffect(() => {
     const role = sessionStorage.getItem("role");
-    if (!role || role !== "user") {
+    if (!role || role !== "admin") {
       router.push("/signin");
     } else {
       setIsAuthorized(true);
