@@ -152,6 +152,10 @@ export default function UserTable() {
                   <Input type="text" name="last_name" value={editedUser?.last_name || ""} onChange={handleChange} />
                 </div>
                 <div>
+                  <label>Birthday</label>
+                  <Input type="email" name="date_of_birth" value={editedUser?.date_of_birth || ""} onChange={handleChange} />
+                </div>
+                <div>
                   <label>Email</label>
                   <Input type="email" name="email" value={editedUser?.email || ""} onChange={handleChange} />
                 </div>
@@ -184,9 +188,33 @@ export default function UserTable() {
                   <Input type="text" name="gender" value={editedUser?.gender || ""} onChange={handleChange} />
                 </div>
                 <div>
+                  <label>Card id</label>
+                  <Input type="text" name="card_id" value={editedUser?.card_id || ""} onChange={handleChange} />
+                </div>
+                <div>
                   <label>Position</label>
                   <Input type="text" name="position" value={editedUser?.position || ""} onChange={handleChange} />
                 </div>
+                <div>
+                    <label>2FA</label>
+                    <Input
+                        type="text"
+                        name="two_factor_enabled"
+                        value={editedUser?.two_factor_enabled ? "true" : "false"} // Convert boolean to string
+                        onChange={handleChange}
+                    />
+                </div>
+
+                <div>
+                    <label>KYC</label>
+                    <Input
+                        type="text"
+                        name="kyc_verification"
+                        value={editedUser?.kyc_verification ? "true" : "false"} // Convert boolean to string
+                        onChange={handleChange}
+                    />
+                </div>
+            
                 <div>
                   <label>Facebook</label>
                   <Input type="text" name="facebook_link" value={editedUser?.facebook_link || ""} onChange={handleChange} />
@@ -198,6 +226,10 @@ export default function UserTable() {
                 <div>
                   <label>Instagram</label>
                   <Input type="text" name="instagram_link" value={editedUser?.instagram_link || ""} onChange={handleChange} />
+                </div>
+                <div>
+                  <label>X - Twitter</label>
+                  <Input type="text" name="xcom_link" value={editedUser?.xcom_link || ""} onChange={handleChange} />
                 </div>
               </div>
               <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
