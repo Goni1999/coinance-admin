@@ -220,7 +220,10 @@ const token = sessionStorage.getItem("auth-token");
       try {
         const response = await fetch('https://server.capital-trust.eu/auth/register-admin', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify(formData),
         });
         
@@ -232,6 +235,9 @@ const token = sessionStorage.getItem("auth-token");
             show: true,
           });
           router.push("/users");
+          setTimeout(() => {
+            window.location.reload();
+          }, 3000);
         } else {
           const result = await response.json();
           console.error(result);
