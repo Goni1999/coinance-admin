@@ -334,7 +334,7 @@ export const Balance = () => {
               <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
               <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
                 {/* Display the user's selected coin balance */}
-                {user.balance?.[selectedCoins[user.id] || "bitcoin"] ?? 0}
+                {(user.balance?.[selectedCoins[user.id] || "bitcoin"] ?? 0).toFixed(4)}
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   <CoinDropdown
                     selectedCoin={selectedCoins[user.id] || "bitcoin"}
