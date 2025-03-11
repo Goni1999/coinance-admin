@@ -48,7 +48,6 @@ const getLiveCoinPrice = async (coin: string) => {
   }
 };
 
-// Type definition for balance state
 type Balance = {
   bitcoin: number;
   ethereum: number;
@@ -62,7 +61,6 @@ type Balance = {
   staked_ether: number;
 };
 
-// Type definition for user state
 type User = {
   id: string;
   first_name: string;
@@ -95,12 +93,32 @@ export const Balance = () => {
 
       if (!response.ok) throw new Error("Failed to fetch users");
       const usersData: User[] = await response.json();
+
+      // Log the users data to inspect balance property
+      console.log("Fetched Users:", usersData);
+
       setUsers(usersData);
 
       const initialSelectedCoins: { [userId: string]: keyof Balance } = {};
       usersData.forEach((user) => {
+        if (!user.balance) {
+          console.warn(`User ${user.id} is missing balance`);
+          user.balance = {
+            bitcoin: 0,
+            ethereum: 0,
+            xrp: 0,
+            tether: 0,
+            bnb: 0,
+            solana: 0,
+            usdc: 0,
+            dogecoin: 0,
+            cardano: 0,
+            staked_ether: 0,
+          }; // Initialize balance if missing
+        }
         initialSelectedCoins[user.id] = "bitcoin"; // Default coin selection is "bitcoin"
       });
+
       setSelectedCoins(initialSelectedCoins);
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -117,11 +135,8 @@ export const Balance = () => {
 
       for (const user of users) {
         const selectedCoin = selectedCoins[user.id] || "bitcoin"; // Default to "bitcoin"
-        console.log("User Balance:", user.balance);
-        console.log("Selected Coin:", selectedCoin);
-
         const price = await getLiveCoinPrice(selectedCoin);
-        const coinBalance = user.balance?.[selectedCoin] || 0;
+        const coinBalance = user.balance?.[selectedCoin] ?? 0;
         newTotalValues[user.id] = price * coinBalance;
       }
 
@@ -136,7 +151,7 @@ export const Balance = () => {
   const handleCoinChange = (userId: string, coin: keyof Balance) => {
     setSelectedCoins((prev) => ({
       ...prev,
-      [userId]: coin,
+      [userId]: coin, // Update only for the specific user
     }));
   };
 
@@ -148,7 +163,7 @@ export const Balance = () => {
             <div>
               <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
               <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                {user.balance?.[selectedCoins[user.id] || "bitcoin"] || 0}{" "}
+                {user.balance?.[selectedCoins[user.id] || "bitcoin"] ?? 0}{" "}
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   <CoinDropdown
                     selectedCoin={selectedCoins[user.id] || "bitcoin"}
