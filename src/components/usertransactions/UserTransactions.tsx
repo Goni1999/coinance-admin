@@ -23,6 +23,7 @@ interface User {
   id: string;
   first_name: string;
   last_name: string;
+  email: string;
   transactions: Transaction[]; // Transactions are added to the User interface
 }
 
@@ -110,15 +111,56 @@ const [isExpanded, setIsExpanded] = useState<boolean | number>(-1); // Track whi
     setSelectedUser(user);
     setIsAddTransactionModalOpen(true);
   };
-  // Handle search input
 
+  const handleDeleteTransaction = async (transactionId: number | undefined) => {
+    // Check if transactionId is undefined or not a valid number
+    if (transactionId === undefined) {
+      alert('Transaction ID is missing.');
+      return;
+    }
+  
+    if (window.confirm('Are you sure you want to delete this transaction?')) {
+      try {
+        const response = await fetch(`https://server.capital-trust.eu/api/admin-transactions-delete`, {
+          method: "POST", // Keep the DELETE method
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            transaction_id: transactionId, // Send transactionId in the request body
+          }),
+        });
+  
+        if (response.ok) {
+          // Refresh the user data after the transaction is deleted
+          const updatedUsers = users.map(user => {
+            if (user.id === selectedUser?.id) {
+              user.transactions = user.transactions.filter(
+                transaction => transaction.transaction_id !== transactionId
+              );
+            }
+            return user;
+          });
+  
+          setUsers(updatedUsers);
+          alert('Transaction deleted successfully!');
+        } else {
+          alert('Failed to delete transaction.');
+        }
+      } catch (error) {
+        console.error('Error deleting transaction:', error);
+        alert('Error deleting transaction.');
+      }
+    }
+  };
+  
   
     // Handle search input
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
       setSearchTerm(event.target.value);
     };
   
-    // Filter transactions based on the search term
    // Filter transactions based on the search term
 const filteredTransactions = selectedUser?.transactions?.filter((transaction) => {
     const searchLower = searchTerm.toLowerCase();
@@ -181,6 +223,8 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
                 <div key={user.id} className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
                   <div className="flex items-end justify-between mt-5">
                     <div>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.email}`}</span>
+
                       <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
                     </div>
                     <div className="flex flex-col items-end">
@@ -345,8 +389,13 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       {transaction.details}
       </td>
       <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
-      Action
-      </td>
+  <button
+    onClick={() => handleDeleteTransaction(transaction.transaction_id)}
+    className="inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-red-50 text-red-500 hover:text-red-700 text-sm"
+  >
+    Delete
+  </button>
+</td>
     </tr>
   ))}
 </tbody>
