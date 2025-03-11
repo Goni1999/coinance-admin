@@ -291,6 +291,9 @@ export const Balance = () => {
             : user
         );
         setUsers(updatedUsers);
+        setTimeout(() => {
+          setAlert((prevAlert) => (prevAlert.userId === updatedData.user_id ? { ...prevAlert, show: false } : prevAlert));
+        }, 5000);
         setIsEditModalOpen(false);
       } else {
         console.error("Failed to update balance");
@@ -303,6 +306,9 @@ export const Balance = () => {
           userId: updatedData.user_id, // Set the alert userId
 
         });
+        setTimeout(() => {
+          setAlert((prevAlert) => (prevAlert.userId === updatedData.user_id ? { ...prevAlert, show: false } : prevAlert));
+        }, 5000);
        
       }
     } catch (error) {
