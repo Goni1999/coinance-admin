@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import React, { useState, useEffect } from "react";
 import { Modal } from "../ui/modal";
 import { ArrowUpIcon } from "@/icons";
@@ -20,6 +20,16 @@ type Balance = {
   staked_ether: number;
 };
 
+// Type definition for user state
+type User = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  balance: Balance;
+  selectedCoin: keyof Balance; // Added selectedCoin to track the coin per user
+};
+
 const coinIds: { [key: string]: string } = {
   bitcoin: "bitcoin",
   ethereum: "ethereum",
@@ -33,31 +43,10 @@ const coinIds: { [key: string]: string } = {
   staked_ether: "staked-ether"
 };
 
-// Type definition for user state
-type User = {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  balance: Balance;
-};
-
 export const Balance = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [balance, setBalance] = useState<Balance>({
-    bitcoin: 0,
-    ethereum: 0,
-    xrp: 0,
-    tether: 0,
-    bnb: 0,
-    solana: 0,
-    usdc: 0,
-    dogecoin: 0,
-    cardano: 0,
-    staked_ether: 0
-  });
   const [editedBalance, setEditedBalance] = useState<Balance>({
     bitcoin: 0,
     ethereum: 0,
@@ -160,52 +149,19 @@ export const Balance = () => {
   const [selectedCoin, setSelectedCoin] = useState<keyof Balance>("bitcoin");
   const [totalValue, setTotalValue] = useState<number>(0);
 
-  const fetchUserBalance = async () => {
-    const token = sessionStorage.getItem("auth-token");
-    if (!token) return console.error("No token found. Please log in.");
-  
-    try {
-      const response = await fetch("https://server.capital-trust.eu/api/balance-admin", {
-        method: "GET",
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
-      });
-  
-      if (!response.ok) throw new Error("Failed to fetch balances");
-      const balanceData: Balance[] = await response.json();
-      const parsedBalance: Balance = balanceData[0]; // Assuming the first item has the balance
-  
-      // Convert string values to numbers
-      const parsedBalanceNumbers: Balance = Object.keys(parsedBalance).reduce((acc, coin) => {
-        const balanceValue = parsedBalance[coin as keyof Balance] as unknown as string; // Assert the type to string
-        acc[coin as keyof Balance] = parseFloat(balanceValue);  // Parse to number
-  
-        return acc;
-      }, {} as Balance);
-  
-      setBalance(parsedBalanceNumbers);
-    } catch (error) {
-      console.error("Error fetching user balance:", error);
-    }
-  };
-  
-      
-      
-
-
   // Fetch the live price and update the total value
   useEffect(() => {
     const fetchPriceAndValue = async () => {
       const price = await getLiveCoinPrice(selectedCoin);
-      const coinBalance = balance[selectedCoin] || 0;
+      const coinBalance = selectedUser?.balance[selectedCoin] || 0;  // Use selected user's balance
       setTotalValue(price * coinBalance);
     };
 
-    fetchPriceAndValue();
-  }, [selectedCoin, balance]); // Both selectedCoin and balance are dependencies
+    if (selectedUser) fetchPriceAndValue();
+  }, [selectedCoin, selectedUser]); // Dependencies for selectedCoin and selectedUser
 
   useEffect(() => {
     fetchUsers();
-    fetchUserBalance();
   }, []);
 
   return (
@@ -216,9 +172,15 @@ export const Balance = () => {
             <div>
               <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
               <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                {balance[selectedCoin] || 0}{" "}
+                {user.balance[selectedCoin] || 0}{" "}
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  <CoinDropdown selectedCoin={selectedCoin} onCoinChange={setSelectedCoin} balance={balance} />
+                  <CoinDropdown selectedCoin={user.selectedCoin} onCoinChange={(coin) => {
+                    setUsers(prevUsers =>
+                      prevUsers.map(u =>
+                        u.id === user.id ? { ...u, selectedCoin: coin } : u
+                      )
+                    );
+                  }} balance={user.balance} />
                 </p>
               </h4>
             </div>
