@@ -57,6 +57,7 @@ export const Balance = () => {
     cardano: 0,
     staked_ether: 0
   });
+  
 
   const fetchUsers = async () => {
     const token = sessionStorage.getItem("auth-token");
@@ -134,14 +135,19 @@ export const Balance = () => {
         method: "GET",
         headers: { "x-cg-pro-api-key": "CG-nqfeGL8o6Ky2ngtB3FSJ2oNu" }
       });
-      
+  
+      if (!response.ok) {
+        throw new Error("Error fetching coin price");
+      }
+  
       const data = await response.json();
-      return data[correctCoinId]?.usd || 0;
+      return data[correctCoinId]?.usd || 0;  // Safely access data to avoid errors.
     } catch (error) {
       console.error("Error fetching coin price:", error);
-      return 0;
+      return 0;  // Return a default value if an error occurs
     }
   };
+  
 
   // Calculate total value based on the selected coin for each user
   const calculateTotalValue = async (user: User) => {
@@ -213,19 +219,25 @@ export const Balance = () => {
             </h4>
             <form className="flex flex-col">
               <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-4">
-                {Object.keys(editedBalance).map((coin) => (
-                  <div key={coin} className="flex flex-col">
-                    <label className="px-4 py-3 font-normal text-gray-500 dark:text-gray-400">
-                      {coin.charAt(0).toUpperCase() + coin.slice(1)}
-                    </label>
-                    <input
-                      type="number"
-                      name={coin}
-                      value={editedBalance[coin as keyof Balance].toString()}  
-                      onChange={(e) => handleBalanceChange(coin as keyof Balance, e.target.value)}
-                    />
-                  </div>
-                ))}
+              {Object.keys(editedBalance).map((coin) => {
+                if (coin) {
+                    return (
+                    <div key={coin} className="flex flex-col">
+                        <label className="px-4 py-3 font-normal text-gray-500 dark:text-gray-400">
+                        {coin.charAt(0).toUpperCase() + coin.slice(1)}
+                        </label>
+                        <input
+                        type="number"
+                        name={coin}
+                        value={editedBalance[coin as keyof Balance] ?? 0}  // This ensures a default value of 0 if the balance is undefined.
+                        onChange={(e) => handleBalanceChange(coin as keyof Balance, e.target.value)}
+                        />
+                    </div>
+                    );
+                }
+                return null; // In case the coin is undefined or invalid, we return null to avoid rendering the element.
+                })}
+
               </div>
 
               <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
