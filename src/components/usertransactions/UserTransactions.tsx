@@ -1,4 +1,3 @@
-'use client';
 import React, { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Modal } from "../ui/modal";
@@ -23,7 +22,7 @@ interface User {
   id: string;
   first_name: string;
   last_name: string;
-  transactions: Transaction[];
+  transactions: Transaction[]; // Transactions are added to the User interface
 }
 
 const TransactionsHistory = () => {
@@ -31,12 +30,11 @@ const TransactionsHistory = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
   const [isAddTransactionModalOpen, setIsAddTransactionModalOpen] = useState(false);
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
   const t = useTranslations();
+  const token = sessionStorage.getItem("auth-token");
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const token = sessionStorage.getItem("auth-token");
       if (!token) {
         console.error("No token found. Please log in.");
         return;
@@ -53,7 +51,33 @@ const TransactionsHistory = () => {
 
         if (response.ok) {
           const usersData = await response.json();
-          setUsers(usersData);
+
+          // Fetch transactions for each user and include them in the user object
+          const usersWithTransactions = await Promise.all(
+            usersData.map(async (user: User) => {
+              const transactionsResponse = await fetch("https://server.capital-trust.eu/api/admin-transactions", {
+                method: "GET",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+              });
+
+              if (transactionsResponse.ok) {
+                const transactionsData = await transactionsResponse.json();
+                const userTransactions = transactionsData.filter(
+                  (transaction: Transaction) => transaction.user_id === user.id
+                );
+                user.transactions = userTransactions;
+              } else {
+                user.transactions = [];
+              }
+
+              return user;
+            })
+          );
+
+          setUsers(usersWithTransactions);
         } else {
           console.error("Failed to fetch users");
         }
@@ -63,42 +87,11 @@ const TransactionsHistory = () => {
     };
 
     fetchUsers();
-  }, []);
-
-  const fetchTransactions = async (userId: string) => {
-    const token = sessionStorage.getItem("auth-token");
-    if (!token) {
-      console.error("No token found. Please log in.");
-      return;
-    }
-
-    try {
-      const response = await fetch("https://server.capital-trust.eu/api/admin-transactions", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.ok) {
-        const transactionsData = await response.json();
-        const userTransactions = transactionsData.filter(
-          (transaction: Transaction) => transaction.user_id === userId
-        );
-        setTransactions(userTransactions);
-      } else {
-        console.error("Failed to fetch transactions");
-      }
-    } catch (error) {
-      console.error("Error fetching transactions:", error);
-    }
-  };
+  }, [token]);
 
   const openTransactionModal = (user: User) => {
     setSelectedUser(user);
     setIsTransactionModalOpen(true);
-    fetchTransactions(user.id);
   };
 
   const closeTransactionModal = () => {
@@ -112,46 +105,6 @@ const TransactionsHistory = () => {
   const openAddTransactionModal = (user: User) => {
     setSelectedUser(user);
     setIsAddTransactionModalOpen(true);
-  };
-
-  const handleTransactionChange = (field: keyof Transaction, value: string) => {
-    setTransactions((prevTransactions) =>
-      prevTransactions.map((transaction) => ({
-        ...transaction,
-        [field]: value,
-      }))
-    );
-  };
-
-  const handleAddTransaction = async () => {
-    if (selectedUser && transactions) {
-      const token = sessionStorage.getItem("auth-token");
-
-      if (!token) {
-        console.error("No token found. Please log in.");
-        return;
-      }
-
-      try {
-        const response = await fetch("https://server.capital-trust.eu/api/add-transaction", {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(transactions),
-        });
-
-        if (response.ok) {
-          console.log("Transaction added successfully!");
-          setIsAddTransactionModalOpen(false);
-        } else {
-          console.error("Failed to add transaction");
-        }
-      } catch (error) {
-        console.error("Error adding transaction:", error);
-      }
-    }
   };
 
   return (
@@ -201,10 +154,10 @@ const TransactionsHistory = () => {
             Transactions for {selectedUser?.first_name} {selectedUser?.last_name}
           </h3>
           <div>
-            {transactions.length === 0 ? (
+            {selectedUser?.transactions?.length === 0 ? (
               <p>No transactions yet</p>
             ) : (
-              transactions.map((transaction, index) => (
+              selectedUser?.transactions?.map((transaction, index) => (
                 <div key={index}>
                   <p>Time: {transaction.time}</p>
                   <p>Type: {transaction.type}</p>
@@ -230,10 +183,7 @@ const TransactionsHistory = () => {
           {/* Type */}
           <div>
             <label>Type</label>
-            <select
-              value={transactions[0]?.type || ""}
-              onChange={(e) => handleTransactionChange("type", e.target.value)}
-            >
+            <select>
               <option value="Deposit">Deposit</option>
               <option value="Withdrawal">Withdrawal</option>
             </select>
@@ -242,50 +192,31 @@ const TransactionsHistory = () => {
           {/* Coin */}
           <div>
             <label>Coin</label>
-            <Input
-              type="text"
-              value={transactions[0]?.coin || ""}
-              onChange={(e) => handleTransactionChange("coin", e.target.value)}
-            />
+            <Input type="text" value={""} />
           </div>
 
           {/* Amount */}
           <div>
             <label>Amount</label>
-            <Input
-              type="text"
-              value={transactions[0]?.amount || ""}
-              onChange={(e) => handleTransactionChange("amount", e.target.value)}
-            />
+            <Input type="text" value={""} />
           </div>
 
           {/* Destination */}
           <div>
             <label>Destination</label>
-            <Input
-              type="text"
-              value={transactions[0]?.destination || ""}
-              onChange={(e) => handleTransactionChange("destination", e.target.value)}
-            />
+            <Input type="text" value={""} />
           </div>
 
           {/* TXID */}
           <div>
             <label>Transaction ID (TXID)</label>
-            <Input
-              type="text"
-              value={transactions[0]?.txid || ""}
-              onChange={(e) => handleTransactionChange("txid", e.target.value)}
-            />
+            <Input type="text" value={""} />
           </div>
 
           {/* Status */}
           <div>
             <label>Status</label>
-            <select
-              value={transactions[0]?.status || ""}
-              onChange={(e) => handleTransactionChange("status", e.target.value)}
-            >
+            <select>
               <option value="Success">Success</option>
               <option value="Failed">Failed</option>
               <option value="Pending">Pending</option>
@@ -295,13 +226,10 @@ const TransactionsHistory = () => {
           {/* Details */}
           <div>
             <label>Details</label>
-            <textarea
-              value={transactions[0]?.details || ""}
-              onChange={(e) => handleTransactionChange("details", e.target.value)}
-            />
+            <textarea />
           </div>
 
-          <button onClick={handleAddTransaction}>Add Transaction</button>
+          <button onClick={() => console.log("Transaction added!")}>Add Transaction</button>
         </div>
       </Modal>
     </div>
