@@ -208,7 +208,7 @@ export const Balance = () => {
     }
   
     // Collect only the fields that have been updated
-    const updatedFields: { [key: string]: any } = {};
+    const updatedFields: { [key: string]: unknown } = {};
   
     // Compare balance
     if (JSON.stringify(updatedData.balance) !== JSON.stringify(selectedUser?.balance)) {
