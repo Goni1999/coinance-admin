@@ -1,3 +1,5 @@
+
+'use client';
 import React, { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 interface Transaction {
@@ -97,7 +99,7 @@ const TransactionsHistory = () => {
     setNewTransaction((prevTransaction) => ({
       ...prevTransaction,
       user_id: user.id,
-      admin_email: sessionStorage.getItem("auth-email") || '', // Set admin_email from logged-in user
+      admin_email: sessionStorage.getItem("userEmail") || '', // Set admin_email from logged-in user
     }));
   };
   
