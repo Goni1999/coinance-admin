@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import Badge from "../ui/badge/Badge";
 import { ArrowUpIcon } from "@/icons";
 import CoinDropdown from "../ecommerce/coinDropdows";
-//import { useTranslations } from "next-intl";
 
 // Corrected coin IDs
 const coinIds: { [key: string]: string } = {
@@ -22,7 +21,7 @@ const coinIds: { [key: string]: string } = {
 // Function to fetch live coin price from CoinGecko
 const getLiveCoinPrice = async (coin: string) => {
   try {
-    const correctCoinId = coinIds[coin]; // Use the correct coin ID for the selected coin
+    const correctCoinId = coinIds[coin];
     const response = await fetch(`https://pro-api.coingecko.com/api/v3/simple/price?ids=${correctCoinId}&vs_currencies=usd`, {
       method: "GET",
       headers: {
@@ -31,16 +30,15 @@ const getLiveCoinPrice = async (coin: string) => {
     });
     const data = await response.json();
 
-    // If price data is missing, return 0
     if (!data[correctCoinId] || !data[correctCoinId].usd) {
       console.warn(`No price found for ${coin}`);
       return 0;
     }
 
-    return data[correctCoinId]?.usd || 0; // Return USD price if available
+    return data[correctCoinId]?.usd || 0;
   } catch (error) {
     console.error("Error fetching coin price:", error);
-    return 0; // Return 0 if there's an error
+    return 0;
   }
 };
 
@@ -68,7 +66,6 @@ type User = {
 };
 
 export const Balance = () => {
-  //const t = useTranslations();
   const [users, setUsers] = useState<User[]>([]);
   const [selectedCoins, setSelectedCoins] = useState<{ [userId: string]: keyof Balance }>({});
   const [totalValues, setTotalValues] = useState<{ [userId: string]: number }>({});
@@ -116,11 +113,17 @@ export const Balance = () => {
     const fetchPrices = async () => {
       const newTotalValues: { [userId: string]: number } = {};
 
-      for (const user of users) { // Use `const` here since user is not reassigned
-        const selectedCoin = selectedCoins[user.id] || "bitcoin";
-        const price = await getLiveCoinPrice(selectedCoin);
+      for (const user of users) {
+        const selectedCoin = selectedCoins[user.id] || "bitcoin"; // Default to bitcoin if no coin selected
         const coinBalance = user.balance[selectedCoin] || 0;
-        newTotalValues[user.id] = price * coinBalance;
+
+        // Only fetch price if balance exists
+        if (coinBalance > 0) {
+          const price = await getLiveCoinPrice(selectedCoin);
+          newTotalValues[user.id] = price * coinBalance;
+        } else {
+          newTotalValues[user.id] = 0; // Set to 0 if no balance
+        }
       }
 
       setTotalValues(newTotalValues);
