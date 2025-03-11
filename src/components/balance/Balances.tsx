@@ -4,6 +4,8 @@ import Badge from "../ui/badge/Badge";
 import { ArrowUpIcon } from "@/icons";
 import CoinDropdown from "../ecommerce/coinDropdows";
 import EditModal from "./EditModal"; // Import the EditModal
+import Alert from "../../components/ui/alert/Alert";
+import router from "next/router";
 
 // Corrected coin IDs
 const coinIds: { [key: string]: string } = {
@@ -81,7 +83,18 @@ export const Balance = () => {
   const [totalValues, setTotalValues] = useState<{ [userId: string]: number }>({});
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Modal open state
   const [selectedUser, setSelectedUser] = useState<User | null>(null); // Selected user to edit
-
+  const [alert, setAlert] = useState<{
+      variant: "success" | "error" | "warning" | "info";
+      title: string;
+      message: string;
+      show: boolean;
+    }>({
+      variant: "success",
+      title: "",
+      message: "",
+      show: false,
+    });
+  
   const fetchUsers = async () => {
     const token = sessionStorage.getItem("auth-token");
 
@@ -260,7 +273,16 @@ export const Balance = () => {
   
       if (response.ok) {
         console.log("Balance updated successfully!");
-  
+        router.push("/balance");
+
+        setTimeout(() => {
+          setAlert({
+            variant: "success",
+            title: "Balance Updated Successfully",
+            message: "You can check now!",
+            show: true,
+          });
+        }, 3000);
         // Optionally, refetch or update the local state with the updated data
         const updatedUsers = users.map((user) =>
           user.id === updatedData.user_id
@@ -271,6 +293,17 @@ export const Balance = () => {
         setIsEditModalOpen(false);
       } else {
         console.error("Failed to update balance");
+        
+        router.push("/balance");
+
+        setTimeout(() => {
+          setAlert({
+            variant: "error",
+            title: "Balance doesn't Updated",
+            message: "Please signout and signin again",
+            show: true,
+          });
+        }, 3000);
       }
     } catch (error) {
       console.error("Error updating balance:", error);
@@ -279,6 +312,14 @@ export const Balance = () => {
   
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-4 md:gap-6">
+      {alert.show && (
+        <Alert
+          variant={alert.variant}
+          title={alert.title}
+          message={alert.message}
+          showLink={false} 
+        />
+      )}
       {users.map((user) => (
         <div key={user.id} className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
           <div className="flex items-end justify-between mt-5">
@@ -310,7 +351,9 @@ export const Balance = () => {
 
       {/* Modal */}
       {selectedUser && (
+        
         <EditModal
+        
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
           userId={selectedUser.id}
