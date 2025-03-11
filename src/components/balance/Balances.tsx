@@ -257,7 +257,7 @@ export const Balance = () => {
           <div className="flex justify-end mt-2">
             <button
               onClick={() => openModal(user)}
-              className="text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
+              className="text-sm rounded-lg border border-gray-300 bg-white px-7 py-2.5 text-theme-sm font-medium  shadow-theme-xs hover:bg-gray-50  dark:border-gray-700 dark:bg-gray-800  dark:hover:bg-white/[0.03]  text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
             >
               Edit Balance
             </button>
