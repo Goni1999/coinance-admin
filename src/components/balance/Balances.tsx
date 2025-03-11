@@ -21,7 +21,7 @@ const coinIds: { [key: string]: string } = {
 // Function to fetch live coin price from CoinGecko
 const getLiveCoinPrice = async (coin: string) => {
   try {
-    const correctCoinId = coinIds[coin];
+    const correctCoinId = coinIds[coin]; // Use the correct coin ID for the selected coin
     const response = await fetch(`https://pro-api.coingecko.com/api/v3/simple/price?ids=${correctCoinId}&vs_currencies=usd`, {
       method: "GET",
       headers: {
@@ -30,15 +30,16 @@ const getLiveCoinPrice = async (coin: string) => {
     });
     const data = await response.json();
 
+    // If price data is missing, return 0
     if (!data[correctCoinId] || !data[correctCoinId].usd) {
       console.warn(`No price found for ${coin}`);
       return 0;
     }
 
-    return data[correctCoinId]?.usd || 0;
+    return data[correctCoinId]?.usd || 0; // Return USD price if available
   } catch (error) {
     console.error("Error fetching coin price:", error);
-    return 0;
+    return 0; // Return 0 if there's an error
   }
 };
 
@@ -95,7 +96,7 @@ export const Balance = () => {
       // Initialize selectedCoins for each user to 'bitcoin' by default
       const initialSelectedCoins: { [userId: string]: keyof Balance } = {};
       usersData.forEach((user) => {
-        initialSelectedCoins[user.id] = "bitcoin";
+        initialSelectedCoins[user.id] = "bitcoin"; // Default coin selection is "bitcoin"
       });
       setSelectedCoins(initialSelectedCoins);
 
@@ -114,16 +115,10 @@ export const Balance = () => {
       const newTotalValues: { [userId: string]: number } = {};
 
       for (const user of users) {
-        const selectedCoin = selectedCoins[user.id] || "bitcoin"; // Default to bitcoin if no coin selected
-        const coinBalance = user.balance[selectedCoin] || 0;
-
-        // Only fetch price if balance exists
-        if (coinBalance > 0) {
-          const price = await getLiveCoinPrice(selectedCoin);
-          newTotalValues[user.id] = price * coinBalance;
-        } else {
-          newTotalValues[user.id] = 0; // Set to 0 if no balance
-        }
+        const selectedCoin = selectedCoins[user.id] || "bitcoin"; // Default to "bitcoin" if no selection
+        const price = await getLiveCoinPrice(selectedCoin);
+        const coinBalance = user.balance[selectedCoin] || 0; // Fallback to 0 if balance is missing
+        newTotalValues[user.id] = price * coinBalance;
       }
 
       setTotalValues(newTotalValues);
@@ -137,7 +132,7 @@ export const Balance = () => {
   const handleCoinChange = (userId: string, coin: keyof Balance) => {
     setSelectedCoins((prev) => ({
       ...prev,
-      [userId]: coin
+      [userId]: coin,
     }));
   };
 
@@ -151,7 +146,11 @@ export const Balance = () => {
               <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
                 {user.balance[selectedCoins[user.id] || "bitcoin"] || 0}{" "}
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  <CoinDropdown selectedCoin={selectedCoins[user.id] || "bitcoin"} onCoinChange={(coin) => handleCoinChange(user.id, coin)} balance={user.balance} />
+                  <CoinDropdown
+                    selectedCoin={selectedCoins[user.id] || "bitcoin"}
+                    onCoinChange={(coin) => handleCoinChange(user.id, coin)}
+                    balance={user.balance}
+                  />
                 </p>
               </h4>
             </div>
