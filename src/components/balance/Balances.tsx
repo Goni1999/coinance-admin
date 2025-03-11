@@ -192,7 +192,6 @@ export const Balance = () => {
     setSelectedUser(user);
     setIsEditModalOpen(true);
   };
-
   const handleSubmitUpdatedBalance = async (updatedData: {
     balance_id: string;
     user_id: string;
@@ -207,22 +206,63 @@ export const Balance = () => {
       console.error("No token found. Please log in.");
       return;
     }
-
+  
+    // Collect only the fields that have been updated
+    const updatedFields: { [key: string]: any } = {};
+  
+    // Compare balance
+    if (JSON.stringify(updatedData.balance) !== JSON.stringify(selectedUser?.balance)) {
+      updatedFields.balance = updatedData.balance;
+    }
+  
+    // Compare status
+    if (updatedData.status !== selectedUser?.status) {
+      updatedFields.status = updatedData.status;
+    }
+  
+    // Compare USDT total
+    if (updatedData.usdt_total !== selectedUser?.usdt_total) {
+      updatedFields.usdt_total = updatedData.usdt_total;
+    }
+  
+    // Compare unpaid amount
+    if (updatedData.unpaid_amount !== selectedUser?.unpaid_amount) {
+      updatedFields.unpaid_amount = updatedData.unpaid_amount;
+    }
+  
+    // Compare deposit wallet
+    if (updatedData.deposit_wallet !== selectedUser?.deposit_wallet) {
+      updatedFields.deposit_wallet = updatedData.deposit_wallet;
+    }
+  
+    // If no fields have changed, don't send the request
+    if (Object.keys(updatedFields).length === 0) {
+      console.log("No changes detected.");
+      return;
+    }
+  
+    // Add the user_id to the updated fields (because we need it for the backend)
+    updatedFields.user_id = updatedData.user_id;
+  
     try {
-      const response = await fetch(`https://server.capital-trust.eu/api/update-balance/${updatedData.user_id}`, {
+      // Send the request to the backend with user_id in the body
+      const response = await fetch("https://server.capital-trust.eu/api/update-balance", {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(updatedData),
+        body: JSON.stringify(updatedFields),
       });
-
+  
       if (response.ok) {
         console.log("Balance updated successfully!");
-        // Optionally, refetch or update the local state
+  
+        // Optionally, refetch or update the local state with the updated data
         const updatedUsers = users.map((user) =>
-          user.id === updatedData.user_id ? { ...user, balance: updatedData.balance, status: updatedData.status, usdt_total: updatedData.usdt_total, unpaid_amount: updatedData.unpaid_amount,  deposit_wallet: updatedData.deposit_wallet } : user
+          user.id === updatedData.user_id
+            ? { ...user, ...updatedFields } // Update only the changed fields
+            : user
         );
         setUsers(updatedUsers);
         setIsEditModalOpen(false);
@@ -233,7 +273,7 @@ export const Balance = () => {
       console.error("Error updating balance:", error);
     }
   };
-
+  
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
       {users.map((user) => (
