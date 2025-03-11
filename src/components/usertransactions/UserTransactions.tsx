@@ -148,31 +148,103 @@ const TransactionsHistory = () => {
         </div>
       </div>
 
-      {/* Transaction Modal */}
-      <Modal isOpen={isTransactionModalOpen} onClose={closeTransactionModal}>
-        <div className="relative w-full p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
-          <h3 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
-            Transactions for {selectedUser?.first_name} {selectedUser?.last_name}
-          </h3>
-          <div>
-            {selectedUser?.transactions?.length === 0 ? (
-              <p>No transactions yet</p>
-            ) : (
-              selectedUser?.transactions?.map((transaction, index) => (
-                <div key={index}>
-                  <p>Time: {transaction.time}</p>
-                  <p>Type: {transaction.type}</p>
-                  <p>Amount: {transaction.amount}</p>
-                  <p>Status: {transaction.status}</p>
-                  <p>Transaction ID: {transaction.txid}</p>
-                  <p>Balance ID: {transaction.balance_id}</p>
-                  <hr />
-                </div>
-              ))
-            )}
-          </div>
+     {/* Transaction Modal */}
+<Modal isOpen={isTransactionModalOpen} onClose={closeTransactionModal}>
+  <div className="relative w-full p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
+    <h3 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
+      Transactions for {selectedUser?.first_name} {selectedUser?.last_name}
+    </h3>
+    <div className="overflow-hidden mt-6">
+      <div className="max-w-full px-5 overflow-x-auto sm:px-6">
+        <div>
+          <table className="min-w-full">
+            <thead className="border-gray-200 border-y dark:border-gray-800">
+              <tr>
+                <th className="py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  {t("overview10")} {/* Time */}
+                </th>
+                <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  {t("overview11")} {/* Type */}
+                </th>
+                <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  {t("overview12")} {/* Balance ID */}
+                </th>
+                <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  {t("overview13")} {/* Coin */}
+                </th>
+                <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  {t("overview14")} {/* Amount */}
+                </th>
+                <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  {t("overview15")} {/* Status */}
+                </th>
+                <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  {t("overview16")} {/* TXID */}
+                </th>
+                <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                  {t("overview17")} {/* Details */}
+                </th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+              {selectedUser?.transactions?.length === 0 ? (
+                <tr>
+                  <td  className="text-center text-gray-500 dark:text-gray-400 py-4">
+                    No transactions yet
+                  </td>
+                </tr>
+              ) : (
+                selectedUser?.transactions?.map((transaction, index) => (
+                  <tr key={index}>
+                    <td className="px-4 py-4 text-blue-700 dark:text-blue-400">
+                      <div>{transaction.time}</div>
+                    </td>
+                    <td className="px-4 py-4 text-gray-700 dark:text-gray-400">
+                      {transaction.type}
+                    </td>
+                    <td className="px-4 py-4 text-gray-700 dark:text-gray-400">
+                      <span
+                        className="cursor-pointer"
+                      >
+                        {transaction.balance_id.slice(0, 5)}...
+                      </span>
+                    </td>
+                    <td className="px-4 py-4 text-gray-700 dark:text-gray-400">
+                      {transaction.coin}
+                    </td>
+                    <td className="px-4 py-4 text-gray-700 dark:text-gray-400">
+                      {transaction.amount}
+                    </td>
+                    <td className="px-4 py-4 text-gray-700 dark:text-gray-400">
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium text-theme-xs ${
+                          transaction.status === "Success"
+                            ? "bg-success-50 text-success-600 dark:bg-success-500/15 dark:text-success-500"
+                            : transaction.status === "Failed"
+                            ? "bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500"
+                            : "bg-warning-50 text-warning-600 dark:bg-warning-500/15 dark:text-orange-400"
+                        }`}
+                      >
+                        {transaction.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-4 text-gray-700 dark:text-gray-400">
+                      {transaction.txid}
+                    </td>
+                    <td className="px-4 py-4 text-gray-700 dark:text-gray-400">
+                      {transaction.details}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
         </div>
-      </Modal>
+      </div>
+    </div>
+  </div>
+</Modal>
+
 
       {/* Add Transaction Modal */}
       <Modal isOpen={isAddTransactionModalOpen} onClose={closeAddTransactionModal}>
