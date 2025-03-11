@@ -130,6 +130,10 @@ export const Balance = () => {
                 cardano: parseFloat(userBalance.cardano) || 0,
                 staked_ether: parseFloat(userBalance.staked_ether) || 0,
               };
+              user.deposit_wallet || "";
+              user.balance_id || "";
+              user.unpaid_amount || "";
+              user.usdt_total || "";
             } else {
               user.balance = null;
             }
