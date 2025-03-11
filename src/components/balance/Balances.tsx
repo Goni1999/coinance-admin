@@ -1,4 +1,3 @@
-'use client';
 import React, { useState, useEffect } from "react";
 import { Modal } from "../ui/modal";
 import { ArrowUpIcon } from "@/icons";
@@ -102,7 +101,6 @@ export const Balance = () => {
   };
 
   const handleBalanceChange = (coin: keyof Balance, value: string) => {
-    // Convert value back to number, handle empty strings or invalid numbers
     setEditedBalance((prev) => ({
       ...prev,
       [coin]: value ? parseFloat(value) : 0
@@ -146,19 +144,20 @@ export const Balance = () => {
     }
   };
 
-  const [selectedCoin, setSelectedCoin] = useState<keyof Balance>("bitcoin");
   const [totalValue, setTotalValue] = useState<number>(0);
 
   // Fetch the live price and update the total value
   useEffect(() => {
     const fetchPriceAndValue = async () => {
-      const price = await getLiveCoinPrice(selectedCoin);
-      const coinBalance = selectedUser?.balance[selectedCoin] || 0;  // Use selected user's balance
-      setTotalValue(price * coinBalance);
+      if (selectedUser) {
+        const price = await getLiveCoinPrice(selectedUser.selectedCoin);  // Use selectedCoin for the user
+        const coinBalance = selectedUser.balance[selectedUser.selectedCoin] || 0;
+        setTotalValue(price * coinBalance);
+      }
     };
 
-    if (selectedUser) fetchPriceAndValue();
-  }, [selectedCoin, selectedUser]); // Dependencies for selectedCoin and selectedUser
+    fetchPriceAndValue();
+  }, [selectedUser]); // Depend on selectedUser to trigger when it changes
 
   useEffect(() => {
     fetchUsers();
@@ -172,7 +171,7 @@ export const Balance = () => {
             <div>
               <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
               <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                {user.balance[selectedCoin] || 0}{" "}
+                {user.balance[user.selectedCoin] || 0}{" "}
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   <CoinDropdown selectedCoin={user.selectedCoin} onCoinChange={(coin) => {
                     setUsers(prevUsers =>
