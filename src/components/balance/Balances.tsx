@@ -57,6 +57,7 @@ export const Balance = () => {
     cardano: 0,
     staked_ether: 0
   });
+  const [coinPrices, setCoinPrices] = useState<{ [key: string]: number }>({});
 
   const fetchUsers = async () => {
     const token = sessionStorage.getItem("auth-token");
@@ -146,14 +147,13 @@ export const Balance = () => {
       }
 
       const data = await response.json();
-      return data[correctCoinId]?.usd || 0;  // Safely access data to avoid errors.
+      return data[correctCoinId]?.usd || 0;
     } catch (error) {
       console.error("Error fetching coin price:", error);
-      return 0;  // Return a default value if an error occurs
+      return 0;
     }
   };
 
-  // Calculate total value based on the selected coin for each user
   const calculateTotalValue = async (user: User) => {
     const price = await getLiveCoinPrice(user.selectedCoin);
     const coinBalance = user.balance[user.selectedCoin] || 0;
@@ -162,6 +162,18 @@ export const Balance = () => {
 
   useEffect(() => {
     fetchUsers();
+  }, []);
+
+  useEffect(() => {
+    const fetchPrices = async () => {
+      const newCoinPrices: { [key: string]: number } = {};
+      for (const coin in coinIds) {
+        newCoinPrices[coin] = await getLiveCoinPrice(coin as keyof Balance);
+      }
+      setCoinPrices(newCoinPrices);
+    };
+
+    fetchPrices();
   }, []);
 
   return (
@@ -194,11 +206,10 @@ export const Balance = () => {
             </div>
             <Badge color="success">
               <ArrowUpIcon />
-              {/* Calculate the total value dynamically for each user */}
               <span>
-                {calculateTotalValue(user).then(value => (
-                  value > 0 ? value.toFixed(2) : "Unavailable"
-                ))}
+                {coinPrices[user.selectedCoin]
+                  ? (coinPrices[user.selectedCoin] * user.balance[user.selectedCoin]).toFixed(2)
+                  : "Unavailable"}
               </span>
             </Badge>
           </div>
@@ -232,13 +243,13 @@ export const Balance = () => {
                         <input
                           type="number"
                           name={coin}
-                          value={editedBalance[coin as keyof Balance] ?? 0}  // This ensures a default value of 0 if the balance is undefined.
+                          value={editedBalance[coin as keyof Balance] ?? 0}  // Default to 0 if undefined
                           onChange={(e) => handleBalanceChange(coin as keyof Balance, e.target.value)}
                         />
                       </div>
                     );
                   }
-                  return null; // In case the coin is undefined or invalid, we return null to avoid rendering the element.
+                  return null;
                 })}
               </div>
 
