@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Badge from "../ui/badge/Badge";
 import { ArrowUpIcon } from "@/icons";
 import CoinDropdown from "../ecommerce/coinDropdows";
-import { useTranslations } from "next-intl";
+//import { useTranslations } from "next-intl";
 
 // Corrected coin IDs
 const coinIds: { [key: string]: string } = {
@@ -68,7 +68,7 @@ type User = {
 };
 
 export const Balance = () => {
-  const t = useTranslations();
+  //const t = useTranslations();
   const [users, setUsers] = useState<User[]>([]);
   const [selectedCoins, setSelectedCoins] = useState<{ [userId: string]: keyof Balance }>({});
   const [totalValues, setTotalValues] = useState<{ [userId: string]: number }>({});
@@ -97,7 +97,7 @@ export const Balance = () => {
 
       // Initialize selectedCoins for each user to 'bitcoin' by default
       const initialSelectedCoins: { [userId: string]: keyof Balance } = {};
-      usersData.forEach(user => {
+      usersData.forEach((user) => {
         initialSelectedCoins[user.id] = "bitcoin";
       });
       setSelectedCoins(initialSelectedCoins);
@@ -116,7 +116,7 @@ export const Balance = () => {
     const fetchPrices = async () => {
       const newTotalValues: { [userId: string]: number } = {};
 
-      for (let user of users) {
+      for (const user of users) { // Use `const` here since user is not reassigned
         const selectedCoin = selectedCoins[user.id] || "bitcoin";
         const price = await getLiveCoinPrice(selectedCoin);
         const coinBalance = user.balance[selectedCoin] || 0;
