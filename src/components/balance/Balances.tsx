@@ -224,7 +224,6 @@ export const Balance = () => {
                     return (
                     <div key={coin} className="flex flex-col">
                         <label className="px-4 py-3 font-normal text-gray-500 dark:text-gray-400">
-                        {coin.charAt(0).toUpperCase() + coin.slice(1)}
                         </label>
                         <input
                         type="number"
