@@ -66,7 +66,7 @@ type User = {
   first_name: string;
   last_name: string;
   email: string;
-  balance: Balance;
+  balance: Balance | null; // Allow null for balance if not found
 };
 
 export const Balance = () => {
@@ -97,29 +97,55 @@ export const Balance = () => {
       // Log the users data to inspect balance property
       console.log("Fetched Users:", usersData);
 
-      setUsers(usersData);
+      // Fetch balance for each user
+      const usersWithBalance = await Promise.all(
+        usersData.map(async (user) => {
+          const balanceResponse = await fetch("https://server.capital-trust.eu/api/balance-admin", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (balanceResponse.ok) {
+            const balanceData = await balanceResponse.json();
+
+            // Here, `item` will be typed as a `Balance` object
+            const userBalance = balanceData.find((item: { user_id: string }) => item.user_id === user.id);
+
+            if (userBalance) {
+              user.balance = {
+                bitcoin: userBalance.bitcoin || 0,
+                ethereum: userBalance.ethereum || 0,
+                xrp: userBalance.xrp || 0,
+                tether: userBalance.tether || 0,
+                bnb: userBalance.bnb || 0,
+                solana: userBalance.solana || 0,
+                usdc: userBalance.usdc || 0,
+                dogecoin: userBalance.dogecoin || 0,
+                cardano: userBalance.cardano || 0,
+                staked_ether: userBalance.staked_ether || 0,
+              };
+            } else {
+              user.balance = null; // If no balance found, set it as null
+            }
+          } else {
+            console.error("Failed to fetch balance for user:", user.id);
+            user.balance = null;
+          }
+          return user;
+        })
+      );
+
+      setUsers(usersWithBalance);
 
       const initialSelectedCoins: { [userId: string]: keyof Balance } = {};
-      usersData.forEach((user) => {
-        if (!user.balance) {
-          console.warn(`User ${user.id} is missing balance`);
-          user.balance = {
-            bitcoin: 0,
-            ethereum: 0,
-            xrp: 0,
-            tether: 0,
-            bnb: 0,
-            solana: 0,
-            usdc: 0,
-            dogecoin: 0,
-            cardano: 0,
-            staked_ether: 0,
-          }; // Initialize balance if missing
-        }
+      usersWithBalance.forEach((user) => {
         initialSelectedCoins[user.id] = "bitcoin"; // Default coin selection is "bitcoin"
       });
-
       setSelectedCoins(initialSelectedCoins);
+
     } catch (error) {
       console.error("Error fetching users:", error);
     }
@@ -134,9 +160,13 @@ export const Balance = () => {
       const newTotalValues: { [userId: string]: number } = {};
 
       for (const user of users) {
+        if (!user.balance) {
+          continue; // Skip users without a balance
+        }
+
         const selectedCoin = selectedCoins[user.id] || "bitcoin"; // Default to "bitcoin"
         const price = await getLiveCoinPrice(selectedCoin);
-        const coinBalance = user.balance?.[selectedCoin] ?? 0;
+        const coinBalance = user.balance[selectedCoin] || 0;
         newTotalValues[user.id] = price * coinBalance;
       }
 
@@ -168,7 +198,7 @@ export const Balance = () => {
                   <CoinDropdown
                     selectedCoin={selectedCoins[user.id] || "bitcoin"}
                     onCoinChange={(coin) => handleCoinChange(user.id, coin)}
-                    balance={user.balance}
+                    balance={user.balance || { bitcoin: 0, ethereum: 0, xrp: 0, tether: 0, bnb: 0, solana: 0, usdc: 0, dogecoin: 0, cardano: 0, staked_ether: 0 }}
                   />
                 </p>
               </h4>
