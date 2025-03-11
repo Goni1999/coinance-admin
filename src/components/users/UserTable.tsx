@@ -267,9 +267,13 @@ const token = sessionStorage.getItem("auth-token");
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
-      <Button  className="ml-4 inline-flex items-center mt-4 gap-2 rounded-lg border border-gray-300 bg-white px-7 py-2.5 text-theme-sm font-medium text-blue-600 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200" onClick={() => openModal1()}>
-                     + Add user
-                    </Button>
+      <Button
+  className="ml-4 inline-flex items-center mt-4 gap-2 rounded-lg border border-gray-300 bg-white text-blue-600 px-7 py-2.5 font-medium shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+  onClick={() => openModal1()}
+>
+  + Add user
+</Button>
+
       <div className="max-w-full overflow-x-auto">
         <Table>
           <TableHeader className="border-b text-center   border-gray-100 dark:border-white/[0.05]">
