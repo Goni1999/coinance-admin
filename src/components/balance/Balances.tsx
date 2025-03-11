@@ -345,14 +345,14 @@ export const Balance = () => {
               </h4>
             </div>
             <div className="flex flex-col items-end">
-            <span className="inline-flex items-center mb-4  px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium  bg-red-50  dark:bg-red-500/15 text-sm text-red-500 dark:text-red-400 ">Unpaid: ${`${Number(user.unpaid_amount).toFixed(0)}`}</span>
+            <span className="inline-flex items-center mb-2  px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium  bg-red-50  dark:bg-red-500/15 text-sm text-red-500 dark:text-red-400 ">Unpaid: ${`${Number(user.unpaid_amount).toFixed(0)}`}</span>
 
             <Badge  color="success">
               <ArrowUpIcon />
               ${totalValues[user.id] > 0 ? totalValues[user.id].toFixed(2) : "Unavailable"}
             </Badge>
             {/* Edit button */}
-          <button onClick={() =>  handleEdit(user)} className="mt-4 inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium  bg-blue-50  dark:bg-blue-500/15  text-blue-500 hover:text-blue-700 text-sm">
+          <button onClick={() =>  handleEdit(user)} className="mt-2 inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium  bg-blue-50  dark:bg-blue-500/15  text-blue-500 hover:text-blue-700 text-sm">
               Edit
             </button>
             </div>
