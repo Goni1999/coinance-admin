@@ -67,7 +67,7 @@ type User = {
   balance: Balance;
 };
 
-export const EcommerceMetrics = () => {
+export const Balance = () => {
   const t = useTranslations();
   const [users, setUsers] = useState<User[]>([]);
   const [selectedCoins, setSelectedCoins] = useState<{ [userId: string]: keyof Balance }>({});
