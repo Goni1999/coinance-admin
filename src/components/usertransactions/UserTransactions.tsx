@@ -304,8 +304,16 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
         {transaction.coin}
       </td>
+      
       <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
         {formatAmount(transaction.amount)}
+      </td>
+      <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
+        {transaction.destination}
+      </td>
+      
+      <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
+        {transaction.txid}
       </td>
       <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
         <span
@@ -321,10 +329,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
         </span>
       </td>
       <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
-        {transaction.txid}
-      </td>
-      <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
-        {/* Details or any other action */}
+      {transaction.details}
       </td>
     </tr>
   ))}
