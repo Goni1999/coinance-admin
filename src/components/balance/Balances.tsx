@@ -1,8 +1,8 @@
-"use client";
 import React, { useState, useEffect } from "react";
 import Badge from "../ui/badge/Badge";
 import { ArrowUpIcon } from "@/icons";
 import CoinDropdown from "../ecommerce/coinDropdows";
+import EditModal from "./EditModal"; // Import the EditModal
 
 // Corrected coin IDs
 const coinIds: { [key: string]: string } = {
@@ -66,13 +66,20 @@ type User = {
   first_name: string;
   last_name: string;
   email: string;
-  balance: Balance | null; // Allow null for balance if not found
+  balance: Balance | null;
+  balance_id: string;
+  status: string;
+  usdt_total: number;
+  unpaid_amount: number;
+  deposit_wallet: string;
 };
 
 export const Balance = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedCoins, setSelectedCoins] = useState<{ [userId: string]: keyof Balance }>({});
   const [totalValues, setTotalValues] = useState<{ [userId: string]: number }>({});
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Modal open state
+  const [selectedUser, setSelectedUser] = useState<User | null>(null); // Selected user to edit
 
   const fetchUsers = async () => {
     const token = sessionStorage.getItem("auth-token");
@@ -94,9 +101,6 @@ export const Balance = () => {
       if (!response.ok) throw new Error("Failed to fetch users");
       const usersData: User[] = await response.json();
 
-      // Log the users data to inspect balance property
-      console.log("Fetched Users:", usersData);
-
       // Fetch balance for each user
       const usersWithBalance = await Promise.all(
         usersData.map(async (user) => {
@@ -110,12 +114,9 @@ export const Balance = () => {
 
           if (balanceResponse.ok) {
             const balanceData = await balanceResponse.json();
-
-            // Here, `item` will be typed as a `Balance` object
             const userBalance = balanceData.find((item: { user_id: string }) => item.user_id === user.id);
 
             if (userBalance) {
-              // Parse the balance values as numbers
               user.balance = {
                 bitcoin: parseFloat(userBalance.bitcoin) || 0,
                 ethereum: parseFloat(userBalance.ethereum) || 0,
@@ -129,11 +130,9 @@ export const Balance = () => {
                 staked_ether: parseFloat(userBalance.staked_ether) || 0,
               };
             } else {
-              console.log(`No balance found for user: ${user.id}`);
-              user.balance = null; // If no balance found, set it as null
+              user.balance = null;
             }
           } else {
-            console.error("Failed to fetch balance for user:", user.id);
             user.balance = null;
           }
           return user;
@@ -141,7 +140,6 @@ export const Balance = () => {
       );
 
       setUsers(usersWithBalance);
-
       const initialSelectedCoins: { [userId: string]: keyof Balance } = {};
       usersWithBalance.forEach((user) => {
         initialSelectedCoins[user.id] = "bitcoin"; // Default coin selection is "bitcoin"
@@ -162,10 +160,7 @@ export const Balance = () => {
       const newTotalValues: { [userId: string]: number } = {};
 
       for (const user of users) {
-        if (!user.balance) {
-          console.log(`Skipping user with no balance: ${user.id}`);
-          continue; // Skip users without a balance
-        }
+        if (!user.balance) continue;
 
         const selectedCoin = selectedCoins[user.id] || "bitcoin"; // Default to "bitcoin"
         const price = await getLiveCoinPrice(selectedCoin);
@@ -184,8 +179,54 @@ export const Balance = () => {
   const handleCoinChange = (userId: string, coin: keyof Balance) => {
     setSelectedCoins((prev) => ({
       ...prev,
-      [userId]: coin, // Update only for the specific user
+      [userId]: coin,
     }));
+  };
+
+  const handleEdit = (user: User) => {
+    setSelectedUser(user);
+    setIsEditModalOpen(true);
+  };
+
+  const handleSubmitUpdatedBalance = async (updatedData: {
+    balance_id: string;
+    user_id: string;
+    balance: Balance;
+    status: string;
+    usdt_total: number;
+    unpaid_amount: number;
+    deposit_wallet: string;
+  }) => {
+    const token = sessionStorage.getItem("auth-token");
+    if (!token) {
+      console.error("No token found. Please log in.");
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://server.capital-trust.eu/api/update-balance/${updatedData.user_id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedData),
+      });
+
+      if (response.ok) {
+        console.log("Balance updated successfully!");
+        // Optionally, refetch or update the local state
+        const updatedUsers = users.map((user) =>
+          user.id === updatedData.user_id ? { ...user, balance: updatedData.balance, status: updatedData.status, usdt_total: updatedData.usdt_total, unpaid_amount: updatedData.unpaid_amount,  deposit_wallet: updatedData.deposit_wallet } : user
+        );
+        setUsers(updatedUsers);
+        setIsEditModalOpen(false);
+      } else {
+        console.error("Failed to update balance");
+      }
+    } catch (error) {
+      console.error("Error updating balance:", error);
+    }
   };
 
   return (
@@ -196,8 +237,8 @@ export const Balance = () => {
             <div>
               <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
               <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                {/* Here, ensure you are displaying the balance correctly */}
-                {user.balance?.[selectedCoins[user.id] || "bitcoin"] ?? 0}{" "}
+                {/* Display the user's selected coin balance */}
+                {user.balance?.[selectedCoins[user.id] || "bitcoin"] ?? 0}
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   <CoinDropdown
                     selectedCoin={selectedCoins[user.id] || "bitcoin"}
@@ -211,9 +252,29 @@ export const Balance = () => {
               <ArrowUpIcon />
               ${totalValues[user.id] > 0 ? totalValues[user.id].toFixed(2) : "Unavailable"}
             </Badge>
+            {/* Edit button */}
+            <button onClick={() =>  handleEdit(user)} className="text-blue-500 hover:text-blue-700 text-sm">
+              Edit
+            </button>
           </div>
         </div>
       ))}
+
+      {/* Modal */}
+      {selectedUser && (
+        <EditModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          userId={selectedUser.id}
+          balanceId={selectedUser.balance_id || ""}
+          balance={selectedUser.balance || { bitcoin: 0, ethereum: 0, xrp: 0, tether: 0, bnb: 0, solana: 0, usdc: 0, dogecoin: 0, cardano: 0, staked_ether: 0 }}
+          status={selectedUser.status || "Active"}
+          usdtTotal={selectedUser.usdt_total || 0}
+          unpaidAmount={selectedUser.unpaid_amount || 0}
+          depositWallet={selectedUser.deposit_wallet || ""}
+          onSubmit={handleSubmitUpdatedBalance}
+        />
+      )}
     </div>
   );
 };
