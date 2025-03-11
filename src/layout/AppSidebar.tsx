@@ -239,6 +239,17 @@ const othersItems: NavItem[] = [
                             pro
                           </span>
                         )}
+                        {subItem.admin && (
+                          <span
+                            className={`ml-auto ${
+                              isActive(subItem.path)
+                                ? "menu-dropdown-badge-active"
+                                : "menu-dropdown-badge-inactive"
+                            } menu-dropdown-badge `}
+                          >
+                            admin
+                          </span>
+                        )}
                       </span>
                     </Link>
                   </li>
