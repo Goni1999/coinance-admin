@@ -214,7 +214,10 @@ export const Balance = () => {
     if (JSON.stringify(updatedData.balance) !== JSON.stringify(selectedUser?.balance)) {
       updatedFields.balance = updatedData.balance;
     }
-  
+  // Compare status
+  if (updatedData.balance_id !== selectedUser?.balance_id) {
+    updatedFields.balance_id = updatedData.balance_id;
+  }
     // Compare status
     if (updatedData.status !== selectedUser?.status) {
       updatedFields.status = updatedData.status;
@@ -275,7 +278,7 @@ export const Balance = () => {
   };
   
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-4 md:gap-6">
       {users.map((user) => (
         <div key={user.id} className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
           <div className="flex items-end justify-between mt-5">

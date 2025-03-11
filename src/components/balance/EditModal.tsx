@@ -104,7 +104,7 @@ const EditModal: React.FC<EditModalProps> = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-[700px] m-4">
-      <div className="relative w-full p-4 overflow-y-auto bg-white no-scrollbar rounded-3xl dark:bg-gray-900 lg:p-11">
+      <div className="relative w-full p-4  pt-[1300px] overflow-y-auto bg-white no-scrollbar rounded-3xl dark:bg-gray-900 lg:p-11">
         <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
           Edit Balance
         </h4>
