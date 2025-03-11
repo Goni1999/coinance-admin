@@ -114,7 +114,6 @@ const TransactionsHistory = () => {
     if (selectedUser && newTransaction) {
       // Add the transaction logic here
       // For example, send the transaction data to the server
-      addTransactionToDatabase(newTransaction); // This function will handle adding the transaction to the DB
   
       setIsAddTransactionModalOpen(false);
       setNewTransaction({
@@ -293,7 +292,4 @@ const TransactionsHistory = () => {
 };
 
 export default TransactionsHistory;
-function addTransactionToDatabase(newTransaction: Transaction) {
-    throw new Error("Function not implemented.");
-}
 

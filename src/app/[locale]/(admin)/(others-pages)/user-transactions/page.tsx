@@ -2,7 +2,7 @@
 import { Metadata } from "next";
 import React from "react";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
-import {Balance} from "@/components/balance/Balances";
+import TransactionsHistory from "@/components/usertransactions/UserTransactions";
 export const metadata: Metadata = {
   title: "All transactions",
   description:
@@ -16,7 +16,7 @@ export default function Overview() {
 
       <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
        
-          <Balance />
+          <TransactionsHistory />
       </div>
     </div>
   );
