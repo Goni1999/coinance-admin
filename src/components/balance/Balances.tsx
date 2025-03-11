@@ -20,23 +20,28 @@ const coinIds: { [key: string]: string } = {
 
 // Function to fetch live coin price from CoinGecko
 const getLiveCoinPrice = async (coin: string) => {
+  const correctCoinId = coinIds[coin];
+
+  if (!correctCoinId) {
+    console.warn(`Invalid coin selected: ${coin}`);
+    return 0; // Return 0 if coin is invalid
+  }
+
   try {
-    const correctCoinId = coinIds[coin]; // Use the correct coin ID for the selected coin
     const response = await fetch(`https://pro-api.coingecko.com/api/v3/simple/price?ids=${correctCoinId}&vs_currencies=usd`, {
       method: "GET",
       headers: {
         "x-cg-pro-api-key": "CG-nqfeGL8o6Ky2ngtB3FSJ2oNu"
       }
     });
-    const data = await response.json();
 
-    // If price data is missing, return 0
+    const data = await response.json();
     if (!data[correctCoinId] || !data[correctCoinId].usd) {
       console.warn(`No price found for ${coin}`);
       return 0;
     }
 
-    return data[correctCoinId]?.usd || 0; // Return USD price if available
+    return data[correctCoinId]?.usd || 0;
   } catch (error) {
     console.error("Error fetching coin price:", error);
     return 0; // Return 0 if there's an error
@@ -71,7 +76,6 @@ export const Balance = () => {
   const [selectedCoins, setSelectedCoins] = useState<{ [userId: string]: keyof Balance }>({});
   const [totalValues, setTotalValues] = useState<{ [userId: string]: number }>({});
 
-  // Fetch users from the API
   const fetchUsers = async () => {
     const token = sessionStorage.getItem("auth-token");
 
@@ -93,13 +97,11 @@ export const Balance = () => {
       const usersData: User[] = await response.json();
       setUsers(usersData);
 
-      // Initialize selectedCoins for each user to 'bitcoin' by default
       const initialSelectedCoins: { [userId: string]: keyof Balance } = {};
       usersData.forEach((user) => {
         initialSelectedCoins[user.id] = "bitcoin"; // Default coin selection is "bitcoin"
       });
       setSelectedCoins(initialSelectedCoins);
-
     } catch (error) {
       console.error("Error fetching users:", error);
     }
@@ -109,15 +111,17 @@ export const Balance = () => {
     fetchUsers();
   }, []);
 
-  // Calculate and set the total value for each user
   useEffect(() => {
     const fetchPrices = async () => {
       const newTotalValues: { [userId: string]: number } = {};
 
       for (const user of users) {
-        const selectedCoin = selectedCoins[user.id] || "bitcoin"; // Default to "bitcoin" if no selection
+        const selectedCoin = selectedCoins[user.id] || "bitcoin"; // Default to "bitcoin"
+        console.log("User Balance:", user.balance);
+        console.log("Selected Coin:", selectedCoin);
+
         const price = await getLiveCoinPrice(selectedCoin);
-        const coinBalance = user.balance?.[selectedCoin] || 0; // Fallback to 0 if balance is missing
+        const coinBalance = user.balance?.[selectedCoin] || 0;
         newTotalValues[user.id] = price * coinBalance;
       }
 
