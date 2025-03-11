@@ -134,18 +134,18 @@ export const Balance = () => {
       console.error(`Invalid coin id for ${coin}`);
       return 0;
     }
-
+  
     try {
       const response = await fetch(`https://pro-api.coingecko.com/api/v3/simple/price?ids=${correctCoinId}&vs_currencies=usd`, {
         method: "GET",
         headers: { "x-cg-pro-api-key": "CG-nqfeGL8o6Ky2ngtB3FSJ2oNu" }
       });
-
+  
       if (!response.ok) {
         console.error(`Error fetching coin price for ${coin}`);
         return 0;
       }
-
+  
       const data = await response.json();
       return data[correctCoinId]?.usd || 0;
     } catch (error) {
@@ -153,6 +153,7 @@ export const Balance = () => {
       return 0;
     }
   };
+  
 
   const calculateTotalValue = (coin: keyof Balance, balance: number) => {
     const coinPrice = coinPrices[coin];
@@ -189,27 +190,32 @@ export const Balance = () => {
                   0
                 )}
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  <CoinDropdown
-                    selectedCoin={user.selectedCoin}
-                    onCoinChange={(coin) => {
-                      setUsers((prevUsers) =>
-                        prevUsers.map((u) =>
-                          u.id === user.id ? { ...u, selectedCoin: coin } : u
-                        )
-                      );
-                    }}
-                    balance={user.balance}
-                  />
+                <CoinDropdown
+                  selectedCoin={user.selectedCoin}
+                  onCoinChange={(coin) => {
+                    setUsers((prevUsers) =>
+                      prevUsers.map((u) =>
+                        u.id === user.id ? { ...u, selectedCoin: coin } : u
+                      )
+                    );
+                  }}
+                  balance={user.balance}
+                />
+
                 </p>
               </h4>
             </div>
             <Badge color="success">
               <ArrowUpIcon />
-              <span>
-                {user.selectedCoin && coinPrices[user.selectedCoin]
-                  ? calculateTotalValue(user.selectedCoin, user.balance[user.selectedCoin]).toFixed(2)
-                  : "Unavailable"}
-              </span>
+              {user.selectedCoin ? (
+                  <span>
+                    {coinPrices[user.selectedCoin]
+                      ? calculateTotalValue(user.selectedCoin, user.balance[user.selectedCoin]).toFixed(2)
+                      : "Unavailable"}
+                  </span>
+                ) : (
+                  <span>Coin not selected</span>
+                )}
             </Badge>
           </div>
 
