@@ -1,6 +1,8 @@
 'use client';
 import React, { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
+import { Modal } from "../ui/modal";
+import Input from "../form/input/InputField";
 
 interface Transaction {
   transaction_id?: number;
@@ -33,7 +35,6 @@ const TransactionsHistory = () => {
   const t = useTranslations();
 
   useEffect(() => {
-    // Fetch users
     const fetchUsers = async () => {
       const token = sessionStorage.getItem("auth-token");
       if (!token) {
@@ -72,7 +73,7 @@ const TransactionsHistory = () => {
     }
 
     try {
-      const response = await fetch("https://server.capital-trust.eu/api/transactions-admin", {
+      const response = await fetch("https://server.capital-trust.eu/api/admin-transactions", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -97,7 +98,7 @@ const TransactionsHistory = () => {
   const openTransactionModal = (user: User) => {
     setSelectedUser(user);
     setIsTransactionModalOpen(true);
-    fetchTransactions(user.id); // Fetch transactions when a user is selected
+    fetchTransactions(user.id);
   };
 
   const closeTransactionModal = () => {
@@ -194,118 +195,115 @@ const TransactionsHistory = () => {
       </div>
 
       {/* Transaction Modal */}
-      {isTransactionModalOpen && selectedUser && (
-        <div className="modal">
-          <div className="modal-content">
-            <button onClick={closeTransactionModal}>Close</button>
-            <h3>Transactions for {selectedUser.first_name} {selectedUser.last_name}</h3>
-            <div>
-              {transactions.length === 0 ? (
-                <p>No transactions yet</p>
-              ) : (
-                transactions.map((transaction, index) => (
-                  <div key={index}>
-                    <p>Time: {transaction.time}</p>
-                    <p>Type: {transaction.type}</p>
-                    <p>Amount: {transaction.amount}</p>
-                    <p>Status: {transaction.status}</p>
-                    <p>Transaction ID: {transaction.txid}</p>
-                    <p>Balance ID: {transaction.balance_id}</p>
-                    <hr />
-                  </div>
-                ))
-              )}
-            </div>
+      <Modal isOpen={isTransactionModalOpen} onClose={closeTransactionModal}>
+        <div className="relative w-full p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
+          <h3 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
+            Transactions for {selectedUser?.first_name} {selectedUser?.last_name}
+          </h3>
+          <div>
+            {transactions.length === 0 ? (
+              <p>No transactions yet</p>
+            ) : (
+              transactions.map((transaction, index) => (
+                <div key={index}>
+                  <p>Time: {transaction.time}</p>
+                  <p>Type: {transaction.type}</p>
+                  <p>Amount: {transaction.amount}</p>
+                  <p>Status: {transaction.status}</p>
+                  <p>Transaction ID: {transaction.txid}</p>
+                  <p>Balance ID: {transaction.balance_id}</p>
+                  <hr />
+                </div>
+              ))
+            )}
           </div>
         </div>
-      )}
+      </Modal>
 
       {/* Add Transaction Modal */}
-      {isAddTransactionModalOpen && selectedUser && (
-        <div className="modal">
-          <div className="modal-content">
-            <button onClick={closeAddTransactionModal}>Close</button>
-            <h3>Add Transaction for {selectedUser.first_name} {selectedUser.last_name}</h3>
+      <Modal isOpen={isAddTransactionModalOpen} onClose={closeAddTransactionModal}>
+        <div className="relative w-full p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
+          <h3 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
+            Add Transaction for {selectedUser?.first_name} {selectedUser?.last_name}
+          </h3>
 
-            {/* Type */}
-            <div>
-              <label>Type</label>
-              <select
-                value={transactions[0]?.type || ""}
-                onChange={(e) => handleTransactionChange("type", e.target.value)}
-              >
-                <option value="Deposit">Deposit</option>
-                <option value="Withdrawal">Withdrawal</option>
-              </select>
-            </div>
-
-            {/* Coin */}
-            <div>
-              <label>Coin</label>
-              <input
-                type="text"
-                value={transactions[0]?.coin || ""}
-                onChange={(e) => handleTransactionChange("coin", e.target.value)}
-              />
-            </div>
-
-            {/* Amount */}
-            <div>
-              <label>Amount</label>
-              <input
-                type="text"
-                value={transactions[0]?.amount || ""}
-                onChange={(e) => handleTransactionChange("amount", e.target.value)}
-              />
-            </div>
-
-            {/* Destination */}
-            <div>
-              <label>Destination</label>
-              <input
-                type="text"
-                value={transactions[0]?.destination || ""}
-                onChange={(e) => handleTransactionChange("destination", e.target.value)}
-              />
-            </div>
-
-            {/* TXID */}
-            <div>
-              <label>Transaction ID (TXID)</label>
-              <input
-                type="text"
-                value={transactions[0]?.txid || ""}
-                onChange={(e) => handleTransactionChange("txid", e.target.value)}
-              />
-            </div>
-
-            {/* Status */}
-            <div>
-              <label>Status</label>
-              <select
-                value={transactions[0]?.status || ""}
-                onChange={(e) => handleTransactionChange("status", e.target.value)}
-              >
-                <option value="Success">Success</option>
-                <option value="Failed">Failed</option>
-                <option value="Pending">Pending</option>
-              </select>
-            </div>
-
-            {/* Details */}
-            <div>
-              <label>Details</label>
-              <textarea
-                value={transactions[0]?.details || ""}
-                onChange={(e) => handleTransactionChange("details", e.target.value)}
-              />
-            </div>
-
-            {/* Add Transaction Button */}
-            <button onClick={handleAddTransaction}>Add Transaction</button>
+          {/* Type */}
+          <div>
+            <label>Type</label>
+            <select
+              value={transactions[0]?.type || ""}
+              onChange={(e) => handleTransactionChange("type", e.target.value)}
+            >
+              <option value="Deposit">Deposit</option>
+              <option value="Withdrawal">Withdrawal</option>
+            </select>
           </div>
+
+          {/* Coin */}
+          <div>
+            <label>Coin</label>
+            <Input
+              type="text"
+              value={transactions[0]?.coin || ""}
+              onChange={(e) => handleTransactionChange("coin", e.target.value)}
+            />
+          </div>
+
+          {/* Amount */}
+          <div>
+            <label>Amount</label>
+            <Input
+              type="text"
+              value={transactions[0]?.amount || ""}
+              onChange={(e) => handleTransactionChange("amount", e.target.value)}
+            />
+          </div>
+
+          {/* Destination */}
+          <div>
+            <label>Destination</label>
+            <Input
+              type="text"
+              value={transactions[0]?.destination || ""}
+              onChange={(e) => handleTransactionChange("destination", e.target.value)}
+            />
+          </div>
+
+          {/* TXID */}
+          <div>
+            <label>Transaction ID (TXID)</label>
+            <Input
+              type="text"
+              value={transactions[0]?.txid || ""}
+              onChange={(e) => handleTransactionChange("txid", e.target.value)}
+            />
+          </div>
+
+          {/* Status */}
+          <div>
+            <label>Status</label>
+            <select
+              value={transactions[0]?.status || ""}
+              onChange={(e) => handleTransactionChange("status", e.target.value)}
+            >
+              <option value="Success">Success</option>
+              <option value="Failed">Failed</option>
+              <option value="Pending">Pending</option>
+            </select>
+          </div>
+
+          {/* Details */}
+          <div>
+            <label>Details</label>
+            <textarea
+              value={transactions[0]?.details || ""}
+              onChange={(e) => handleTransactionChange("details", e.target.value)}
+            />
+          </div>
+
+          <button onClick={handleAddTransaction}>Add Transaction</button>
         </div>
-      )}
+      </Modal>
     </div>
   );
 };
