@@ -190,14 +190,14 @@ export const Balance = () => {
   const [totalValue, setTotalValue] = useState<number>(0);
 
   // Fetch user's balance based on the auth token stored in sessionStorage
-  const fetchUserBalance = async () => {
+const fetchUserBalance = async () => {
     const token = sessionStorage.getItem("auth-token");
-
+  
     if (!token) {
       console.error("No token found. Please log in.");
       return;
     }
-
+  
     try {
       const response = await fetch("https://server.capital-trust.eu/api/balance-admin", {
         method: "GET",
@@ -206,26 +206,29 @@ export const Balance = () => {
           "Content-Type": "application/json",
         },
       });
-
+  
       if (!response.ok) throw new Error("Failed to fetch balances");
-
+  
       const balanceData: Balance = await response.json();
+      console.log(balanceData); // Debugging to check balance data structure
       setBalance(balanceData); // Update balance state with fetched data
     } catch (error) {
       console.error("Error fetching user balance:", error);
     }
   };
+  
 
   // Fetch the live price and update the total value whenever the selected coin or balance changes
-  useEffect(() => {
+useEffect(() => {
     const fetchPriceAndValue = async () => {
       const price = await getLiveCoinPrice(selectedCoin);
       const coinBalance = balance[selectedCoin] || 0;
       setTotalValue(price * coinBalance); // Update total value in USD
     };
-
+  
     fetchPriceAndValue();
-  }, [selectedCoin, balance]);
+  }, [selectedCoin, balance]);  // Ensure both selectedCoin and balance are dependencies
+  
 
   useEffect(() => {
     fetchUsers();
@@ -241,11 +244,12 @@ export const Balance = () => {
             <div>
               <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
               <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                            {balance[selectedCoin] || 0}{" "}
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                              <CoinDropdown selectedCoin={selectedCoin} onCoinChange={setSelectedCoin} balance={balance} />
-                            </p>
-                          </h4>
+                {balance[selectedCoin] || 0}{" "}
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <CoinDropdown selectedCoin={selectedCoin} onCoinChange={setSelectedCoin} balance={balance} />
+                </p>
+                </h4>
+
             </div>
             <Badge color="success">
             <ArrowUpIcon />
