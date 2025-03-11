@@ -344,8 +344,8 @@ export const Balance = () => {
                 </p>
               </h4>
             </div>
-            <div className="flex flex-col">
-            <span className="inline-flex items-center mb-4  px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium  bg-red-50  dark:bg-red-500/15 text-sm text-red-500 dark:text-red-400 ">Unpaid: ${`${user.unpaid_amount.toFixed(0)}`}</span>
+            <div className="flex flex-col items-end">
+            <span className="inline-flex items-center mb-4  px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium  bg-red-50  dark:bg-red-500/15 text-sm text-red-500 dark:text-red-400 ">Unpaid: ${`${Number(user.unpaid_amount).toFixed(0)}`}</span>
 
             <Badge  color="success">
               <ArrowUpIcon />
