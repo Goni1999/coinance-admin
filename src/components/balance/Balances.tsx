@@ -117,7 +117,7 @@ export const Balance = () => {
       for (const user of users) {
         const selectedCoin = selectedCoins[user.id] || "bitcoin"; // Default to "bitcoin" if no selection
         const price = await getLiveCoinPrice(selectedCoin);
-        const coinBalance = user.balance[selectedCoin] || 0; // Fallback to 0 if balance is missing
+        const coinBalance = user.balance?.[selectedCoin] || 0; // Fallback to 0 if balance is missing
         newTotalValues[user.id] = price * coinBalance;
       }
 
@@ -144,7 +144,7 @@ export const Balance = () => {
             <div>
               <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
               <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                {user.balance[selectedCoins[user.id] || "bitcoin"] || 0}{" "}
+                {user.balance?.[selectedCoins[user.id] || "bitcoin"] || 0}{" "}
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   <CoinDropdown
                     selectedCoin={selectedCoins[user.id] || "bitcoin"}
