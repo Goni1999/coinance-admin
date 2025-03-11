@@ -39,9 +39,8 @@ const coinIds: { [key: string]: string } = {
   staked_ether: "staked-ether"
 };
 
-export const Balance = () => {
+const Balance = () => {
   const [users, setUsers] = useState<User[]>([]);
-
   const [coinPrices, setCoinPrices] = useState<{ [key: string]: number }>({});
 
   const fetchUsers = async () => {
@@ -62,28 +61,24 @@ export const Balance = () => {
     }
   };
 
-
-
-
-
   const getLiveCoinPrice = async (coin: keyof Balance) => {
     const correctCoinId = coinIds[coin];
     if (!correctCoinId) {
       console.error(`Invalid coin id for ${coin}`);
       return 0;
     }
-  
+
     try {
       const response = await fetch(`https://pro-api.coingecko.com/api/v3/simple/price?ids=${correctCoinId}&vs_currencies=usd`, {
         method: "GET",
         headers: { "x-cg-pro-api-key": "CG-nqfeGL8o6Ky2ngtB3FSJ2oNu" }
       });
-  
+
       if (!response.ok) {
         console.error(`Error fetching coin price for ${coin}`);
         return 0;
       }
-  
+
       const data = await response.json();
       return data[correctCoinId]?.usd || 0;
     } catch (error) {
@@ -91,8 +86,8 @@ export const Balance = () => {
       return 0;
     }
   };
-  
 
+  // Define calculateTotalValue function
   const calculateTotalValue = (coin: keyof Balance, balance: number) => {
     const coinPrice = coinPrices[coin];
     return coinPrice * balance;
@@ -122,49 +117,44 @@ export const Balance = () => {
             <div>
               <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
               <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                  {user.balance && user.selectedCoin ? (
-                    user.balance[user.selectedCoin] || 0
-                  ) : (
-                    0
-                  )}
-
-
+                {user.balance && user.selectedCoin ? (
+                  user.balance[user.selectedCoin] ?? 0
+                ) : (
+                  0
+                )}
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                <CoinDropdown
-                selectedCoin={user.selectedCoin || "bitcoin"} // Default to "bitcoin" if undefined
-                onCoinChange={(coin) => {
-                  setUsers((prevUsers) =>
-                    prevUsers.map((u) =>
-                      u.id === user.id ? { ...u, selectedCoin: coin } : u
-                    )
-                  );
-                }}
-                balance={user.balance}
-              />
-
+                  <CoinDropdown
+                    selectedCoin={user.selectedCoin || "bitcoin"} // Default to "bitcoin" if undefined
+                    onCoinChange={(coin) => {
+                      setUsers((prevUsers) =>
+                        prevUsers.map((u) =>
+                          u.id === user.id ? { ...u, selectedCoin: coin } : u
+                        )
+                      );
+                    }}
+                    balance={user.balance}
+                  />
                 </p>
               </h4>
             </div>
             <Badge color="success">
-                      <ArrowUpIcon />
-                      {user.selectedCoin ? (
-                        coinPrices[user.selectedCoin] ? (
-                          <span>
-                            {calculateTotalValue(user.selectedCoin, user.balance[user.selectedCoin]).toFixed(2)}
-                          </span>
-                        ) : (
-                          <span>Price Unavailable</span>
-                        )
-                      ) : (
-                        <span>Coin not selected</span>
-                      )}
-</Badge>
-
+              <ArrowUpIcon />
+              {user.selectedCoin ? (
+                coinPrices[user.selectedCoin] ? (
+                  <span>
+                    {calculateTotalValue(user.selectedCoin, user.balance[user.selectedCoin] ?? 0).toFixed(2)}
+                  </span>
+                ) : (
+                  <span>Price Unavailable</span>
+                )
+              ) : (
+                <span>Coin not selected</span>
+              )}
+            </Badge>
           </div>
 
           <div className="flex justify-end mt-2">
             <button
-             
               className="text-sm rounded-full border border-gray-300 bg-white px-2.5 py-0.5 text-theme-sm font-medium shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-white/[0.03] text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
             >
               Edit Balance
@@ -172,8 +162,8 @@ export const Balance = () => {
           </div>
         </div>
       ))}
-
-     
     </div>
   );
 };
+
+export default Balance;

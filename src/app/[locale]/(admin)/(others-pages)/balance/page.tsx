@@ -2,7 +2,7 @@
 import { Metadata } from "next";
 import React from "react";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
-import { Balance } from "@/components/balance/Balances";
+import Balance from "@/components/balance/Balances";
 export const metadata: Metadata = {
   title: "Balances",
   description:
