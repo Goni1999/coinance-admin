@@ -118,7 +118,7 @@ export default function CoinDropdown({ selectedCoin, onCoinChange, balance }: Co
       <Dropdown
         isOpen={isOpen}
         onClose={closeDropdown}
-        className="absolute right-0 mt-[17px] flex w-[200px] flex-col rounded-2xl border border-gray-200 bg-white p-2 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark"
+        className="absolute left-0 mt-[17px] flex w-[200px] flex-col rounded-2xl border border-gray-200 bg-white p-2 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark"
       >
         <ul className="flex flex-col gap-0.5 pt-1 pb-1">
           {coins.map((coin) => (
