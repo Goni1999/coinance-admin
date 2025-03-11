@@ -83,16 +83,19 @@ export const Balance = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); // Modal open state
   const [selectedUser, setSelectedUser] = useState<User | null>(null); // Selected user to edit
   const [alert, setAlert] = useState<{
-      variant: "success" | "error" | "warning" | "info";
-      title: string;
-      message: string;
-      show: boolean;
-    }>({
-      variant: "success",
-      title: "",
-      message: "",
-      show: false,
-    });
+    variant: "success" | "error" | "warning" | "info";
+    title: string;
+    message: string;
+    show: boolean;
+    userId: string | null;  // Allow userId to be either a string or null
+  }>({
+    variant: "success",
+    title: "",
+    message: "",
+    show: false,
+    userId: null,  // Initially null, later set to user_id when alert is shown
+  });
+  
   
   const fetchUsers = async () => {
     const token = sessionStorage.getItem("auth-token");
@@ -277,6 +280,8 @@ export const Balance = () => {
           title: "User Balance Updated Successfully",
           message: "You can check now!",
           show: true,
+          userId: updatedData.user_id, // Set the alert userId
+
         });
         
         // Optionally, refetch or update the local state with the updated data
@@ -295,6 +300,8 @@ export const Balance = () => {
           title: "User Balance doesn't Updated",
           message: "Please signout and signin again",
           show: true,
+          userId: updatedData.user_id, // Set the alert userId
+
         });
        
       }
@@ -308,14 +315,14 @@ export const Balance = () => {
       
       {users.map((user) => (
         <div key={user.id} className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-          {alert.show && (
-        <Alert
-          variant={alert.variant}
-          title={alert.title}
-          message={alert.message}
-          showLink={false} 
-        />
-      )}
+         {alert.show && alert.userId === user.id && (
+          <Alert
+            variant={alert.variant}
+            title={alert.title}
+            message={alert.message}
+            showLink={false} 
+          />
+        )}
           <div className="flex items-end justify-between mt-5">
             <div>
               <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
@@ -331,16 +338,20 @@ export const Balance = () => {
                 </p>
               </h4>
             </div>
+            <div>
+            <span className="text-sm text-red-500 dark:text-red-400">Unpaid Amount {`${user.unpaid_amount}`}</span>
+
             <Badge color="success">
               <ArrowUpIcon />
               ${totalValues[user.id] > 0 ? totalValues[user.id].toFixed(2) : "Unavailable"}
             </Badge>
-            
-          </div>
-          {/* Edit button */}
+            {/* Edit button */}
           <button onClick={() =>  handleEdit(user)} className="text-blue-500 hover:text-blue-700 text-sm">
               Edit
             </button>
+            </div>
+          </div>
+          
         </div>
       ))}
 
