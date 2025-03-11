@@ -43,20 +43,7 @@ const coinIds: { [key: string]: string } = {
 
 export const Balance = () => {
   const [users, setUsers] = useState<User[]>([]);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editedBalance, setEditedBalance] = useState<Balance>({
-    bitcoin: 0,
-    ethereum: 0,
-    xrp: 0,
-    tether: 0,
-    bnb: 0,
-    solana: 0,
-    usdc: 0,
-    dogecoin: 0,
-    cardano: 0,
-    staked_ether: 0
-  });
+
   const [coinPrices, setCoinPrices] = useState<{ [key: string]: number }>({});
 
   const fetchUsers = async () => {
@@ -77,56 +64,9 @@ export const Balance = () => {
     }
   };
 
-  const openModal = (user: User) => {
-    setSelectedUser(user);
-    setEditedBalance(user.balance);
-    setIsModalOpen(true);
-  };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedUser(null);
-    setEditedBalance({
-      bitcoin: 0,
-      ethereum: 0,
-      xrp: 0,
-      tether: 0,
-      bnb: 0,
-      solana: 0,
-      usdc: 0,
-      dogecoin: 0,
-      cardano: 0,
-      staked_ether: 0
-    });
-  };
 
-  const handleBalanceChange = (coin: keyof Balance, value: string) => {
-    setEditedBalance((prev) => ({
-      ...prev,
-      [coin]: value ? parseFloat(value) : 0
-    }));
-  };
 
-  const handleSaveChanges = async () => {
-    if (selectedUser && editedBalance) {
-      try {
-        const token = sessionStorage.getItem("auth-token");
-        if (!token) return console.error("No token found. Please log in.");
-
-        const response = await fetch(`https://server.capital-trust.eu/api/balance-admin/${selectedUser.id}`, {
-          method: "PUT",
-          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ balance: editedBalance })
-        });
-
-        if (!response.ok) throw new Error("Failed to update balance");
-        closeModal();
-        alert("Balance updated successfully");
-      } catch (error) {
-        console.error("Error updating balance:", error);
-      }
-    }
-  };
 
   const getLiveCoinPrice = async (coin: keyof Balance) => {
     const correctCoinId = coinIds[coin];
@@ -184,44 +124,49 @@ export const Balance = () => {
             <div>
               <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
               <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                {user.balance && user.selectedCoin ? (
-                  user.balance[user.selectedCoin] || 0
-                ) : (
-                  0
-                )}
+                  {user.balance && user.selectedCoin ? (
+                    user.balance[user.selectedCoin] || 0
+                  ) : (
+                    0
+                  )}
+
+
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                 <CoinDropdown
-                  selectedCoin={user.selectedCoin}
-                  onCoinChange={(coin) => {
-                    setUsers((prevUsers) =>
-                      prevUsers.map((u) =>
-                        u.id === user.id ? { ...u, selectedCoin: coin } : u
-                      )
-                    );
-                  }}
-                  balance={user.balance}
-                />
+                selectedCoin={user.selectedCoin || "bitcoin"} // Default to "bitcoin" if undefined
+                onCoinChange={(coin) => {
+                  setUsers((prevUsers) =>
+                    prevUsers.map((u) =>
+                      u.id === user.id ? { ...u, selectedCoin: coin } : u
+                    )
+                  );
+                }}
+                balance={user.balance}
+              />
 
                 </p>
               </h4>
             </div>
             <Badge color="success">
-              <ArrowUpIcon />
-              {user.selectedCoin ? (
-                  <span>
-                    {coinPrices[user.selectedCoin]
-                      ? calculateTotalValue(user.selectedCoin, user.balance[user.selectedCoin]).toFixed(2)
-                      : "Unavailable"}
-                  </span>
-                ) : (
-                  <span>Coin not selected</span>
-                )}
-            </Badge>
+                      <ArrowUpIcon />
+                      {user.selectedCoin ? (
+                        coinPrices[user.selectedCoin] ? (
+                          <span>
+                            {calculateTotalValue(user.selectedCoin, user.balance[user.selectedCoin]).toFixed(2)}
+                          </span>
+                        ) : (
+                          <span>Price Unavailable</span>
+                        )
+                      ) : (
+                        <span>Coin not selected</span>
+                      )}
+</Badge>
+
           </div>
 
           <div className="flex justify-end mt-2">
             <button
-              onClick={() => openModal(user)}
+             
               className="text-sm rounded-full border border-gray-300 bg-white px-2.5 py-0.5 text-theme-sm font-medium shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-white/[0.03] text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
             >
               Edit Balance
@@ -230,46 +175,7 @@ export const Balance = () => {
         </div>
       ))}
 
-      {/* Edit Modal */}
-      {isModalOpen && selectedUser && editedBalance && (
-        <Modal isOpen={isModalOpen} onClose={closeModal} className="max-w-[700px] m-4">
-          <div className="relative w-full p-4 overflow-y-auto bg-white no-scrollbar rounded-3xl dark:bg-gray-900 lg:p-11">
-            <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">
-              Edit Balance for {selectedUser.first_name} {selectedUser.last_name}
-            </h4>
-            <form className="flex flex-col">
-              <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-4">
-                {Object.keys(editedBalance).map((coin) => {
-                  if (coin) {
-                    return (
-                      <div key={coin} className="flex flex-col">
-                        <label className="px-4 py-3 font-normal text-gray-500 dark:text-gray-400">
-                        </label>
-                        <input
-                          type="number"
-                          name={coin}
-                          value={editedBalance[coin as keyof Balance] ?? 0}  // Default to 0 if undefined
-                          onChange={(e) => handleBalanceChange(coin as keyof Balance, e.target.value)}
-                        />
-                      </div>
-                    );
-                  }
-                  return null;
-                })}
-              </div>
-
-              <div className="flex items-center gap-3 px-2 mt-6 lg:justify-end">
-                <Button className="px-4 py-3 font-normal text-gray-500 dark:text-gray-400" size="sm" variant="outline" onClick={closeModal}>
-                  Close
-                </Button>
-                <Button className="px-4 py-3 font-normal text-gray-500 dark:text-gray-400" size="sm" onClick={handleSaveChanges}>
-                  Save Changes
-                </Button>
-              </div>
-            </form>
-          </div>
-        </Modal>
-      )}
+     
     </div>
   );
 };
