@@ -272,17 +272,14 @@ export const Balance = () => {
       });
   
       if (response.ok) {
-        console.log("Balance updated successfully!");
-        router.push("/balance");
-
-        setTimeout(() => {
-          setAlert({
-            variant: "success",
-            title: "Balance Updated Successfully",
-            message: "You can check now!",
-            show: true,
-          });
-        }, 3000);
+        console.log("User Balance updated successfully!");
+        setAlert({
+          variant: "success",
+          title: "User Balance Updated Successfully",
+          message: "You can check now!",
+          show: true,
+        });
+        
         // Optionally, refetch or update the local state with the updated data
         const updatedUsers = users.map((user) =>
           user.id === updatedData.user_id
@@ -294,16 +291,13 @@ export const Balance = () => {
       } else {
         console.error("Failed to update balance");
         
-        router.push("/balance");
-
-        setTimeout(() => {
-          setAlert({
-            variant: "error",
-            title: "Balance doesn't Updated",
-            message: "Please signout and signin again",
-            show: true,
-          });
-        }, 3000);
+        setAlert({
+          variant: "error",
+          title: "User Balance doesn't Updated",
+          message: "Please signout and signin again",
+          show: true,
+        });
+       
       }
     } catch (error) {
       console.error("Error updating balance:", error);
@@ -312,7 +306,10 @@ export const Balance = () => {
   
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-4 md:gap-6">
-      {alert.show && (
+      
+      {users.map((user) => (
+        <div key={user.id} className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
+          {alert.show && (
         <Alert
           variant={alert.variant}
           title={alert.title}
@@ -320,8 +317,6 @@ export const Balance = () => {
           showLink={false} 
         />
       )}
-      {users.map((user) => (
-        <div key={user.id} className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
           <div className="flex items-end justify-between mt-5">
             <div>
               <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
@@ -341,11 +336,12 @@ export const Balance = () => {
               <ArrowUpIcon />
               ${totalValues[user.id] > 0 ? totalValues[user.id].toFixed(2) : "Unavailable"}
             </Badge>
-            {/* Edit button */}
-            <button onClick={() =>  handleEdit(user)} className="text-blue-500 hover:text-blue-700 text-sm">
+            
+          </div>
+          {/* Edit button */}
+          <button onClick={() =>  handleEdit(user)} className="text-blue-500 hover:text-blue-700 text-sm">
               Edit
             </button>
-          </div>
         </div>
       ))}
 
