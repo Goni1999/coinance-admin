@@ -246,7 +246,7 @@ export const Balance = () => {
   
     try {
       // Send the request to the backend with user_id in the body
-      const response = await fetch("https://server.capital-trust.eu/api/update-balance", {
+      const response = await fetch("https://server.capital-trust.eu/api/update-balance-admin", {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
