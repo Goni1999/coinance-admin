@@ -154,10 +154,9 @@ export const Balance = () => {
     }
   };
 
-  const calculateTotalValue = async (user: User) => {
-    const price = await getLiveCoinPrice(user.selectedCoin);
-    const coinBalance = user.balance[user.selectedCoin] || 0;
-    return price * coinBalance;
+  const calculateTotalValue = (coin: keyof Balance, balance: number) => {
+    const coinPrice = coinPrices[coin];
+    return coinPrice * balance;
   };
 
   useEffect(() => {
@@ -207,8 +206,8 @@ export const Balance = () => {
             <Badge color="success">
               <ArrowUpIcon />
               <span>
-                {coinPrices[user.selectedCoin]
-                  ? (coinPrices[user.selectedCoin] * user.balance[user.selectedCoin]).toFixed(2)
+                {user.selectedCoin && coinPrices[user.selectedCoin]
+                  ? calculateTotalValue(user.selectedCoin, user.balance[user.selectedCoin]).toFixed(2)
                   : "Unavailable"}
               </span>
             </Badge>
