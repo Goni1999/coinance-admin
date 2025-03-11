@@ -22,7 +22,7 @@ type NavItem = {
   name: string;
   icon: React.ReactNode;
   path?: string;
-  subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
+  subItems?: { name: string; path: string; pro?: boolean; new?: boolean; admin?: boolean }[];
 };
 
 
@@ -42,14 +42,13 @@ const navItems: NavItem[] = [
     icon: <UserCircleIcon />,
     name: "Clients",
     subItems: [
-      { name: "Users", path: "/users", pro: false },
-      { name: "Balances", path: "/balance", pro: false },
-      { name: "Transactions", path: "/user-transactions", pro: false },
-      { name: "Invoices", path: "/user-invoices", pro: false },
-      { name: "Investments", path: "/investments", pro: false },
-      { name: "Enquiries", path: "/enquiries", pro: false },
-      { name: "Raports", path: "/raports", pro: false },
-
+      { name: "Users", path: "/users", pro: false, admin: true },
+      { name: "Balances", path: "/balance", pro: false, admin: true  },
+      { name: "Transactions", path: "/user-transactions", pro: false, admin: true  },
+      { name: "Invoices", path: "/user-invoices", pro: false, admin: true  },
+      { name: "Investments", path: "/investments", pro: false, admin: true  },
+      { name: "Enquiries", path: "/enquiries", pro: false, admin: true  },
+      { name: "Raports", path: "/raports", pro: false, admin: true  },
     ],
   },
   {
