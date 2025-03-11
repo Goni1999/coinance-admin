@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal } from "../ui/modal";
 import Button from "../ui/button/Button";
 import Input from "../form/input/InputField";
+
 type Balance = {
   bitcoin: number;
   ethereum: number;
@@ -27,7 +28,15 @@ type EditModalProps = {
   usdtTotal: number;
   unpaidAmount: number;
   depositWallet: string;
-  onSubmit: (updatedData: { balance_id: string; user_id: string; balance: Balance; status: string; usdt_total: number; unpaid_amount: number; deposit_wallet: string }) => void;
+  onSubmit: (updatedData: {
+    balance_id: string;
+    user_id: string;
+    balance: Balance;
+    status: string;
+    usdt_total: number;
+    unpaid_amount: number;
+    deposit_wallet: string;
+  }) => void;
 };
 
 const EditModal: React.FC<EditModalProps> = ({
@@ -51,6 +60,21 @@ const EditModal: React.FC<EditModalProps> = ({
     unpaid_amount: unpaidAmount,
     deposit_wallet: depositWallet,
   });
+
+  // Update form data when modal is opened with a new user
+  useEffect(() => {
+    if (isOpen) {
+      setFormData({
+        balance_id: balanceId,
+        user_id: userId,
+        balance: { ...balance },
+        status,
+        usdt_total: usdtTotal,
+        unpaid_amount: unpaidAmount,
+        deposit_wallet: depositWallet,
+      });
+    }
+  }, [isOpen, userId, balanceId, balance, status, usdtTotal, unpaidAmount, depositWallet]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -88,22 +112,37 @@ const EditModal: React.FC<EditModalProps> = ({
           <div className="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-4">
             {/* Balance Inputs */}
             {Object.keys(formData.balance).map((coin) => (
-              <div key={coin}>
+              <div key={coin} className="flex flex-col mb-4">
                 <label className="px-4 py-3 font-normal text-gray-500 text-theme-sm dark:text-gray-400">
                   {coin.charAt(0).toUpperCase() + coin.slice(1)}
                 </label>
-                <input
+                <Input
                   type="number"
                   name={`balance.${coin}`}
-                  value={formData.balance[coin as keyof Balance]}
+                  value={formData.balance[coin as keyof Balance].toString()}
                   onChange={handleChange}
+                  className="w-full p-3 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   placeholder={`Enter ${coin}`}
                 />
               </div>
             ))}
+                  {/* Balance id */}
+            <div className="flex flex-col mb-4">
+              <label className="px-4 py-3 font-normal text-gray-500 text-theme-sm dark:text-gray-400">
+                Balance ID
+              </label>
+              <Input
+                type="text"
+                name="balance_id"
+                value={formData.balance_id}
+                onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                placeholder="Enter status"
+              />
+            </div>
 
             {/* Status */}
-            <div>
+            <div className="flex flex-col mb-4">
               <label className="px-4 py-3 font-normal text-gray-500 text-theme-sm dark:text-gray-400">
                 Status
               </label>
@@ -112,40 +151,43 @@ const EditModal: React.FC<EditModalProps> = ({
                 name="status"
                 value={formData.status}
                 onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 placeholder="Enter status"
               />
             </div>
 
             {/* USDT Total */}
-            <div>
+            <div className="flex flex-col mb-4">
               <label className="px-4 py-3 font-normal text-gray-500 text-theme-sm dark:text-gray-400">
                 USDT Total
               </label>
-              <input
+              <Input
                 type="number"
                 name="usdt_total"
-                value={formData.usdt_total}
+                value={formData.usdt_total.toString()}
                 onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 placeholder="Enter USDT Total"
               />
             </div>
 
             {/* Unpaid Amount */}
-            <div>
+            <div className="flex flex-col mb-4">
               <label className="px-4 py-3 font-normal text-gray-500 text-theme-sm dark:text-gray-400">
                 Unpaid Amount
               </label>
-              <input
+              <Input
                 type="number"
                 name="unpaid_amount"
-                value={formData.unpaid_amount}
+                value={formData.unpaid_amount.toString()}
                 onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 placeholder="Enter unpaid amount"
               />
             </div>
 
             {/* Deposit Wallet */}
-            <div>
+            <div className="flex flex-col mb-4">
               <label className="px-4 py-3 font-normal text-gray-500 text-theme-sm dark:text-gray-400">
                 Deposit Wallet
               </label>
@@ -154,6 +196,7 @@ const EditModal: React.FC<EditModalProps> = ({
                 name="deposit_wallet"
                 value={formData.deposit_wallet}
                 onChange={handleChange}
+                className="w-full p-3 border border-gray-300 rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 placeholder="Enter deposit wallet"
               />
             </div>
