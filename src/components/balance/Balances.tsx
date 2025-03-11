@@ -292,7 +292,7 @@ export const Balance = () => {
         );
         setUsers(updatedUsers);
         setTimeout(() => {
-          setAlert((prevAlert) => (prevAlert.userId === updatedData.user_id ? { ...prevAlert, show: false } : prevAlert));
+          window.location.reload();
         }, 5000);
         setIsEditModalOpen(false);
       } else {
@@ -307,7 +307,7 @@ export const Balance = () => {
 
         });
         setTimeout(() => {
-          setAlert((prevAlert) => (prevAlert.userId === updatedData.user_id ? { ...prevAlert, show: false } : prevAlert));
+          window.location.reload();
         }, 5000);
        
       }
@@ -330,7 +330,7 @@ export const Balance = () => {
           />
         )}
           <div className="flex items-end justify-between mt-5">
-            <div>
+            <div >
               <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
               <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
                 {/* Display the user's selected coin balance */}
@@ -344,15 +344,15 @@ export const Balance = () => {
                 </p>
               </h4>
             </div>
-            <div>
-            <span className="text-sm text-red-500 dark:text-red-400">Unpaid Amount {`${user.unpaid_amount}`}</span>
+            <div className="flex flex-col">
+            <span className="inline-flex items-center mb-4  px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium  bg-red-50  dark:bg-red-500/15 text-sm text-red-500 dark:text-red-400 ">Unpaid: ${`${user.unpaid_amount.toFixed(0)}`}</span>
 
-            <Badge color="success">
+            <Badge  color="success">
               <ArrowUpIcon />
               ${totalValues[user.id] > 0 ? totalValues[user.id].toFixed(2) : "Unavailable"}
             </Badge>
             {/* Edit button */}
-          <button onClick={() =>  handleEdit(user)} className="text-blue-500 hover:text-blue-700 text-sm">
+          <button onClick={() =>  handleEdit(user)} className="mt-4 inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium  bg-blue-50  dark:bg-blue-500/15  text-blue-500 hover:text-blue-700 text-sm">
               Edit
             </button>
             </div>
