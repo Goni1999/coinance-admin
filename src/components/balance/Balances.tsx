@@ -1,13 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Modal } from "../ui/modal";
-// import { useTranslations } from "next-intl";
 import { ArrowUpIcon } from "@/icons";
 import Button from "../ui/button/Button";
 import Badge from "../ui/badge/Badge";
 import CoinDropdown from "../ecommerce/coinDropdows";
 
-// Type definition for balance state
+// Type definition for balance state, all values should be numbers
 type Balance = {
   bitcoin: number;
   ethereum: number;
@@ -113,10 +112,11 @@ export const Balance = () => {
     });
   };
 
-  const handleBalanceChange = (coin: keyof Balance, value: number) => {
+  const handleBalanceChange = (coin: keyof Balance, value: string) => {
+    // Convert value back to number, handle empty strings or invalid numbers
     setEditedBalance((prev) => ({
       ...prev,
-      [coin]: value
+      [coin]: value ? parseFloat(value) : 0
     }));
   };
 
@@ -163,20 +163,34 @@ export const Balance = () => {
   const fetchUserBalance = async () => {
     const token = sessionStorage.getItem("auth-token");
     if (!token) return console.error("No token found. Please log in.");
-    
+  
     try {
       const response = await fetch("https://server.capital-trust.eu/api/balance-admin", {
         method: "GET",
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
       });
-
+  
       if (!response.ok) throw new Error("Failed to fetch balances");
-      const balanceData: Balance = await response.json();
-      setBalance(balanceData);
+      const balanceData: Balance[] = await response.json();
+      const parsedBalance: Balance = balanceData[0]; // Assuming the first item has the balance
+  
+      // Convert string values to numbers
+      const parsedBalanceNumbers: Balance = Object.keys(parsedBalance).reduce((acc, coin) => {
+        const balanceValue = parsedBalance[coin as keyof Balance] as unknown as string; // Assert the type to string
+        acc[coin as keyof Balance] = parseFloat(balanceValue);  // Parse to number
+  
+        return acc;
+      }, {} as Balance);
+  
+      setBalance(parsedBalanceNumbers);
     } catch (error) {
       console.error("Error fetching user balance:", error);
     }
   };
+  
+      
+      
+
 
   // Fetch the live price and update the total value
   useEffect(() => {
@@ -239,8 +253,8 @@ export const Balance = () => {
                     <input
                       type="number"
                       name={coin}
-                      value={editedBalance[coin as keyof Balance]}
-                      onChange={(e) => handleBalanceChange(coin as keyof Balance, parseFloat(e.target.value))}
+                      value={editedBalance[coin as keyof Balance].toString()}  
+                      onChange={(e) => handleBalanceChange(coin as keyof Balance, e.target.value)}
                     />
                   </div>
                 ))}
