@@ -278,7 +278,13 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
                           {t("overview16")} {/* TXID */}
                         </th>
                         <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                          {t("overview17")} {/* Details */}
+                          {t("overview17")} {/* Status */}
+                        </th>
+                        <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                          {t("overview18")} {/* Details */}
+                        </th>
+                        <th className="px-4 py-3 font-normal text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                          Action 
                         </th>
                       </tr>
                     </thead>
@@ -309,7 +315,14 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
         {formatAmount(transaction.amount)}
       </td>
       <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
-        {transaction.destination}
+      <span
+          className="cursor-pointer"
+          onClick={() => handleToggle(index)}
+        >
+          {isExpanded === index
+            ? transaction.destination
+            : `${transaction.destination.slice(0, 5)}...`}
+        </span> 
       </td>
       
       <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
@@ -330,6 +343,9 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       </td>
       <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
       {transaction.details}
+      </td>
+      <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
+      Action
       </td>
     </tr>
   ))}
