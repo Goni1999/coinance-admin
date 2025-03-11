@@ -1,8 +1,6 @@
 'use client';
 import React, { useState, useEffect } from "react";
-import { Modal } from "../ui/modal";
 import { ArrowUpIcon } from "@/icons";
-import Button from "../ui/button/Button";
 import Badge from "../ui/badge/Badge";
 import CoinDropdown from "../ecommerce/coinDropdows";
 
