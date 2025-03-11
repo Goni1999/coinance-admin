@@ -166,37 +166,50 @@ export const Balance = () => {
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-4 md:gap-6">
-      {users.map((user) => (
-        <div key={user.id} className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-          <div className="flex items-end justify-between mt-5">
-            <div>
-              <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
-              <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                {user.balance[user.selectedCoin] || 0}{" "}
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  <CoinDropdown selectedCoin={user.selectedCoin} onCoinChange={(coin) => {
-                    setUsers(prevUsers =>
-                      prevUsers.map(u =>
-                        u.id === user.id ? { ...u, selectedCoin: coin } : u
-                      )
-                    );
-                  }} balance={user.balance} />
-                </p>
-              </h4>
-            </div>
-            <Badge color="success">
-              <ArrowUpIcon />
-              ${totalValue > 0 ? totalValue.toFixed(2) : "Unavailable"}
-            </Badge>
-          </div>
+{users.map((user) => (
+  <div key={user.id} className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
+    <div className="flex items-end justify-between mt-5">
+      <div>
+        <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
+        <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
+          {/* Safely access balance */}
+          {user.balance && user.selectedCoin ? (
+            user.balance[user.selectedCoin] || 0
+          ) : (
+            0
+          )}
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            <CoinDropdown
+              selectedCoin={user.selectedCoin}
+              onCoinChange={(coin) => {
+                setUsers((prevUsers) =>
+                  prevUsers.map((u) =>
+                    u.id === user.id ? { ...u, selectedCoin: coin } : u
+                  )
+                );
+              }}
+              balance={user.balance}
+            />
+          </p>
+        </h4>
+      </div>
+      <Badge color="success">
+        <ArrowUpIcon />
+        ${totalValue > 0 ? totalValue.toFixed(2) : "Unavailable"}
+      </Badge>
+    </div>
 
-          <div className="flex justify-end mt-2">
-            <button onClick={() => openModal(user)} className="text-sm rounded-full border border-gray-300 bg-white px-2.5 py-0.5 text-theme-sm font-medium shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-white/[0.03] text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200">
-              Edit Balance
-            </button>
-          </div>
-        </div>
-      ))}
+    <div className="flex justify-end mt-2">
+      <button
+        onClick={() => openModal(user)}
+        className="text-sm rounded-full border border-gray-300 bg-white px-2.5 py-0.5 text-theme-sm font-medium shadow-theme-xs hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-white/[0.03] text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
+      >
+        Edit Balance
+      </button>
+    </div>
+  </div>
+))}
+
 
       {/* Edit Modal */}
       {isModalOpen && selectedUser && editedBalance && (
