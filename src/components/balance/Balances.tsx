@@ -129,6 +129,7 @@ export const Balance = () => {
                 staked_ether: parseFloat(userBalance.staked_ether) || 0,
               };
             } else {
+              console.log(`No balance found for user: ${user.id}`);
               user.balance = null; // If no balance found, set it as null
             }
           } else {
@@ -162,6 +163,7 @@ export const Balance = () => {
 
       for (const user of users) {
         if (!user.balance) {
+          console.log(`Skipping user with no balance: ${user.id}`);
           continue; // Skip users without a balance
         }
 
@@ -194,6 +196,7 @@ export const Balance = () => {
             <div>
               <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
               <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
+                {/* Here, ensure you are displaying the balance correctly */}
                 {user.balance?.[selectedCoins[user.id] || "bitcoin"] ?? 0}{" "}
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   <CoinDropdown
@@ -206,7 +209,7 @@ export const Balance = () => {
             </div>
             <Badge color="success">
               <ArrowUpIcon />
-              ${totalValues[user.id] > 0 ? totalValues[user.id].toFixed(2) : "0"}
+              ${totalValues[user.id] > 0 ? totalValues[user.id].toFixed(2) : "Unavailable"}
             </Badge>
           </div>
         </div>
