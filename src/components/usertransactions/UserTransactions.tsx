@@ -223,23 +223,25 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
                 <div key={user.id} className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
                   <div className="flex items-end justify-between mt-5">
                     <div>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.email}`}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
+                    <span className="mt-2 inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-red-50 dark:bg-red-500/15 text-red-500 hover:text-red-700 text-sm">{`${user.email}`}</span>
 
-                      <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
+                      
                     </div>
                     <div className="flex flex-col items-end">
+                    <button
+                        onClick={() => openAddTransactionModal(user)}
+                        className="mt-2 inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-green-50 dark:bg-green-500/15 text-green-500 hover:text-green-700 text-sm"
+                      >
+                        Add Transaction
+                      </button>
                       <button
                         onClick={() => openTransactionModal(user)}
                         className="mt-2 inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-blue-50 dark:bg-blue-500/15 text-blue-500 hover:text-blue-700 text-sm"
                       >
                         Show All
                       </button>
-                      <button
-                        onClick={() => openAddTransactionModal(user)}
-                        className="mt-2 inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-green-50 dark:bg-green-500/15 text-green-500 hover:text-green-700 text-sm"
-                      >
-                        Add Transaction
-                      </button>
+                      
                     </div>
                   </div>
                 </div>
