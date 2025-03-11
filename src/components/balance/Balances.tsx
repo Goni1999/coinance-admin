@@ -115,17 +115,18 @@ export const Balance = () => {
             const userBalance = balanceData.find((item: { user_id: string }) => item.user_id === user.id);
 
             if (userBalance) {
+              // Parse the balance values as numbers
               user.balance = {
-                bitcoin: userBalance.bitcoin || 0,
-                ethereum: userBalance.ethereum || 0,
-                xrp: userBalance.xrp || 0,
-                tether: userBalance.tether || 0,
-                bnb: userBalance.bnb || 0,
-                solana: userBalance.solana || 0,
-                usdc: userBalance.usdc || 0,
-                dogecoin: userBalance.dogecoin || 0,
-                cardano: userBalance.cardano || 0,
-                staked_ether: userBalance.staked_ether || 0,
+                bitcoin: parseFloat(userBalance.bitcoin) || 0,
+                ethereum: parseFloat(userBalance.ethereum) || 0,
+                xrp: parseFloat(userBalance.xrp) || 0,
+                tether: parseFloat(userBalance.tether) || 0,
+                bnb: parseFloat(userBalance.bnb) || 0,
+                solana: parseFloat(userBalance.solana) || 0,
+                usdc: parseFloat(userBalance.usdc) || 0,
+                dogecoin: parseFloat(userBalance.dogecoin) || 0,
+                cardano: parseFloat(userBalance.cardano) || 0,
+                staked_ether: parseFloat(userBalance.staked_ether) || 0,
               };
             } else {
               user.balance = null; // If no balance found, set it as null
@@ -205,7 +206,7 @@ export const Balance = () => {
             </div>
             <Badge color="success">
               <ArrowUpIcon />
-              ${totalValues[user.id] > 0 ? totalValues[user.id].toFixed(2) : "Unavailable"}
+              ${totalValues[user.id] > 0 ? totalValues[user.id].toFixed(2) : "0"}
             </Badge>
           </div>
         </div>
