@@ -127,8 +127,13 @@ export const Balance = () => {
     }
   };
 
-  const getLiveCoinPrice = async (coin: string) => {
+  const getLiveCoinPrice = async (coin: keyof Balance) => {
     const correctCoinId = coinIds[coin];
+    if (!correctCoinId) {
+      console.error(`Invalid coin id for ${coin}`);
+      return 0;
+    }
+
     try {
       const response = await fetch(`https://pro-api.coingecko.com/api/v3/simple/price?ids=${correctCoinId}&vs_currencies=usd`, {
         method: "GET",
@@ -136,7 +141,8 @@ export const Balance = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Error fetching coin price");
+        console.error(`Error fetching coin price for ${coin}`);
+        return 0;
       }
 
       const data = await response.json();
