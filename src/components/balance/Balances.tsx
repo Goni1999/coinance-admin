@@ -5,7 +5,6 @@ import { ArrowUpIcon } from "@/icons";
 import CoinDropdown from "../ecommerce/coinDropdows";
 import EditModal from "./EditModal"; // Import the EditModal
 import Alert from "../../components/ui/alert/Alert";
-import router from "next/router";
 
 // Corrected coin IDs
 const coinIds: { [key: string]: string } = {
