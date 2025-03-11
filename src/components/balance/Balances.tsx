@@ -30,7 +30,7 @@ const coinIds: { [key: string]: string } = {
   usdc: "usd-coin",
   dogecoin: "dogecoin",
   cardano: "cardano",
-  staked_ether: "staked-ether",
+  staked_ether: "staked-ether"
 };
 
 // Type definition for user state
@@ -40,13 +40,13 @@ type User = {
   last_name: string;
   email: string;
   balance: Balance;
+  selectedCoin: keyof Balance; // Add selectedCoin to User type
 };
 
 export const Balance = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [userBalances, setUserBalances] = useState<{ [key: string]: Balance }>({});
   const [editedBalance, setEditedBalance] = useState<Balance>({
     bitcoin: 0,
     ethereum: 0,
@@ -57,20 +57,17 @@ export const Balance = () => {
     usdc: 0,
     dogecoin: 0,
     cardano: 0,
-    staked_ether: 0,
+    staked_ether: 0
   });
-
-  const [selectedCoin, setSelectedCoin] = useState<keyof Balance>("bitcoin");
-  const [totalValue, setTotalValue] = useState<number>(0);
 
   const fetchUsers = async () => {
     const token = sessionStorage.getItem("auth-token");
     if (!token) return console.error("No token found. Please log in.");
-
+    
     try {
       const response = await fetch("https://server.capital-trust.eu/api/users-admin", {
         method: "GET",
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
       });
 
       if (!response.ok) throw new Error("Failed to fetch users");
@@ -83,7 +80,7 @@ export const Balance = () => {
 
   const openModal = (user: User) => {
     setSelectedUser(user);
-    setEditedBalance(userBalances[user.id]); // Set the selected user's balance in the modal
+    setEditedBalance(user.balance);
     setIsModalOpen(true);
   };
 
@@ -100,15 +97,14 @@ export const Balance = () => {
       usdc: 0,
       dogecoin: 0,
       cardano: 0,
-      staked_ether: 0,
+      staked_ether: 0
     });
   };
 
   const handleBalanceChange = (coin: keyof Balance, value: string) => {
-    // Convert value back to number, handle empty strings or invalid numbers
     setEditedBalance((prev) => ({
       ...prev,
-      [coin]: value ? parseFloat(value) : 0,
+      [coin]: value ? parseFloat(value) : 0
     }));
   };
 
@@ -118,23 +114,13 @@ export const Balance = () => {
         const token = sessionStorage.getItem("auth-token");
         if (!token) return console.error("No token found. Please log in.");
 
-        const response = await fetch(
-          `https://server.capital-trust.eu/api/balance-admin/${selectedUser.id}`,
-          {
-            method: "PUT",
-            headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-            body: JSON.stringify({ balance: editedBalance }),
-          }
-        );
+        const response = await fetch(`https://server.capital-trust.eu/api/balance-admin/${selectedUser.id}`, {
+          method: "PUT",
+          headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ balance: editedBalance })
+        });
 
         if (!response.ok) throw new Error("Failed to update balance");
-
-        // Update the userBalances state after saving
-        setUserBalances((prev) => ({
-          ...prev,
-          [selectedUser.id]: editedBalance,
-        }));
-
         closeModal();
         alert("Balance updated successfully");
       } catch (error) {
@@ -146,14 +132,11 @@ export const Balance = () => {
   const getLiveCoinPrice = async (coin: string) => {
     const correctCoinId = coinIds[coin];
     try {
-      const response = await fetch(
-        `https://pro-api.coingecko.com/api/v3/simple/price?ids=${correctCoinId}&vs_currencies=usd`,
-        {
-          method: "GET",
-          headers: { "x-cg-pro-api-key": "CG-nqfeGL8o6Ky2ngtB3FSJ2oNu" },
-        }
-      );
-
+      const response = await fetch(`https://pro-api.coingecko.com/api/v3/simple/price?ids=${correctCoinId}&vs_currencies=usd`, {
+        method: "GET",
+        headers: { "x-cg-pro-api-key": "CG-nqfeGL8o6Ky2ngtB3FSJ2oNu" }
+      });
+      
       const data = await response.json();
       return data[correctCoinId]?.usd || 0;
     } catch (error) {
@@ -162,41 +145,61 @@ export const Balance = () => {
     }
   };
 
+  const [totalValue, setTotalValue] = useState<number>(0);
+
   const fetchUserBalance = async () => {
     const token = sessionStorage.getItem("auth-token");
     if (!token) return console.error("No token found. Please log in.");
-
+  
     try {
       const response = await fetch("https://server.capital-trust.eu/api/balance-admin", {
         method: "GET",
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }
       });
-
+  
       if (!response.ok) throw new Error("Failed to fetch balances");
-      const balanceData: { userId: string; balance: Balance }[] = await response.json();
-
-      // Update the userBalances state with each user's balance
-      const updatedBalances = balanceData.reduce((acc, { userId, balance }) => {
-        acc[userId] = balance;
+      const balanceData: Balance[] = await response.json();
+      const parsedBalance: Balance = balanceData[0]; // Assuming the first item has the balance
+  
+      // Convert string values to numbers
+      const parsedBalanceNumbers: Balance = Object.keys(parsedBalance).reduce((acc, coin) => {
+        const balanceValue = parsedBalance[coin as keyof Balance] as unknown as string; // Assert the type to string
+        acc[coin as keyof Balance] = parseFloat(balanceValue);  // Parse to number
+  
         return acc;
-      }, {} as { [key: string]: Balance });
-
-      setUserBalances(updatedBalances);
+      }, {} as Balance);
+  
+      // Now we are setting the balance data for users
+      setUsers((prevUsers) => prevUsers.map(user => ({
+        ...user,
+        balance: parsedBalanceNumbers, // Apply balance for each user
+      })));
     } catch (error) {
       console.error("Error fetching user balance:", error);
     }
   };
 
+  // Handle the coin selection for each user
+  const handleCoinChange = (userId: string, selectedCoin: keyof Balance) => {
+    setUsers((prevUsers) =>
+      prevUsers.map((user) =>
+        user.id === userId ? { ...user, selectedCoin } : user
+      )
+    );
+  };
+
   // Fetch the live price and update the total value
   useEffect(() => {
     const fetchPriceAndValue = async () => {
-      const price = await getLiveCoinPrice(selectedCoin);
-      const coinBalance = userBalances[selectedUser?.id || ""]?.[selectedCoin] || 0;
-      setTotalValue(price * coinBalance);
+      if (selectedUser) {
+        const price = await getLiveCoinPrice(selectedUser.selectedCoin);
+        const coinBalance = selectedUser.balance[selectedUser.selectedCoin] || 0;
+        setTotalValue(price * coinBalance);
+      }
     };
 
     fetchPriceAndValue();
-  }, [selectedCoin, userBalances, selectedUser]); // Both selectedCoin and userBalances are dependencies
+  }, [selectedUser]);
 
   useEffect(() => {
     fetchUsers();
@@ -211,9 +214,9 @@ export const Balance = () => {
             <div>
               <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
               <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
-                {userBalances[user.id]?.[selectedCoin] || 0}{" "}
+                {user.balance[user.selectedCoin] || 0}{" "}
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  <CoinDropdown selectedCoin={selectedCoin} onCoinChange={setSelectedCoin} balance={userBalances[user.id] || {}} />
+                  <CoinDropdown selectedCoin={user.selectedCoin} onCoinChange={(coin) => handleCoinChange(user.id, coin)} balance={user.balance} />
                 </p>
               </h4>
             </div>
