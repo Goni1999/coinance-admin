@@ -533,7 +533,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
 
 
       {/* Add Transaction Modal */}
-      <Modal  className="max-w-[700px] m-4" isOpen={isAddTransactionModalOpen} onClose={closeAddTransactionModal}>
+      <Modal  className="max-w-[700px] m-4 pt-[300px]" isOpen={isAddTransactionModalOpen} onClose={closeAddTransactionModal}>
   <div className="relative w-full p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
 
     <h3 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
@@ -566,7 +566,9 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
         onChange={handleInputChange}
       />
     </div>
-    <div>
+    <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+    <div className="sm:col-span-1">
+
       <Label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Type</Label>
       
       <select className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400"
@@ -577,17 +579,19 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
         <option value="Deposit">Deposit</option>
         <option value="Withdrawal">Withdrawal</option>
       </select>
-    </div>
-    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-    <Label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Coin</Label>
+      </div>
+      <div className="sm:col-span-1">
+
+     <Label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Coin</Label>
       <Input
         type="text"
         name="coin"
         value={newTransaction.coin}
         onChange={handleInputChange}
       />
-    </div>
-    <div>
+     </div>
+     <div className="sm:col-span-1">
+
       <Label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Amount</Label>
       <Input
         type="text"
@@ -595,6 +599,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
         value={newTransaction.amount}
         onChange={handleInputChange}
       />
+      </div>
     </div>
     <div>
       <Label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Destination</Label>
@@ -614,8 +619,10 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
         onChange={handleInputChange}
       />
     </div>
-    <div>
-      <Label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Status</Label>
+    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+
+    <div className="sm:col-span-1">
+    <Label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Status</Label>
       <select className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400"
         name="status"
         value={newTransaction.status}
@@ -626,16 +633,18 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
         <option value="Pending">Pending</option>
       </select>
     </div>
-    <div>
-      <Label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Details</Label>
+    <div className="sm:col-span-1">
+    <Label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Details</Label>
       <textarea className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400"
         name="details"
         value={newTransaction.details}
         onChange={handleInputChange}
       />
     </div>
+</div>
+    <button className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700"
 
-    <button onClick={handleAddTransaction}>Add Transaction</button>
+     onClick={handleAddTransaction}>Add Transaction</button>
   </div>
 </Modal>
 
