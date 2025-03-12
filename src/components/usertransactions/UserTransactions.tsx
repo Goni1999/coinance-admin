@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { Modal } from "../ui/modal";
 import Input from "../form/input/InputField";
 import Alert from "../ui/alert/Alert";
+import Label from "../form/Label";
 
 interface Transaction {
   transaction_id?: number;
@@ -332,7 +333,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
                                       <span className="mt-2 w-full inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-red-50 dark:bg-red-500/15 text-red-500 hover:text-red-700 text-sm">{`${user.email}`}</span>
 
                   <div className="flex items-end justify-between mt-5">
-                    <div >
+                    <div className="flex flex-col items-start gap-1  font-medium text-gray-500 dark:text-gray-400 text-sm">
                     <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name}`}</span>
                     <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.last_name}`}</span>
 
@@ -548,7 +549,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       Add Transaction for {selectedUser?.first_name} {selectedUser?.last_name}
     </h3>
     <div>
-      <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Wallet Address</label>
+      <Label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Wallet Address</Label>
       <Input
         type="text"
         name="walletAddress"
@@ -557,7 +558,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       />
     </div>
     <div>
-      <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Time</label>
+      <Label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Time</Label>
       <Input
         type="date"
         name="time"
@@ -566,8 +567,9 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       />
     </div>
     <div>
-      <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Type</label>
-      <select
+      <Label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Type</Label>
+      
+      <select className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400"
         name="type"
         value={newTransaction.type}
         onChange={handleInputChange}
@@ -576,8 +578,8 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
         <option value="Withdrawal">Withdrawal</option>
       </select>
     </div>
-    <div>
-      <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Coin</label>
+    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+    <Label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Coin</Label>
       <Input
         type="text"
         name="coin"
@@ -586,7 +588,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       />
     </div>
     <div>
-      <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Amount</label>
+      <Label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Amount</Label>
       <Input
         type="text"
         name="amount"
@@ -595,7 +597,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       />
     </div>
     <div>
-      <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Destination</label>
+      <Label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Destination</Label>
       <Input
         type="text"
         name="destination"
@@ -604,7 +606,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       />
     </div>
     <div>
-      <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Transaction ID (TXID)</label>
+      <Label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Transaction ID (TXID)</Label>
       <Input
         type="text"
         name="txid"
@@ -613,8 +615,8 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       />
     </div>
     <div>
-      <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Status</label>
-      <select
+      <Label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Status</Label>
+      <select className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400"
         name="status"
         value={newTransaction.status}
         onChange={handleInputChange}
@@ -625,8 +627,8 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       </select>
     </div>
     <div>
-      <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Details</label>
-      <textarea
+      <Label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Details</Label>
+      <textarea className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400"
         name="details"
         value={newTransaction.details}
         onChange={handleInputChange}
