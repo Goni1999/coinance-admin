@@ -328,13 +328,15 @@ const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
               showLink={false} 
             />
           )}
+            <div className="flex items-end">
            <button
                 onClick={() => setIsModalOpen(true)}
 
-                  className="self-center px-4 py-2 bg-blue-500 text-white rounded"
+                  className="self-centermb-4 ml-1  px-4 py-2 bg-blue-500 text-white rounded"
                 >
                   Add Invoice
                 </button>
+                </div>
       <div className="flex flex-col h-full gap-6 sm:gap-5 xl:flex-row">
         {/* Left Panel: User List */}
         <div className="rounded-2xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.03] xl:w-1/5">
