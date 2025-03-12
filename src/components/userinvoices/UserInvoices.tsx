@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import Link from 'next/link';
@@ -9,6 +7,7 @@ type User = {
   first_name: string;
   last_name: string;
   email: string;
+  is_active: boolean; // Add active status field
   invoices: Invoice[];  // Store invoices in the user object
 };
 
@@ -132,7 +131,10 @@ const Invoices = () => {
               >
                 <div>
                   <span className="mb-0.5 block text-sm font-medium text-gray-800 dark:text-white/90">
-                    {user.email}
+                    {user.first_name} {user.last_name}
+                  </span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    {user.is_active ? 'Active' : 'Inactive'}
                   </span>
                 </div>
               </div>
@@ -141,26 +143,29 @@ const Invoices = () => {
         </div>
 
         {/* Right Panel: Invoice List and Details */}
-        <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] xl:w-4/5">
+        <div className="flex-1 rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] xl:w-4/5 flex flex-col">
           {selectedUser && (
             <>
               {/* Top Right Panel: Invoices for Selected User */}
               <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800">
                 <h3 className="font-medium text-gray-800 text-theme-xl dark:text-white/90">{t('inv3')}</h3>
                 <h4 className="text-base font-medium text-gray-700 dark:text-gray-400">
-                  User: {selectedUser.email}
+                  User: {selectedUser.first_name} {selectedUser.last_name}
                 </h4>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Status: {selectedUser.is_active ? 'Active' : 'Inactive'}
+                </p>
               </div>
 
-              <div className="p-5 xl:p-8">
-                {/* If no invoices, show message */}
-                {selectedUser.invoices.length === 0 ? (
-                  <div className="text-gray-500 dark:text-gray-400">
-                    No invoices for {selectedUser.first_name} {selectedUser.last_name}.
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {selectedUser.invoices.map((invoice) => (
+              <div className="flex gap-6 p-5 xl:p-8">
+                {/* Left Column: Invoices List */}
+                <div className="flex flex-col w-2/3 space-y-3">
+                  {selectedUser.invoices.length === 0 ? (
+                    <div className="text-gray-500 dark:text-gray-400">
+                      No invoices for {selectedUser.first_name} {selectedUser.last_name}.
+                    </div>
+                  ) : (
+                    selectedUser.invoices.map((invoice) => (
                       <div
                         key={invoice.id}
                         className="cursor-pointer flex items-center gap-3 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-white/[0.03]"
@@ -173,13 +178,13 @@ const Invoices = () => {
                           <span className="block text-gray-500 dark:text-gray-400">{invoice.status}</span>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                )}
+                    ))
+                  )}
+                </div>
 
-                {/* Bottom Right Panel: Selected Invoice Details */}
+                {/* Right Column: Selected Invoice Details */}
                 {selectedInvoice && (
-                  <div className="mt-8 p-5 xl:p-8 border-t border-gray-200 dark:border-gray-800">
+                  <div className="flex-1 p-5 xl:p-8 border-l border-gray-200 dark:border-gray-800">
                     <h3 className="font-medium text-gray-800 text-theme-xl dark:text-white/90">
                       Invoice Details
                     </h3>
