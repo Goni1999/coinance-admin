@@ -1,6 +1,6 @@
 
 import { Metadata } from "next";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import UserTable from "@/components/users/UserTable";
 export const metadata: Metadata = {
@@ -9,7 +9,24 @@ export const metadata: Metadata = {
     "Users",
 };
 
-export default function Overview() {
+export default function Users() {
+   const [loading, setLoading] = useState<boolean>(true);
+    
+      useEffect(() => {
+        const timeoutId = setTimeout(() => {
+          setLoading(false); // Hide spinner after delay
+        }, 1000); // Delay time (e.g., 1 second)
+    
+        return () => clearTimeout(timeoutId); // Cleanup timeout on component unmount
+      }, []); // Empty dependency array to run the effect once on page load
+    
+      if (loading) {
+        return (
+          <div className="flex justify-center items-center h-screen">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500"></div>
+          </div>
+        );
+      }
   return (
     <div>
     <PageBreadcrumb pageTitle="Users" />

@@ -185,6 +185,7 @@ module.exports = {
         14.5: "3.625rem",
         15: "3.75rem",
       },
+      
     },
   },
   plugins: [require("@tailwindcss/forms"), require("autoprefixer")],
