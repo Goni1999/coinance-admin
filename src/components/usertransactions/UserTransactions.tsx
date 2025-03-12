@@ -623,7 +623,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
 
     <div className="sm:col-span-1">
     <Label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Status</Label>
-      <select className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400"
+      <select className="px-7 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400"
         name="status"
         value={newTransaction.status}
         onChange={handleInputChange}
@@ -635,19 +635,20 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
     </div>
     <div className="sm:col-span-1">
     <Label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Details</Label>
-      <textarea className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400"
+      <textarea className="px-2.5 py-0.5 font-normal text-gray-500  text-theme-sm dark:text-gray-400"
         name="details"
         value={newTransaction.details}
         onChange={handleInputChange}
       />
     </div>
-</div>
-<div className="flex justify-center mt-4">
+<div className="sm:col-span-1">
 
     <button className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700"
 
      onClick={handleAddTransaction}>Add Transaction</button>
      </div>
+     </div>
+
   </div>
 </Modal>
 
