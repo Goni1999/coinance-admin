@@ -223,15 +223,23 @@ const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
             message: "The invoice has been created successfully.",
             show: true,
         });
+        setTimeout(() => {
+            window.location.reload();
+          }, 3000);
 
     } catch (error) {
         console.error('Error creating invoice:', error);
+        setIsModalOpen(false);
+
         setAlert({
             variant: "error",
             title: "Failed to Create Invoice",
             message: "Please try again.",
             show: true,
         });
+        setTimeout(() => {
+            window.location.reload();
+          }, 3000);
     }
 };
 
@@ -324,7 +332,7 @@ const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
               showLink={false} 
             />
           )}
-            <div className="flex justify-end">
+            <div className="flex justify-end mt-4">
            <button
                 onClick={() => setIsModalOpen(true)}
 
