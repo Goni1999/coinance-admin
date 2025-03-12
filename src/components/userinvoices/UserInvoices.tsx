@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from '../ui/modal';
+import Alert from '../ui/alert/Alert';
 
 
 type User = {
@@ -32,7 +33,6 @@ const Invoices = () => {
   const [error, setError] = useState<string | null>(null);
 const [InvoiceToDelete, setInvoiceToDelete] = useState<Invoice | null>(null); // The transaction to delete
 const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the delete confirmation modal
-const [, setTransactions] = useState([]);
  const [alert, setAlert] = useState<{
     variant: "success" | "error" | "warning" | "info";
     title: string;
@@ -236,6 +236,14 @@ const [, setTransactions] = useState([]);
             <>
             <div className="flex flex-row justify-center">
               <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+              {alert.show   &&  (
+            <Alert
+              variant={alert.variant}
+              title={alert.title}
+              message={alert.message}
+              showLink={false} 
+            />
+          )}
                 <h3 className="font-medium text-gray-800 text-theme-xl dark:text-white/90">
                   User: {selectedUser.first_name} {selectedUser.last_name}
                 </h3>
