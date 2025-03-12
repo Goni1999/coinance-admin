@@ -91,14 +91,20 @@ const Invoices = () => {
   };
 
   const getInvoiceStatusClass = (status: string) => {
-    if (status === 'paid') return 'bg-green-100 text-green-600';
-    if (status === 'unpaid') return 'bg-red-100 text-red-600';
+    if (status === 'paid') return 'bg-green-50 dark:green-500/15 text-green-500';
+    if (status === 'unpaid') return 'bg-red-50 dark:bg-red-500/15 text-red-500';
     return '';
   };
 
   const getSelectedUserClass = (user: User) => {
     return user === selectedUser
-      ? 'bg-blue-100 text-blue-600' // Selected user with blue background
+      ? 'bg-blue-400 text-white' // Selected user with blue background
+      : '';
+  };
+
+  const getSelectedInvoiceClass = (invoice: Invoice) => {
+    return invoice === selectedInvoice
+      ? 'bg-blue-50 dark:bg-blue-500/15 text-blue-500' // Add selected background and text color
       : '';
   };
 
@@ -169,11 +175,12 @@ const Invoices = () => {
                     selectedUser.invoices.map((invoice) => (
                       <div
                         key={invoice.id}
-                        className={`cursor-pointer flex items-center gap-3 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-white/[0.03] ${getInvoiceStatusClass(invoice.status)}`}
+                        className={`cursor-pointer flex items-center gap-3 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-white/[0.03] ${getInvoiceStatusClass(invoice.status)} ${getSelectedInvoiceClass(invoice)}`}
                         onClick={() => handleInvoiceClick(invoice)}
                       >
+                        
                         <div>
-                          <span className="block text-sm font-medium text-gray-800 dark:text-white/90">
+                          <span className="block text-sm font-medium text-red-500 hover:text-red-700">
                             Invoice #{invoice.id} - {formatDate(invoice.issued_date)}
                           </span>
                           <span className="block text-gray-500 dark:text-gray-400">{invoice.status}</span>
@@ -183,27 +190,60 @@ const Invoices = () => {
                   )}
                 </div>
 
-                {/* Right Column: Selected Invoice Details */}
-                {selectedInvoice && (
-                  <div className="flex-1 p-5 xl:p-8 border-l border-gray-200 dark:border-gray-800">
-                    <h3 className="font-medium text-gray-800 text-theme-xl dark:text-white/90">
-                      Invoice Details
-                    </h3>
-                    <p>Invoice ID: #{selectedInvoice.id}</p>
-                    <p>Issued Date: {formatDate(selectedInvoice.issued_date)}</p>
-                    <p>Subtotal: ${selectedInvoice.sub_total}</p>
-                    <p>VAT ({selectedInvoice.vat}%): ${selectedInvoice.sub_total * (selectedInvoice.vat / 100)}</p>
-                    <p className="text-lg font-semibold text-gray-800 dark:text-white/90">
-                      Total: ${selectedInvoice.total}
-                    </p>
-                    <button
+                {/* Right Panel: Selected Invoice Details */}
+{selectedInvoice && (
+  <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] xl:w-4/5">
+    {/* Header Section */}
+    <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+      <h3 className="font-medium text-gray-800 text-theme-xl dark:text-white/90">{t("inv3")}</h3>
+      <h4 className="text-base font-medium text-gray-700 dark:text-gray-400">ID: #{selectedInvoice.id}</h4>
+    </div>
+
+    {/* Invoice Details Section */}
+    <div className="p-5 xl:p-8">
+      <div className="flex flex-col gap-6 mb-9 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <span className="block mb-1 text-sm font-medium text-gray-700 dark:text-gray-400">{t("inv4")}</span>
+          <h5 className="mb-2 text-base font-semibold text-gray-800 dark:text-white/90">Capital Trust</h5>
+          <p className="mb-4 text-sm text-gray-500 dark:text-gray-400">
+            123 Crypto Lane, Blockchain City, USA
+          </p>
+          <span className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">{t("inv5")}:</span>
+          <span className="block text-sm text-gray-500 dark:text-gray-400">{formatDate(selectedInvoice.issued_date)}</span>
+        </div>
+      </div>
+
+      {/* Pricing Section */}
+      <div className="pb-6 my-6 text-right border-b border-gray-100 dark:border-gray-800">
+        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">{t("inv6")}: $ {selectedInvoice.sub_total}</p>
+        <p className="mb-3 text-sm text-gray-500 dark:text-gray-400">
+          {t("inv7")} ({selectedInvoice.vat}%): $ {selectedInvoice.sub_total * (selectedInvoice.vat / 100)}
+        </p>
+        <p className="text-lg font-semibold text-gray-800 dark:text-white/90">
+          {t("inv8")} : $ {selectedInvoice.total}
+        </p>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex items-center justify-end gap-3">
+        <Link href="/managewallet-deposit">
+          <button
+            className="flex items-center justify-center rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm font-medium text-gray-700 shadow-theme-xs hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
+          >
+            {t("inv9")}
+          </button>
+        </Link>
+        <button
                       className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
                       onClick={() => window.open(selectedInvoice.link_of_pdf, '_blank')}
                     >
-                      Download PDF
-                    </button>
-                  </div>
-                )}
+          {t("inv10")}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
               </div>
             </>
           )}
