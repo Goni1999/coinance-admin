@@ -332,7 +332,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
                                       <span className="mt-2 w-full inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-red-50 dark:bg-red-500/15 text-red-500 hover:text-red-700 text-sm">{`${user.email}`}</span>
 
                   <div className="flex items-end justify-between mt-5">
-                    <div className="flex flex-col items-start mt-2 w-full inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-gray-50 dark:bg-gray-500/15 text-gray-500 hover:text-gray-700 text-sm">
+                    <div >
                     <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name}`}</span>
                     <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.last_name}`}</span>
 
@@ -532,7 +532,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
 
 
       {/* Add Transaction Modal */}
-      <Modal isOpen={isAddTransactionModalOpen} onClose={closeAddTransactionModal}>
+      <Modal  className="max-w-[700px] m-4" isOpen={isAddTransactionModalOpen} onClose={closeAddTransactionModal}>
   <div className="relative w-full p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
 
     <h3 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
@@ -548,7 +548,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       Add Transaction for {selectedUser?.first_name} {selectedUser?.last_name}
     </h3>
     <div>
-      <label>Wallet Address</label>
+      <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Wallet Address</label>
       <Input
         type="text"
         name="walletAddress"
@@ -557,7 +557,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       />
     </div>
     <div>
-      <label>Time</label>
+      <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Time</label>
       <Input
         type="date"
         name="time"
@@ -566,7 +566,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       />
     </div>
     <div>
-      <label>Type</label>
+      <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Type</label>
       <select
         name="type"
         value={newTransaction.type}
@@ -577,7 +577,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       </select>
     </div>
     <div>
-      <label>Coin</label>
+      <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Coin</label>
       <Input
         type="text"
         name="coin"
@@ -586,7 +586,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       />
     </div>
     <div>
-      <label>Amount</label>
+      <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Amount</label>
       <Input
         type="text"
         name="amount"
@@ -595,7 +595,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       />
     </div>
     <div>
-      <label>Destination</label>
+      <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Destination</label>
       <Input
         type="text"
         name="destination"
@@ -604,7 +604,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       />
     </div>
     <div>
-      <label>Transaction ID (TXID)</label>
+      <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Transaction ID (TXID)</label>
       <Input
         type="text"
         name="txid"
@@ -613,7 +613,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       />
     </div>
     <div>
-      <label>Status</label>
+      <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Status</label>
       <select
         name="status"
         value={newTransaction.status}
@@ -625,7 +625,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       </select>
     </div>
     <div>
-      <label>Details</label>
+      <label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Details</label>
       <textarea
         name="details"
         value={newTransaction.details}
@@ -640,7 +640,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
 
 
       {/* Delete Confirmation Modal */}
-      <Modal className="relative w-1/2 mx-auto p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11" isOpen={isDeleteModalOpen} onClose={closeDeleteModal}>
+      <Modal  className="max-w-[700px] m-4" isOpen={isDeleteModalOpen} onClose={closeDeleteModal}>
       <div className="relative w-1/2 mx-auto p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
       <h3 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
             Are you sure you want to delete this transaction?
