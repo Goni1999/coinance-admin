@@ -41,6 +41,7 @@ const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
 const [formData, setFormData] = useState({
     id: '',
+    issued_date: '',
     sub_total: '',
     vat: '',
     link_of_pdf: '',
@@ -173,7 +174,7 @@ const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
     const newInvoice = {
         id: parseFloat(formData.id),
         user_id: selectedUser.id,
-        issued_date: new Date().toISOString().split('T')[0],
+        issued_date: formData.issued_date,
         sub_total: parseFloat(formData.sub_total),
         vat: parseFloat(formData.vat),
         link_of_pdf: formData.link_of_pdf || '',
@@ -333,6 +334,7 @@ const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
   // Handle updated invoice submission
   const handleSubmitUpdatedInvoice = async (updatedData: {
     id: number;
+    issued_date: string;
     sub_total: number;
     vat: number;
     link_of_pdf: string;
@@ -345,11 +347,10 @@ const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
     }
   
     // Assuming `selectedInvoice` contains the `user_id` and `issued_date`
-    const { id, sub_total, vat, link_of_pdf, status } = updatedData;
+    const {id, issued_date, sub_total, vat, link_of_pdf, status } = updatedData;
   
     // Include user_id and issued_date from selectedInvoice or the state
     const user_id = selectedInvoice?.user_id; // Assuming this is part of the selectedInvoice
-    const issued_date = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
   
     if (!user_id) {
       console.error("User ID is missing.");
@@ -587,6 +588,18 @@ const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
                         </select>
                     </div>
 
+                    <div>
+                            <Label>
+                            Issued Date<span className="text-red-500">*</span>
+                            </Label>
+                            <Input
+                                type="date"
+                                id="iss"
+                                name="birthday"
+                                value={formData.issued_date}
+                                onChange={handleChange}
+                            />
+                            </div>
                                 {/* Sub Total */}
                                 <div>
                                 <Label>Invoice ID <span className="text-red-500">*</span></Label>

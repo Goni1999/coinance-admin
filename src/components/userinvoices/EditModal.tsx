@@ -12,13 +12,14 @@
         link_of_pdf: string;
         status: string; 
       };
-      
+
     type EditModalProps = {
     isOpen: boolean;
     onClose: () => void;
     selectedInvoice: Invoice | null; // Pass selected invoice to edit
     onSubmit: (updatedData: {
         id: number;
+        issued_date: string;
         sub_total: number;
         vat: number;
         link_of_pdf: string;
@@ -30,6 +31,7 @@
     // Local state for managing form data
     const [updateData, setUpdateData] = useState({
         id: "",
+        issued_date: "",
         sub_total: "",
         vat: "",
         link_of_pdf: "",
@@ -41,6 +43,7 @@
         if (isOpen && selectedInvoice) {
         setUpdateData({
             id: selectedInvoice.id.toString(),
+            issued_date: selectedInvoice.issued_date || "", // Use existing or empty string
             sub_total: selectedInvoice.sub_total.toString(),
             vat: selectedInvoice.vat.toString(),
             link_of_pdf: selectedInvoice.link_of_pdf,
@@ -63,6 +66,7 @@
         e.preventDefault();
         const updatedData = {
         id: parseInt(updateData.id),
+        issued_date: updateData.issued_date, // Pass issued_date from the form
         sub_total: parseFloat(updateData.sub_total),
         vat: parseFloat(updateData.vat),
         link_of_pdf: updateData.link_of_pdf,
@@ -80,19 +84,7 @@
                 <form onSubmit={handleSubmit}>
                 <div className="space-y-5">
                     {/* Invoice ID */}
-                    <div>
-                    <Label>
-                        Invoice ID <span className="text-red-500">*</span>
-                    </Label>
-                    <Input
-                        type="number"
-                        id="id"
-                        name="id"
-                        placeholder="Enter Invoice ID"
-                        value={updateData.id}
-                        onChange={handleEdit}
-                    />
-                    </div>
+                   
 
                     {/* Sub Total */}
                     <div>
