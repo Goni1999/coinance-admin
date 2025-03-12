@@ -250,6 +250,10 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
             show: true,
           });
           closeAddTransactionModal(); // Close the modal after success
+          setTimeout(() => {
+            window.location.reload();
+          }, 5000); // Reloads the window after 5 seconds (5000 milliseconds)
+          
         } else {
           setAlert({
             variant: "error",
@@ -330,6 +334,14 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-4 md:gap-6">
               {users.map((user) => (
                 <div key={user.id} className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
+                   {alert.show  && (
+            <Alert
+              variant={alert.variant}
+              title={alert.title}
+              message={alert.message}
+              showLink={false} 
+            />
+          )}
                                       <span className="mt-2 w-full inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-red-50 dark:bg-red-500/15 text-red-500 hover:text-red-700 text-sm">{`${user.email}`}</span>
 
                   <div className="flex items-end justify-between mt-5">
@@ -619,7 +631,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
         onChange={handleInputChange}
       />
     </div>
-    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+    <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
 
     <div className="sm:col-span-1">
     <Label className="px-4 py-3 font-normal text-gray-500  text-theme-sm dark:text-gray-400">Status</Label>
