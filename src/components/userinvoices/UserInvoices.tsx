@@ -175,6 +175,7 @@ const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
     }
 
     const newInvoice = {
+        id: parseFloat(formData.id),
         user_id: selectedUser.id,
         issued_date: new Date().toISOString().split('T')[0],
         sub_total: parseFloat(formData.sub_total),
@@ -508,7 +509,7 @@ const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
                                 <div>
                                 <Label>Invoice ID <span className="text-red-500">*</span></Label>
                                 <Input
-                                    type="text"
+                                    type="number"
                                     id="id"
                                     name="id"
                                     placeholder="Enter Inv ID"
