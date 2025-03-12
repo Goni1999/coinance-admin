@@ -653,9 +653,9 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
         onChange={handleInputChange}
       />
     </div>
-<div className="sm:col-span-1">
+<div className="sm:col-span-1 content-end">
 
-    <button className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700"
+    <button className="inline-flex items-center px-7 py-4 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700"
 
      onClick={handleAddTransaction}>Add Transaction</button>
      </div>
