@@ -99,77 +99,82 @@ export const Balance = () => {
   
   const fetchUsers = async () => {
     const token = sessionStorage.getItem("auth-token");
-
+  
     if (!token) {
       console.error("No token found. Please log in.");
       return;
     }
-
+  
     try {
-      const response = await fetch("https://server.capital-trust.eu/api/users-admin", {
+      // Fetch all users at once
+      const usersResponse = await fetch("https://server.capital-trust.eu/api/users-admin", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       });
-
-      if (!response.ok) throw new Error("Failed to fetch users");
-      const usersData: User[] = await response.json();
-
-      // Fetch balance for each user
-      const usersWithBalance = await Promise.all(
-        usersData.map(async (user) => {
-          const balanceResponse = await fetch("https://server.capital-trust.eu/api/balance-admin", {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          });
-
-          if (balanceResponse.ok) {
-            const balanceData = await balanceResponse.json();
-            const userBalance = balanceData.find((item: { user_id: string }) => item.user_id === user.id);
-
-            if (userBalance) {
-              user.balance = {
-                bitcoin: parseFloat(userBalance.bitcoin) || 0,
-                ethereum: parseFloat(userBalance.ethereum) || 0,
-                xrp: parseFloat(userBalance.xrp) || 0,
-                tether: parseFloat(userBalance.tether) || 0,
-                bnb: parseFloat(userBalance.bnb) || 0,
-                solana: parseFloat(userBalance.solana) || 0,
-                usdc: parseFloat(userBalance.usdc) || 0,
-                dogecoin: parseFloat(userBalance.dogecoin) || 0,
-                cardano: parseFloat(userBalance.cardano) || 0,
-                staked_ether: parseFloat(userBalance.staked_ether) || 0,
-              };
-              user.deposit_wallet = userBalance?.deposit_wallet || "";
-              user.balance_id = userBalance?.balance_id || "";
-              user.unpaid_amount = userBalance?.unpaid_amount || "";
-              user.usdt_total = userBalance?.usdt_total || "";
-            } else {
-              user.balance = null;
-            }
-          } else {
-            user.balance = null;
-          }
-          return user;
-        })
-      );
-
-      setUsers(usersWithBalance);
-      const initialSelectedCoins: { [userId: string]: keyof Balance } = {};
-      usersWithBalance.forEach((user) => {
-        initialSelectedCoins[user.id] = "bitcoin"; // Default coin selection is "bitcoin"
+  
+      if (!usersResponse.ok) throw new Error("Failed to fetch users");
+      const usersData = await usersResponse.json();
+  
+      // Fetch all balances at once
+      const balanceResponse = await fetch("https://server.capital-trust.eu/api/balance-admin", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       });
+  
+      if (!balanceResponse.ok) throw new Error("Failed to fetch balances");
+      const balanceData = await balanceResponse.json();
+  
+      // Map each user to their respective balance
+      const usersWithBalance = usersData.map((user: { id: any; balance: { bitcoin: number; ethereum: number; xrp: number; tether: number; bnb: number; solana: number; usdc: number; dogecoin: number; cardano: number; staked_ether: number; } | null; deposit_wallet: any; balance_id: any; unpaid_amount: any; usdt_total: any; }) => {
+        // Find the balance for the current user
+        const userBalance = balanceData.find((balance: { user_id: any; }) => balance.user_id === user.id);
+  
+        if (userBalance) {
+          user.balance = {
+            bitcoin: parseFloat(userBalance.bitcoin) || 0,
+            ethereum: parseFloat(userBalance.ethereum) || 0,
+            xrp: parseFloat(userBalance.xrp) || 0,
+            tether: parseFloat(userBalance.tether) || 0,
+            bnb: parseFloat(userBalance.bnb) || 0,
+            solana: parseFloat(userBalance.solana) || 0,
+            usdc: parseFloat(userBalance.usdc) || 0,
+            dogecoin: parseFloat(userBalance.dogecoin) || 0,
+            cardano: parseFloat(userBalance.cardano) || 0,
+            staked_ether: parseFloat(userBalance.staked_ether) || 0,
+          };
+          user.deposit_wallet = userBalance.deposit_wallet || "";
+          user.balance_id = userBalance.balance_id || "";
+          user.unpaid_amount = userBalance.unpaid_amount || "";
+          user.usdt_total = userBalance.usdt_total || "";
+        } else {
+          user.balance = null; // If no balance found, set as null
+        }
+  
+        return user;
+      });
+  
+      // Set the users with balance data
+      setUsers(usersWithBalance);
+  
+      // Default coin selection for users
+      const initialSelectedCoins: { [userId: string]: keyof Balance } = {};
+      usersWithBalance.forEach((user: { id: string | number; }) => {
+        initialSelectedCoins[user.id] = "bitcoin"; // Default coin is "bitcoin"
+      });
+  
       setSelectedCoins(initialSelectedCoins);
-
+      
     } catch (error) {
       console.error("Error fetching users:", error);
     }
   };
+  
 
   useEffect(() => {
     fetchUsers();
