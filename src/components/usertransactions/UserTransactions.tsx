@@ -40,16 +40,18 @@ const TransactionsHistory = () => {
 const [isExpanded, setIsExpanded] = useState<boolean | number>(-1); // Track which address is expanded
 const [transactionToDelete, setTransactionToDelete] = useState<Transaction | null>(null); // The transaction to delete
 const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the delete confirmation modal
-  const [alert, setAlert] = useState<{
+ const [alert, setAlert] = useState<{
     variant: "success" | "error" | "warning" | "info";
     title: string;
     message: string;
     show: boolean;
+    userId: string | undefined;  // Allow userId to be either a string or null
   }>({
     variant: "success",
     title: "",
     message: "",
     show: false,
+    userId: undefined,  // Initially null, later set to user_id when alert is shown
   });
   const [newTransaction, setNewTransaction] = useState({
     walletAddress: "",
@@ -154,6 +156,7 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
         title: "User Balance Updated Successfully",
         message: "You can check now!",
         show: true,
+        userId: selectedUser?.id, // Set the alert userId
 
       });
       return;
@@ -188,6 +191,7 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
           title: "Transaction deleted successfully!",
           message: "",
           show: true,
+          userId: selectedUser?.id, // Set the alert userId
 
         });
       } else {
@@ -196,6 +200,7 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
           title: "Failed to delete transaction.",
           message: "Please try again!",
           show: true,
+          userId: selectedUser?.id, // Set the alert userId
 
         });
       }
@@ -206,6 +211,7 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
         title: "Error deleting transaction.",
         message: "Please try again!",
         show: true,
+        userId: selectedUser?.id, // Set the alert userId
 
       });
     }
@@ -248,6 +254,8 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
             title: "Transaction Added Successfully!",
             message: "The new transaction was successfully added.",
             show: true,
+            userId: selectedUser?.id, // Set the alert userId
+
           });
           closeAddTransactionModal(); // Close the modal after success
           setTimeout(() => {
@@ -260,6 +268,8 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
             title: "Failed to Add Transaction",
             message: "There was an issue while adding the transaction. Please try again.",
             show: true,
+            userId: selectedUser?.id, // Set the alert userId
+
           });
         }
       } catch (error) {
@@ -269,6 +279,8 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
           title: "Error Adding Transaction",
           message: "An unexpected error occurred. Please try again later.",
           show: true,
+          userId: selectedUser?.id, // Set the alert userId
+
         });
       }
     };
@@ -334,7 +346,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-4 md:gap-6">
               {users.map((user) => (
                 <div key={user.id} className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-                   {alert.show  && (
+                   {alert.show   && alert.userId === user.id && (
             <Alert
               variant={alert.variant}
               title={alert.title}
@@ -379,7 +391,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       <div className="relative w-full p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
       
         <h3 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
-        {alert.show  && (
+        {alert.show  && alert.userId === selectedUser?.id && (
             <Alert
               variant={alert.variant}
               title={alert.title}
@@ -549,7 +561,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
   <div className="relative w-full p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
 
     <h3 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
-    {alert.show && (
+    {alert.show  && alert.userId === selectedUser?.id && (
   <Alert
     variant={alert.variant}
     title={alert.title}

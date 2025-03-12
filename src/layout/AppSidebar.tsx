@@ -46,9 +46,9 @@ const navItems: NavItem[] = [
       { name: "Balances", path: "/balance", pro: false, admin: true  },
       { name: "Transactions", path: "/user-transactions", pro: false, admin: true  },
       { name: "Invoices", path: "/user-invoices", pro: false, admin: true  },
-      { name: "Investments", path: "/investments", pro: false, admin: true  },
-      { name: "Enquiries", path: "/enquiries", pro: false, admin: true  },
-      { name: "Raports", path: "/raports", pro: false, admin: true  },
+      { name: "Investments", path: "/investments", pro: false  },
+      { name: "Enquiries", path: "/enquiries", pro: false  },
+      { name: "Raports", path: "/raports", pro: false  },
     ],
   },
   {
