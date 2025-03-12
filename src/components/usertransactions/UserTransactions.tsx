@@ -446,7 +446,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       </td>
       <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
   <button
-    onClick={closeDeleteModal}
+    onClick={() => openDeleteModal(transaction)}
     className="inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-red-50 text-red-500 hover:text-red-700 text-sm"
   >
     Delete
