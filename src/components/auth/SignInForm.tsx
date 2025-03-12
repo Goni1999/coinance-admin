@@ -50,6 +50,8 @@ export default function SignInForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, rememberMe: isChecked }),
+        credentials: 'include', // This will ensure cookies are sent
+
       });
   
       const data = await response.json();
