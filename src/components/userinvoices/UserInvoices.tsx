@@ -100,7 +100,7 @@ const Invoices = () => {
   };
 
   const getSelectedInvoiceClass = (invoice: Invoice) => {
-    return invoice === selectedInvoice ? 'text-blue-500' : '';
+    return invoice === selectedInvoice ? 'text-blue-500 bg-gray-500' : '';
   };
 
   const handleAddInvoice = () => {
@@ -147,7 +147,7 @@ const Invoices = () => {
         <div className="flex-1 rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] xl:w-4/5 flex flex-col">
           {selectedUser && (
             <>
-            <div className="flex flex-row">
+            <div className="flex flex-row justify-center">
               <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800">
                 <h3 className="font-medium text-gray-800 text-theme-xl dark:text-white/90">
                   User: {selectedUser.first_name} {selectedUser.last_name}
@@ -159,7 +159,7 @@ const Invoices = () => {
 
                 <button
                   onClick={handleAddInvoice}
-                  className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+                  className="self-center px-4 py-2 bg-blue-500 text-white rounded"
                 >
                   Add Invoice
                 </button>
@@ -175,14 +175,14 @@ const Invoices = () => {
                     selectedUser.invoices.map((invoice) => (
                       <div
                         key={invoice.id}
-                        className={`cursor-pointer flex items-center gap-3 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-white/[0.03] ${getInvoiceStatusClass(invoice.status)}`}
+                        className={`cursor-pointer flex items-center gap-3 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-white/[0.03] ${getSelectedInvoiceClass(invoice)}`}
                         onClick={() => handleInvoiceClick(invoice)}
                       >
                         <div>
-                          <span className={`block text-sm font-medium ${getSelectedInvoiceClass(invoice)}`}>
+                          <span className={`block text-sm font-medium ${getInvoiceStatusClass(invoice.status)}`}>
                             Invoice #{invoice.id} - {formatDate(invoice.issued_date)}
                           </span>
-                          <span className={`block ${getSelectedInvoiceClass(invoice)}`}>{invoice.status}</span>
+                          <span className={`block ${getInvoiceStatusClass(invoice.status)}`}>{invoice.status}</span>
                         </div>
                       </div>
                     ))
