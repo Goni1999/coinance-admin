@@ -139,7 +139,7 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
     setInvoiceToDelete(null); // Reset the transaction
   };
 
-  const handleDeleteTransaction = async () => {
+  const handleDeleteInvoice = async () => {
     if (!InvoiceToDelete?.id) {
       setAlert({
         variant: "error",
@@ -195,7 +195,7 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
       console.error('Error deleting Invoice:', error);
       setAlert({
         variant: "error",
-        title: "Error deleting transaction.",
+        title: "Error deleting Invoice.",
         message: "Please try again!",
         show: true,
 
@@ -210,6 +210,14 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
 
   return (
     <div className="p-4 mx-auto max-w-screen-2xl md:p-6">
+           {alert.show   &&  (
+            <Alert
+              variant={alert.variant}
+              title={alert.title}
+              message={alert.message}
+              showLink={false} 
+            />
+          )}
       <div className="flex flex-col h-full gap-6 sm:gap-5 xl:flex-row">
         {/* Left Panel: User List */}
         <div className="rounded-2xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.03] xl:w-1/5">
@@ -236,14 +244,7 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
             <>
             <div className="flex flex-row justify-center">
               <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800">
-              {alert.show   &&  (
-            <Alert
-              variant={alert.variant}
-              title={alert.title}
-              message={alert.message}
-              showLink={false} 
-            />
-          )}
+           
                 <h3 className="font-medium text-gray-800 text-theme-xl dark:text-white/90">
                   User: {selectedUser.first_name} {selectedUser.last_name}
                 </h3>
@@ -313,7 +314,7 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
                       <div className="flex items-center justify-end gap-3">
                       <button
                                     onClick={() => openDeleteModal(selectedInvoice)}
-                                    className="inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-red-50 text-red-500 hover:text-red-700 text-sm"
+                                    className="flex items-center gap-2 px-4 py-3 justify-center  rounded-lg font-medium bg-red-500 text-white hover:text-red-600 text-sm"
                                 >
                                     Delete Invoice
                                 </button>
@@ -345,7 +346,7 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
             <Modal  className="max-w-[700px] m-4" isOpen={isDeleteModalOpen} onClose={closeDeleteModal}>
             <div className="relative w-1/2 mx-auto p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
             <h3 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
-                  Are you sure you want to delete this transaction?
+                  Are you sure you want to delete this Invoice?
                 </h3>
                 <div className="flex justify-center mt-4">
                   <button
@@ -355,7 +356,7 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
                     Cancel
                   </button>
                   <button
-                    onClick={handleDeleteTransaction}              
+                    onClick={handleDeleteInvoice}              
                     className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700"
                             >
                     Yes, Delete
