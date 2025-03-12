@@ -84,7 +84,18 @@
                 <form onSubmit={handleSubmit}>
                 <div className="space-y-5">
                     {/* Invoice ID */}
-                   
+                    <div>
+                            <Label>
+                            Issued Date<span className="text-red-500">*</span>
+                            </Label>
+                            <Input
+                                type="date"
+                                id="issued_Date"
+                                name="issued_Date"
+                                value={updateData.issued_date}
+                                onChange={handleEdit}
+                            />
+                            </div>
 
                     {/* Sub Total */}
                     <div>
