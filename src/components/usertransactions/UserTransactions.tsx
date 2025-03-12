@@ -266,11 +266,12 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-4 md:gap-6">
               {users.map((user) => (
                 <div key={user.id} className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-                                      <span className="mt-2 inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-red-50 dark:bg-red-500/15 text-red-500 hover:text-red-700 text-sm">{`${user.email}`}</span>
+                                      <span className="mt-2 w-full inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-red-50 dark:bg-red-500/15 text-red-500 hover:text-red-700 text-sm">{`${user.email}`}</span>
 
                   <div className="flex items-end justify-between mt-5">
                     <div>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name}`}</span>
+                    <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.last_name}`}</span>
 
                       
                     </div>
@@ -300,7 +301,9 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
      {/* Transaction Modal */}
      <Modal isOpen={isTransactionModalOpen} onClose={closeTransactionModal}>
       <div className="relative w-full p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
-      {alert.show  && (
+      
+        <h3 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
+        {alert.show  && (
             <Alert
               variant={alert.variant}
               title={alert.title}
@@ -308,7 +311,6 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
               showLink={false} 
             />
           )}
-        <h3 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
           Transactions for {selectedUser?.first_name} {selectedUser?.last_name}
         </h3>
         <div className="col-span-12 mt-6">
@@ -529,8 +531,8 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
 
       {/* Delete Confirmation Modal */}
       <Modal isOpen={isDeleteModalOpen} onClose={closeDeleteModal}>
-        <div className="relative w-full p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
-          <h3 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
+      <div className="relative w-1/2 mx-auto p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
+      <h3 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
             Are you sure you want to delete this transaction?
           </h3>
           <div className="flex justify-end mt-4">
