@@ -533,7 +533,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
 
 
       {/* Add Transaction Modal */}
-      <Modal  className="max-w-[700px] m-4 pt-[300px]" isOpen={isAddTransactionModalOpen} onClose={closeAddTransactionModal}>
+      <Modal  className="max-w-[700px] m-4 my-auto" isOpen={isAddTransactionModalOpen} onClose={closeAddTransactionModal}>
   <div className="relative w-full p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
 
     <h3 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
@@ -642,9 +642,12 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       />
     </div>
 </div>
+<div className="flex justify-center mt-4">
+
     <button className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700"
 
      onClick={handleAddTransaction}>Add Transaction</button>
+     </div>
   </div>
 </Modal>
 
