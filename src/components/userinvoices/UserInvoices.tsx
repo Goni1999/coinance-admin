@@ -147,6 +147,7 @@ const Invoices = () => {
         <div className="flex-1 rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] xl:w-4/5 flex flex-col">
           {selectedUser && (
             <>
+            <div className="flex flex-row">
               <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800">
                 <h3 className="font-medium text-gray-800 text-theme-xl dark:text-white/90">
                   User: {selectedUser.first_name} {selectedUser.last_name}
@@ -154,6 +155,7 @@ const Invoices = () => {
                 <h4 className="text-base font-medium text-gray-700 dark:text-gray-400">
                   Address: {selectedUser.address}
                 </h4>
+                </div>
 
                 <button
                   onClick={handleAddInvoice}
@@ -162,7 +164,6 @@ const Invoices = () => {
                   Add Invoice
                 </button>
               </div>
-
               <div className="flex gap-6 p-5 xl:p-8">
                 {/* Left Column: Invoices List */}
                 <div className="flex flex-col w-1/3 space-y-3">
@@ -215,20 +216,21 @@ const Invoices = () => {
 
                       {/* Action Buttons */}
                       <div className="flex items-center justify-end gap-3">
-                        <button
-                          onClick={handleEditInvoice}
-                          className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-white rounded-lg bg-blue-500 shadow-theme-xs hover:bg-blue-600"
-                        >
-                          Edit Invoice
-                        </button>
-                        <button
+                      <button
                           onClick={handleDeleteInvoice}
                           className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-white rounded-lg bg-red-500 shadow-theme-xs hover:bg-red-600"
                         >
                           Delete Invoice
                         </button>
                         <button
-                      className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+                          onClick={handleEditInvoice}
+                          className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-white rounded-lg bg-blue-500 shadow-theme-xs hover:bg-blue-600"
+                        >
+                          Edit Invoice
+                        </button>
+                       
+                        <button
+                      className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-white rounded-lg bg-gray-500 shadow-theme-xs hover:bg-gray-600"
                       onClick={() => window.open(selectedInvoice.link_of_pdf, '_blank')}
                              >
                             Download        
