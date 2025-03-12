@@ -7,8 +7,8 @@ type User = {
   first_name: string;
   last_name: string;
   email: string;
-  is_active: boolean; // Add active status field
-  invoices: Invoice[];  // Store invoices in the user object
+  invoices: Invoice[];
+  address: string; // User address field for details
 };
 
 type Invoice = {
@@ -19,7 +19,7 @@ type Invoice = {
   vat: number;
   total: number;
   link_of_pdf: string;
-  status: string;
+  status: string; // 'paid' or 'unpaid'
 };
 
 const Invoices = () => {
@@ -30,7 +30,6 @@ const Invoices = () => {
   const [error, setError] = useState<string | null>(null);
   const t = useTranslations();
 
-  // Fetch users and invoices at once when the component mounts
   useEffect(() => {
     const fetchData = async () => {
       const token = sessionStorage.getItem('auth-token');
@@ -40,7 +39,6 @@ const Invoices = () => {
       }
 
       try {
-        // Fetch users
         const usersResponse = await fetch('https://server.capital-trust.eu/api/users-admin', {
           method: 'GET',
           headers: {
@@ -52,7 +50,6 @@ const Invoices = () => {
         if (!usersResponse.ok) throw new Error('Failed to fetch users');
         const usersData: User[] = await usersResponse.json();
 
-        // Fetch invoices
         const invoicesResponse = await fetch('https://server.capital-trust.eu/api/admin-invoices', {
           method: 'GET',
           headers: {
@@ -64,17 +61,12 @@ const Invoices = () => {
         if (!invoicesResponse.ok) throw new Error('Failed to fetch invoices');
         const invoicesData: Invoice[] = await invoicesResponse.json();
 
-        // Assign invoices to each user
         const usersWithInvoices = usersData.map((user) => {
-          // Filter invoices for this user
           user.invoices = invoicesData.filter((invoice) => invoice.user_id === user.id);
           return user;
         });
 
-        // Set users with invoices
         setUsers(usersWithInvoices);
-
-        // Set loading to false after data is fetched
         setLoading(false);
       } catch (error) {
         setError('Failed to fetch data');
@@ -85,19 +77,32 @@ const Invoices = () => {
     fetchData();
   }, []);
 
-  // Handle invoice click
   const handleInvoiceClick = (invoice: Invoice) => {
     setSelectedInvoice(invoice);
   };
 
-  // Format date for displaying
+  const handleUserClick = (user: User) => {
+    setSelectedUser(user === selectedUser ? null : user); // Toggle selection
+  };
+
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleDateString();
   };
 
-  if (loading) return <div>Loading...</div>;
+  const getInvoiceStatusClass = (status: string) => {
+    if (status === 'paid') return 'bg-green-100 text-green-600';
+    if (status === 'unpaid') return 'bg-red-100 text-red-600';
+    return '';
+  };
 
+  const getSelectedUserClass = (user: User) => {
+    return user === selectedUser
+      ? 'bg-blue-100 text-blue-600' // Selected user with blue background
+      : '';
+  };
+
+  if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
@@ -126,15 +131,12 @@ const Invoices = () => {
             {users.map((user) => (
               <div
                 key={user.id}
-                className="flex cursor-pointer items-center gap-3 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-white/[0.03]"
-                onClick={() => setSelectedUser(user)}
+                className={`flex cursor-pointer items-center gap-3 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-white/[0.03] ${getSelectedUserClass(user)}`}
+                onClick={() => handleUserClick(user)}
               >
                 <div>
                   <span className="mb-0.5 block text-sm font-medium text-gray-800 dark:text-white/90">
                     {user.first_name} {user.last_name}
-                  </span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400">
-                    {user.is_active ? 'Active' : 'Inactive'}
                   </span>
                 </div>
               </div>
@@ -146,20 +148,19 @@ const Invoices = () => {
         <div className="flex-1 rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] xl:w-4/5 flex flex-col">
           {selectedUser && (
             <>
-              {/* Top Right Panel: Invoices for Selected User */}
               <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800">
                 <h3 className="font-medium text-gray-800 text-theme-xl dark:text-white/90">{t('inv3')}</h3>
                 <h4 className="text-base font-medium text-gray-700 dark:text-gray-400">
                   User: {selectedUser.first_name} {selectedUser.last_name}
                 </h4>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Status: {selectedUser.is_active ? 'Active' : 'Inactive'}
+                  Address: {selectedUser.address}
                 </p>
               </div>
 
               <div className="flex gap-6 p-5 xl:p-8">
                 {/* Left Column: Invoices List */}
-                <div className="flex flex-col w-2/3 space-y-3">
+                <div className="flex flex-col w-1/3 space-y-3">
                   {selectedUser.invoices.length === 0 ? (
                     <div className="text-gray-500 dark:text-gray-400">
                       No invoices for {selectedUser.first_name} {selectedUser.last_name}.
@@ -168,7 +169,7 @@ const Invoices = () => {
                     selectedUser.invoices.map((invoice) => (
                       <div
                         key={invoice.id}
-                        className="cursor-pointer flex items-center gap-3 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-white/[0.03]"
+                        className={`cursor-pointer flex items-center gap-3 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-white/[0.03] ${getInvoiceStatusClass(invoice.status)}`}
                         onClick={() => handleInvoiceClick(invoice)}
                       >
                         <div>
