@@ -40,9 +40,9 @@ const TransactionsHistory = () => {
 const [isExpanded, setIsExpanded] = useState<boolean | number>(-1); // Track which address is expanded
 const [transactionToDelete, setTransactionToDelete] = useState<Transaction | null>(null); // The transaction to delete
 const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the delete confirmation modal
-const [transactions, setTransactions] = useState([]);
-const [error, setError] = useState('');
-const [loading, setLoading] = useState(true);
+const [, setTransactions] = useState([]);
+const [, setError] = useState('');
+const [, setLoading] = useState(true);
 
  const [alert, setAlert] = useState<{
     variant: "success" | "error" | "warning" | "info";
