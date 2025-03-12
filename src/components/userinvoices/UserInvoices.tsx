@@ -182,6 +182,9 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
           show: true,
 
         });
+        setTimeout(() => {
+            window.location.reload();
+          }, 5000);
       } else {
         setAlert({
           variant: "error",
@@ -190,6 +193,9 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
           show: true,
 
         });
+        setTimeout(() => {
+            window.location.reload();
+          }, 5000);
       }
     } catch (error) {
       console.error('Error deleting Invoice:', error);
@@ -200,6 +206,9 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
         show: true,
 
       });
+      setTimeout(() => {
+        window.location.reload();
+      }, 5000);
     }
   
     closeDeleteModal(); // Close the modal after deletion
