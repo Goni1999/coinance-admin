@@ -40,6 +40,10 @@ const TransactionsHistory = () => {
 const [isExpanded, setIsExpanded] = useState<boolean | number>(-1); // Track which address is expanded
 const [transactionToDelete, setTransactionToDelete] = useState<Transaction | null>(null); // The transaction to delete
 const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the delete confirmation modal
+const [transactions, setTransactions] = useState([]);
+const [error, setError] = useState('');
+const [loading, setLoading] = useState(true);
+
  const [alert, setAlert] = useState<{
     variant: "success" | "error" | "warning" | "info";
     title: string;
@@ -64,7 +68,6 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
     status: "Success",
     details: "",
   });
-  
   useEffect(() => {
     const fetchUsers = async () => {
       if (!token) {
@@ -73,7 +76,8 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
       }
 
       try {
-        const response = await fetch("https://server.capital-trust.eu/api/users-admin", {
+        // Fetch users
+        const usersResponse = await fetch("https://server.capital-trust.eu/api/users-admin", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -81,40 +85,48 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
           },
         });
 
-        if (response.ok) {
-          const usersData = await response.json();
-
-          // Fetch transactions for each user and include them in the user object
-          const usersWithTransactions = await Promise.all(
-            usersData.map(async (user: User) => {
-              const transactionsResponse = await fetch("https://server.capital-trust.eu/api/admin-transactions", {
-                method: "GET",
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                  "Content-Type": "application/json",
-                },
-              });
-
-              if (transactionsResponse.ok) {
-                const transactionsData = await transactionsResponse.json();
-                const userTransactions = transactionsData.filter(
-                  (transaction: Transaction) => transaction.user_id === user.id
-                );
-                user.transactions = userTransactions;
-              } else {
-                user.transactions = [];
-              }
-
-              return user;
-            })
-          );
-
-          setUsers(usersWithTransactions);
-        } else {
+        if (!usersResponse.ok) {
           console.error("Failed to fetch users");
+          return;
         }
+
+        const usersData = await usersResponse.json();
+
+        // Fetch transactions
+        const transactionsResponse = await fetch("https://server.capital-trust.eu/api/admin-transactions", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!transactionsResponse.ok) {
+          console.error("Failed to fetch transactions");
+          return;
+        }
+
+        const transactionsData = await transactionsResponse.json();
+
+        // Associate transactions with users
+        const usersWithTransactions = usersData.map((user: User) => {
+          const userTransactions = transactionsData.filter(
+            (transaction: Transaction) => transaction.user_id === user.id
+          );
+          return {
+            ...user,
+            transactions: userTransactions, // Add transactions to user object
+          };
+        });
+
+        // Set the users with their associated transactions
+        setUsers(usersWithTransactions);
+        setTransactions(transactionsData); // You can also keep track of transactions if needed
       } catch (error) {
-        console.error("Error fetching users:", error);
+        setError("Error fetching data");
+        console.error("Error fetching users and transactions:", error);
+      } finally {
+        setLoading(false); // Stop loading
       }
     };
 
