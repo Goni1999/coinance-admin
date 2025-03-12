@@ -90,8 +90,8 @@ const Invoices = () => {
   };
 
   const getInvoiceStatusClass = (status: string) => {
-    if (status === 'paid') return 'bg-green-50 dark:green-500/15 text-green-500 cursor-pointer flex items-center gap-3 rounded-lg p-2';
-    if (status === 'unpaid') return 'bg-red-50 dark:bg-red-500/15 text-red-500 cursor-pointer flex items-center gap-3 rounded-lg p-2';
+    if (status === 'paid') return 'bg-green-50 dark:green-500/15 text-green-500 pr-2 pl-2';
+    if (status === 'unpaid') return 'bg-red-50 dark:bg-red-500/15 text-red-500 p2-2 pl-2';
     return '';
   };
 
@@ -179,10 +179,10 @@ const Invoices = () => {
                         onClick={() => handleInvoiceClick(invoice)}
                       >
                         <div>
-                          <span className={`block text-sm font-medium ${getInvoiceStatusClass(invoice.status)}`}>
+                          <span className={`block rounded-tl-lg rounded-tr-lg pt-2 text-sm font-medium ${getInvoiceStatusClass(invoice.status)}`}>
                             Invoice #{invoice.id} - {formatDate(invoice.issued_date)}
                           </span>
-                          <span className={`block ${getInvoiceStatusClass(invoice.status)}`}>{invoice.status}</span>
+                          <span className={`block rounded-bl-lg rounded-br-lg pb-2 ${getInvoiceStatusClass(invoice.status)}`}>{invoice.status}</span>
                         </div>
                       </div>
                     ))
