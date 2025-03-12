@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Modal } from '../ui/modal';
 
 
 type User = {
@@ -22,12 +23,27 @@ type Invoice = {
 };
 
 const Invoices = () => {
+    const token = sessionStorage.getItem("auth-token");
+
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
+const [InvoiceToDelete, setInvoiceToDelete] = useState<Invoice | null>(null); // The transaction to delete
+const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the delete confirmation modal
+const [, setTransactions] = useState([]);
+ const [alert, setAlert] = useState<{
+    variant: "success" | "error" | "warning" | "info";
+    title: string;
+    message: string;
+    show: boolean;
+  }>({
+    variant: "success",
+    title: "",
+    message: "",
+    show: false,
+  });
   useEffect(() => {
     const fetchData = async () => {
       const token = sessionStorage.getItem('auth-token');
@@ -113,9 +129,80 @@ const Invoices = () => {
     console.log(`Editing invoice: ${selectedInvoice?.id}`);
   };
 
-  const handleDeleteInvoice = () => {
-    // Trigger the logic to delete the selected invoice
-    console.log(`Deleting invoice: ${selectedInvoice?.id}`);
+  const openDeleteModal = (invoice: Invoice) => {
+    setInvoiceToDelete(invoice); // Store the full transaction object
+    setIsDeleteModalOpen(true); // Open the confirmation modal
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false); // Close confirmation modal
+    setInvoiceToDelete(null); // Reset the transaction
+  };
+
+  const handleDeleteTransaction = async () => {
+    if (!InvoiceToDelete?.id) {
+      setAlert({
+        variant: "error",
+        title: "No id for this Invoice",
+        message: "",
+        show: true,
+
+      });
+      return;
+    }
+  
+    try {
+      const response = await fetch(`https://server.capital-trust.eu/api/admin-invoices-delete`, {
+        method: "POST", // Keep the DELETE method
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id: InvoiceToDelete.id, // Send transactionId in the request body
+        }),
+      });
+  
+      if (response.ok) {
+        // Refresh the user data after the transaction is deleted
+        const updatedUsers = users.map(user => {
+          if (user.id === selectedUser?.id) {
+            user.invoices = user.invoices.filter(
+              Invoices => Invoices.id !== InvoiceToDelete?.id
+            );
+          }
+          return user;
+        });
+  
+        setUsers(updatedUsers);
+        setAlert({
+          variant: "success",
+          title: "Invoice deleted successfully!",
+          message: "",
+          show: true,
+
+        });
+      } else {
+        setAlert({
+          variant: "error",
+          title: "Failed to delete Invoice.",
+          message: "Please try again!",
+          show: true,
+
+        });
+      }
+    } catch (error) {
+      console.error('Error deleting Invoice:', error);
+      setAlert({
+        variant: "error",
+        title: "Error deleting transaction.",
+        message: "Please try again!",
+        show: true,
+
+      });
+    }
+  
+    closeDeleteModal(); // Close the modal after deletion
   };
 
   if (loading) return <div>Loading...</div>;
@@ -217,11 +304,11 @@ const Invoices = () => {
                       {/* Action Buttons */}
                       <div className="flex items-center justify-end gap-3">
                       <button
-                          onClick={handleDeleteInvoice}
-                          className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-white rounded-lg bg-red-500 shadow-theme-xs hover:bg-red-600"
-                        >
-                          Delete Invoice
-                        </button>
+                                    onClick={() => openDeleteModal(selectedInvoice)}
+                                    className="inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-red-50 text-red-500 hover:text-red-700 text-sm"
+                                >
+                                    Delete Invoice
+                                </button>
                         <button
                           onClick={handleEditInvoice}
                           className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-white rounded-lg bg-blue-500 shadow-theme-xs hover:bg-blue-600"
@@ -244,6 +331,30 @@ const Invoices = () => {
           )}
         </div>
       </div>
+
+      
+            {/* Delete Confirmation Modal */}
+            <Modal  className="max-w-[700px] m-4" isOpen={isDeleteModalOpen} onClose={closeDeleteModal}>
+            <div className="relative w-1/2 mx-auto p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
+            <h3 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
+                  Are you sure you want to delete this transaction?
+                </h3>
+                <div className="flex justify-center mt-4">
+                  <button
+                    onClick={closeDeleteModal}
+                    className="mr-4 inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white dark:border-gray-700"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleDeleteTransaction}              
+                    className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700"
+                            >
+                    Yes, Delete
+                  </button>
+                </div>
+              </div>
+            </Modal>
     </div>
   );
 };
