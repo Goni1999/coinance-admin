@@ -1,14 +1,9 @@
 
 'use client';
-import { Metadata } from "next";
 import React, { useEffect, useState } from "react";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import {Balance} from "@/components/balance/Balances";
-export const metadata: Metadata = {
-  title: "Balances",
-  description:
-    "Balances",
-};
+
 
 export default function Balances() {
   const [loading, setLoading] = useState<boolean>(true);

@@ -1,15 +1,9 @@
 
 'use client';
 
-import { Metadata } from "next";
 import React, { useEffect, useState } from "react";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import TransactionsHistory from "@/components/usertransactions/UserTransactions";
-export const metadata: Metadata = {
-  title: "All transactions",
-  description:
-    "All transactions",
-};
 
 export default function UserTransactions() {
    const [loading, setLoading] = useState<boolean>(true);

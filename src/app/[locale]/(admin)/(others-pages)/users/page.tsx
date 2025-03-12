@@ -1,15 +1,9 @@
 
 'use client';
 
-import { Metadata } from "next";
 import React, { useEffect, useState } from "react";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import UserTable from "@/components/users/UserTable";
-export const metadata: Metadata = {
-  title: "Users",
-  description:
-    "Users",
-};
 
 export default function Users() {
    const [loading, setLoading] = useState<boolean>(true);
