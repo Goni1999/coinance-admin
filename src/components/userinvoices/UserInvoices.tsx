@@ -54,7 +54,7 @@ const Invoices = () => {
         const usersData: User[] = await usersResponse.json();
 
         // Fetch invoices
-        const invoicesResponse = await fetch('https://server.capital-trust.eu/api/invoices-admin', {
+        const invoicesResponse = await fetch('https://server.capital-trust.eu/api/admin-invoices', {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
