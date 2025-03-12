@@ -48,7 +48,7 @@ const navItems: NavItem[] = [
       { name: "Invoices", path: "/user-invoices", pro: false, admin: true  },
       { name: "Investments", path: "/investments", pro: false  },
       { name: "Enquiries", path: "/enquiries", pro: false  },
-      { name: "Raports", path: "/raports", pro: false  },
+      { name: "Raports", path: "/reports", pro: false  },
     ],
   },
   {
