@@ -269,7 +269,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
                                       <span className="mt-2 w-full inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-red-50 dark:bg-red-500/15 text-red-500 hover:text-red-700 text-sm">{`${user.email}`}</span>
 
                   <div className="flex items-end justify-between mt-5">
-                    <div>
+                    <div className="flex flex-col items-start">
                     <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name}`}</span>
                     <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.last_name}`}</span>
 
@@ -530,12 +530,12 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
 
 
       {/* Delete Confirmation Modal */}
-      <Modal isOpen={isDeleteModalOpen} onClose={closeDeleteModal}>
+      <Modal className="relative w-1/2 mx-auto p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11" isOpen={isDeleteModalOpen} onClose={closeDeleteModal}>
       <div className="relative w-1/2 mx-auto p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
       <h3 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
             Are you sure you want to delete this transaction?
           </h3>
-          <div className="flex justify-end mt-4">
+          <div className="flex justify-center mt-4">
             <button
               onClick={closeDeleteModal}
               className="mr-4 inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white dark:border-gray-700"
