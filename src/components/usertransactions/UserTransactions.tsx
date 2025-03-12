@@ -50,7 +50,18 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
     message: "",
     show: false,
   });
-
+  const [newTransaction, setNewTransaction] = useState({
+    walletAddress: "",
+    time: "",
+    type: "Deposit",
+    coin: "",
+    amount: "",
+    destination: "",
+    txid: "",
+    status: "Success",
+    details: "",
+  });
+  
   useEffect(() => {
     const fetchUsers = async () => {
       if (!token) {
@@ -205,6 +216,58 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
       setSearchTerm(event.target.value);
     };
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+      const { name, value } = e.target;
+      setNewTransaction((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    };
+    const handleAddTransaction = async () => {
+      // Add user_id to the newTransaction object
+      const transactionWithUserId = {
+        ...newTransaction,
+        user_id: selectedUser?.id,  // assuming `id` is the user ID in `selectedUser`
+      };
+    
+      try {
+        const response = await fetch("https://server.capital-trust.eu/api/admin-transactions-add", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(transactionWithUserId), // send the updated object
+        });
+    
+        if (response.ok) {
+          setAlert({
+            variant: "success",
+            title: "Transaction Added Successfully!",
+            message: "The new transaction was successfully added.",
+            show: true,
+          });
+          closeAddTransactionModal(); // Close the modal after success
+        } else {
+          setAlert({
+            variant: "error",
+            title: "Failed to Add Transaction",
+            message: "There was an issue while adding the transaction. Please try again.",
+            show: true,
+          });
+        }
+      } catch (error) {
+        console.error("Error adding transaction:", error);
+        setAlert({
+          variant: "error",
+          title: "Error Adding Transaction",
+          message: "An unexpected error occurred. Please try again later.",
+          show: true,
+        });
+      }
+    };
+    
   
    // Filter transactions based on the search term
 const filteredTransactions = selectedUser?.transactions?.filter((transaction) => {
@@ -269,7 +332,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
                                       <span className="mt-2 w-full inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-red-50 dark:bg-red-500/15 text-red-500 hover:text-red-700 text-sm">{`${user.email}`}</span>
 
                   <div className="flex items-end justify-between mt-5">
-                    <div className="flex flex-col items-start">
+                    <div className="flex flex-col items-start mt-2 w-full inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-gray-50 dark:bg-gray-500/15 text-gray-500 hover:text-gray-700 text-sm">
                     <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name}`}</span>
                     <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.last_name}`}</span>
 
@@ -470,63 +533,110 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
 
       {/* Add Transaction Modal */}
       <Modal isOpen={isAddTransactionModalOpen} onClose={closeAddTransactionModal}>
-        <div className="relative w-full p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
-          <h3 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
-            Add Transaction for {selectedUser?.first_name} {selectedUser?.last_name}
-          </h3>
+  <div className="relative w-full p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
 
-          {/* Type */}
-          <div>
-            <label>Type</label>
-            <select>
-              <option value="Deposit">Deposit</option>
-              <option value="Withdrawal">Withdrawal</option>
-            </select>
-          </div>
+    <h3 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
+    {alert.show && (
+  <Alert
+    variant={alert.variant}
+    title={alert.title}
+    message={alert.message}
+    showLink={false}
+  />
+)}
 
-          {/* Coin */}
-          <div>
-            <label>Coin</label>
-            <Input type="text" value={""} />
-          </div>
+      Add Transaction for {selectedUser?.first_name} {selectedUser?.last_name}
+    </h3>
+    <div>
+      <label>Wallet Address</label>
+      <Input
+        type="text"
+        name="walletAddress"
+        value={newTransaction.walletAddress}
+        onChange={handleInputChange}
+      />
+    </div>
+    <div>
+      <label>Time</label>
+      <Input
+        type="date"
+        name="time"
+        value={newTransaction.time}
+        onChange={handleInputChange}
+      />
+    </div>
+    <div>
+      <label>Type</label>
+      <select
+        name="type"
+        value={newTransaction.type}
+        onChange={handleInputChange}
+      >
+        <option value="Deposit">Deposit</option>
+        <option value="Withdrawal">Withdrawal</option>
+      </select>
+    </div>
+    <div>
+      <label>Coin</label>
+      <Input
+        type="text"
+        name="coin"
+        value={newTransaction.coin}
+        onChange={handleInputChange}
+      />
+    </div>
+    <div>
+      <label>Amount</label>
+      <Input
+        type="text"
+        name="amount"
+        value={newTransaction.amount}
+        onChange={handleInputChange}
+      />
+    </div>
+    <div>
+      <label>Destination</label>
+      <Input
+        type="text"
+        name="destination"
+        value={newTransaction.destination}
+        onChange={handleInputChange}
+      />
+    </div>
+    <div>
+      <label>Transaction ID (TXID)</label>
+      <Input
+        type="text"
+        name="txid"
+        value={newTransaction.txid}
+        onChange={handleInputChange}
+      />
+    </div>
+    <div>
+      <label>Status</label>
+      <select
+        name="status"
+        value={newTransaction.status}
+        onChange={handleInputChange}
+      >
+        <option value="Success">Success</option>
+        <option value="Failed">Failed</option>
+        <option value="Pending">Pending</option>
+      </select>
+    </div>
+    <div>
+      <label>Details</label>
+      <textarea
+        name="details"
+        value={newTransaction.details}
+        onChange={handleInputChange}
+      />
+    </div>
 
-          {/* Amount */}
-          <div>
-            <label>Amount</label>
-            <Input type="text" value={""} />
-          </div>
+    <button onClick={handleAddTransaction}>Add Transaction</button>
+  </div>
+</Modal>
 
-          {/* Destination */}
-          <div>
-            <label>Destination</label>
-            <Input type="text" value={""} />
-          </div>
-
-          {/* TXID */}
-          <div>
-            <label>Transaction ID (TXID)</label>
-            <Input type="text" value={""} />
-          </div>
-
-          {/* Status */}
-          <div>
-            <label>Status</label>
-            <select>
-              <option value="Success">Success</option>
-              <option value="Failed">Failed</option>
-              <option value="Pending">Pending</option>
-            </select>
-          </div>
-
-          {/* Details */}
-          <div>
-            <label>Details</label>
-            <textarea />
-          </div>
-
-          <button onClick={() => console.log("Transaction added!")}>Add Transaction</button>
-        </div>
-      </Modal>
 
 
       {/* Delete Confirmation Modal */}
