@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from '../ui/modal';
 import Alert from '../ui/alert/Alert';
+import Label from '../form/Label';
+import Input from '../form/input/InputField';
 
 
 type User = {
@@ -9,7 +11,7 @@ type User = {
   last_name: string;
   email: string;
   invoices: Invoice[];
-  address: string; // User address field for details
+  address: string; 
 };
 
 type Invoice = {
@@ -20,7 +22,7 @@ type Invoice = {
   vat: number;
   total: number;
   link_of_pdf: string;
-  status: string; // 'paid' or 'unpaid'
+  status: string; 
 };
 
 const Invoices = () => {
@@ -31,8 +33,17 @@ const Invoices = () => {
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-const [InvoiceToDelete, setInvoiceToDelete] = useState<Invoice | null>(null); // The transaction to delete
-const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the delete confirmation modal
+const [InvoiceToDelete, setInvoiceToDelete] = useState<Invoice | null>(null); 
+const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); 
+const [isModalOpen, setIsModalOpen] = useState(false); 
+
+const [formData, setFormData] = useState({
+    id: '',
+    sub_total: '',
+    vat: '',
+    link_of_pdf: '',
+    status: 'unpaid',
+});
  const [alert, setAlert] = useState<{
     variant: "success" | "error" | "warning" | "info";
     title: string;
@@ -96,8 +107,8 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
   };
 
   const handleUserClick = (user: User) => {
-    setSelectedUser(user === selectedUser ? null : user); // Toggle selection
-    setSelectedInvoice(null); // Reset selected invoice when user changes
+    setSelectedUser(user === selectedUser ? null : user); 
+    setSelectedInvoice(null); 
   };
 
   const formatDate = (dateString: string): string => {
@@ -119,25 +130,115 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
     return invoice === selectedInvoice ? 'text-blue-500 bg-gray-500' : '';
   };
 
-  const handleAddInvoice = () => {
-    // Trigger the logic to add an invoice for the selected user
-    console.log(`Adding invoice for user: ${selectedUser?.first_name} ${selectedUser?.last_name}`);
-  };
 
   const handleEditInvoice = () => {
-    // Trigger the logic to edit the selected invoice
     console.log(`Editing invoice: ${selectedInvoice?.id}`);
   };
 
   const openDeleteModal = (invoice: Invoice) => {
-    setInvoiceToDelete(invoice); // Store the full transaction object
-    setIsDeleteModalOpen(true); // Open the confirmation modal
+    setInvoiceToDelete(invoice); 
+    setIsDeleteModalOpen(true); 
   };
 
   const closeDeleteModal = () => {
-    setIsDeleteModalOpen(false); // Close confirmation modal
-    setInvoiceToDelete(null); // Reset the transaction
+    setIsDeleteModalOpen(false); 
+    setInvoiceToDelete(null); 
   };
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+    }));
+};
+
+
+
+
+const calculateTotal = () => {
+    const subTotal = parseFloat(formData.sub_total || '0');
+    const vat = parseFloat(formData.vat || '0');
+    return (subTotal + subTotal * (vat / 100)).toFixed(2);
+};
+const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!selectedUser) {
+        setAlert({
+            variant: "error",
+            title: "No user selected",
+            message: "Please select a user to associate the invoice.",
+            show: true,
+        });
+        return;
+    }
+
+    const newInvoice = {
+        user_id: selectedUser.id,
+        issued_date: new Date().toISOString().split('T')[0],
+        sub_total: parseFloat(formData.sub_total),
+        vat: parseFloat(formData.vat),
+        total: parseFloat(calculateTotal()),
+        link_of_pdf: formData.link_of_pdf || '',
+        status: formData.status,
+    };
+
+    try {
+        const token = sessionStorage.getItem('auth-token');
+        if (!token) {
+            setAlert({
+                variant: "error",
+                title: "Authentication Error",
+                message: "No authentication token found.",
+                show: true,
+            });
+            return;
+        }
+
+        const response = await fetch('https://server.capital-trust.eu/api/admin-invoices-create', {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newInvoice),
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to create invoice');
+        }
+
+        const createdInvoice = await response.json();
+
+        const updatedUsers = users.map((user) => {
+            if (user.id === selectedUser.id) {
+                user.invoices.push(createdInvoice); // Add the new invoice to the user's invoices array
+            }
+            return user;
+        });
+
+        setUsers(updatedUsers);
+
+        setIsModalOpen(false);
+        setAlert({
+            variant: "success",
+            title: "Invoice Created",
+            message: "The invoice has been created successfully.",
+            show: true,
+        });
+
+    } catch (error) {
+        console.error('Error creating invoice:', error);
+        setAlert({
+            variant: "error",
+            title: "Failed to Create Invoice",
+            message: "Please try again.",
+            show: true,
+        });
+    }
+};
+
 
   const handleDeleteInvoice = async () => {
     if (!InvoiceToDelete?.id) {
@@ -263,7 +364,8 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
                 </div>
 
                 <button
-                  onClick={handleAddInvoice}
+                onClick={() => setIsModalOpen(true)}
+
                   className="self-center px-4 py-2 bg-blue-500 text-white rounded"
                 >
                   Add Invoice
@@ -373,6 +475,111 @@ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the de
                 </div>
               </div>
             </Modal>
+
+ {/* Modal for adding invoice */}
+ <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} className="max-w-[700px] m-4">
+                <div className="relative w-full p-4 pt-4 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
+                    <h4 className="mb-2 text-2xl font-semibold text-gray-800 dark:text-white/90">Add Invoice</h4>
+                    <form onSubmit={handleAddInvoiceSubmit}>
+                        <div className="space-y-5">
+                            {/* User selection */}
+                            <div>
+                        <Label>Select User <span className="text-red-500">*</span></Label>
+                        <select
+                            onChange={(e) => {
+                                const selectedUserId = e.target.value;
+                                setSelectedUser(users.find((user) => user.id === selectedUserId) || null);
+                            }}
+                            value={selectedUser ? selectedUser.id : ''}
+                        >
+                            <option value="">Select a user</option>
+                            {users.map((user) => (
+                                <option key={user.id} value={user.id}>
+                                    {`${user.first_name} ${user.last_name}`}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                                {/* Sub Total */}
+                                <div>
+                                <Label>Invoice ID <span className="text-red-500">*</span></Label>
+                                <Input
+                                    type="text"
+                                    id="id"
+                                    name="id"
+                                    placeholder="Enter Inv ID"
+                                    value={formData.id}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+
+                            {/* Sub Total */}
+                            <div>
+                                <Label>Sub Total <span className="text-red-500">*</span></Label>
+                                <Input
+                                    type="number"
+                                    id="sub_total"
+                                    name="sub_total"
+                                    placeholder="Enter Sub Total"
+                                    value={formData.sub_total}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            {/* VAT */}
+                            <div>
+                                <Label>VAT <span className="text-red-500">*</span></Label>
+                                <Input
+                                    type="number"
+                                    id="vat"
+                                    name="vat"
+                                    placeholder="Enter VAT percentage"
+                                    value={formData.vat}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            {/* PDF Link */}
+                            <div>
+                                <Label>PDF Link</Label>
+                                <Input
+                                    type="text"
+                                    id="link_of_pdf"
+                                    name="link_of_pdf"
+                                    placeholder="Enter PDF link"
+                                    value={formData.link_of_pdf}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            {/* Status */}
+                            <div>
+                            <Label>Status</Label>
+                            <select
+                                name="status"
+                                value={formData.status}
+                                onChange={handleChange} // handleChange will receive the event
+                            >
+                                <option value="unpaid">Unpaid</option>
+                                <option value="paid">Paid</option>
+                            </select>
+                        </div>
+
+
+                            {/* Submit Button */}
+                            <button
+                                type="submit"
+                                className="w-full px-4 py-3 text-white bg-blue-500 rounded-lg"
+                            >
+                                Add Invoice
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </Modal>
+            
     </div>
   );
 };
