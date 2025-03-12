@@ -131,9 +131,9 @@ export const Balance = () => {
       const balanceData = await balanceResponse.json();
   
       // Map each user to their respective balance
-      const usersWithBalance = usersData.map((user: { id: any; balance: { bitcoin: number; ethereum: number; xrp: number; tether: number; bnb: number; solana: number; usdc: number; dogecoin: number; cardano: number; staked_ether: number; } | null; deposit_wallet: any; balance_id: any; unpaid_amount: any; usdt_total: any; }) => {
+      const usersWithBalance = usersData.map((user: { id: unknown; balance: { bitcoin: number; ethereum: number; xrp: number; tether: number; bnb: number; solana: number; usdc: number; dogecoin: number; cardano: number; staked_ether: number; } | null; deposit_wallet: unknown; balance_id: unknown; unpaid_amount: unknown; usdt_total: unknown; }) => {
         // Find the balance for the current user
-        const userBalance = balanceData.find((balance: { user_id: any; }) => balance.user_id === user.id);
+        const userBalance = balanceData.find((balance: { user_id: unknown; }) => balance.user_id === user.id);
   
         if (userBalance) {
           user.balance = {
