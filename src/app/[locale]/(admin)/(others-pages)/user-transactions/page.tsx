@@ -11,7 +11,7 @@ export default function UserTransactions() {
     useEffect(() => {
       const timeoutId = setTimeout(() => {
         setLoading(false); // Hide spinner after delay
-      }, 1000); // Delay time (e.g., 1 second)
+      }, 300); // Delay time (e.g., 1 second)
   
       return () => clearTimeout(timeoutId); // Cleanup timeout on component unmount
     }, []); // Empty dependency array to run the effect once on page load
