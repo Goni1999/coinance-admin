@@ -113,22 +113,7 @@ const Invoices = () => {
 
   return (
     <div className="p-4 mx-auto max-w-screen-2xl md:p-6">
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-        <h2 className="text-xl font-semibold text-gray-800 dark:text-white/90">{t('inv1')}</h2>
-        <nav>
-          <ol className="flex items-center gap-1.5">
-            <li>
-              <Link
-                className="inline-flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400"
-                href="/"
-              >
-                {t('inv2')}
-              </Link>
-            </li>
-            <li className="text-sm text-gray-800 dark:text-white/90">{t('inv1')}</li>
-          </ol>
-        </nav>
-      </div>
+      
 
       <div className="flex flex-col h-full gap-6 sm:gap-5 xl:flex-row">
         {/* Left Panel: User List */}
@@ -155,13 +140,11 @@ const Invoices = () => {
           {selectedUser && (
             <>
               <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800">
-                <h3 className="font-medium text-gray-800 text-theme-xl dark:text-white/90">{t('inv3')}</h3>
+                <h3 className="font-medium text-gray-800 text-theme-xl dark:text-white/90"> User: {selectedUser.first_name} {selectedUser.last_name}</h3>
                 <h4 className="text-base font-medium text-gray-700 dark:text-gray-400">
-                  User: {selectedUser.first_name} {selectedUser.last_name}
+                Address: {selectedUser.address}
                 </h4>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Address: {selectedUser.address}
-                </p>
+               
               </div>
 
               <div className="flex gap-6 p-5 xl:p-8">
@@ -175,12 +158,12 @@ const Invoices = () => {
                     selectedUser.invoices.map((invoice) => (
                       <div
                         key={invoice.id}
-                        className={`cursor-pointer flex items-center gap-3 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-white/[0.03] ${getInvoiceStatusClass(invoice.status)} ${getSelectedInvoiceClass(invoice)}`}
+                        className={`cursor-pointer flex items-center gap-3 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-white/[0.03] ${getInvoiceStatusClass(invoice.status)} `}
                         onClick={() => handleInvoiceClick(invoice)}
                       >
                         
                         <div>
-                          <span className="block text-sm font-medium text-red-500 hover:text-red-700">
+                          <span className={`block text-sm font-medium ${getSelectedInvoiceClass(invoice)}`}>
                             Invoice #{invoice.id} - {formatDate(invoice.issued_date)}
                           </span>
                           <span className="block text-gray-500 dark:text-gray-400">{invoice.status}</span>
