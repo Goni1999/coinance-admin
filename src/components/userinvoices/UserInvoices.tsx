@@ -3,6 +3,7 @@ import { Modal } from '../ui/modal';
 import Alert from '../ui/alert/Alert';
 import Label from '../form/Label';
 import Input from '../form/input/InputField';
+import EditModal from './EditModal';
 
 
 type User = {
@@ -36,6 +37,7 @@ const Invoices = () => {
 const [InvoiceToDelete, setInvoiceToDelete] = useState<Invoice | null>(null); 
 const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); 
 const [isModalOpen, setIsModalOpen] = useState(false); 
+const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
 const [formData, setFormData] = useState({
     id: '',
@@ -131,9 +133,7 @@ const [formData, setFormData] = useState({
   };
 
 
-  const handleEditInvoice = () => {
-    console.log(`Editing invoice: ${selectedInvoice?.id}`);
-  };
+
 
   const openDeleteModal = (invoice: Invoice) => {
     setInvoiceToDelete(invoice); 
@@ -319,6 +319,85 @@ const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
     closeDeleteModal(); // Close the modal after deletion
   };
 
+  
+  const handleEditInvoice = (invoice: Invoice) => {
+    setSelectedInvoice(invoice);
+    setIsEditModalOpen(true);
+  };
+
+  const handleClickEditInvoice = (invoice: Invoice) => {
+    // This function ensures the button click handler is the right type
+    handleEditInvoice(invoice);
+  };
+
+  // Handle updated invoice submission
+  const handleSubmitUpdatedInvoice = async (updatedData: {
+    id: number;
+    sub_total: number;
+    vat: number;
+    link_of_pdf: string;
+    status: string;
+  }) => {
+    const token = sessionStorage.getItem("auth-token");
+    if (!token) {
+      console.error("No token found. Please log in.");
+      return;
+    }
+  
+    // Assuming `selectedInvoice` contains the `user_id` and `issued_date`
+    const { id, sub_total, vat, link_of_pdf, status } = updatedData;
+  
+    // Include user_id and issued_date from selectedInvoice or the state
+    const user_id = selectedInvoice?.user_id; // Assuming this is part of the selectedInvoice
+    const issued_date = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+  
+    if (!user_id) {
+      console.error("User ID is missing.");
+      return;
+    }
+  
+    const dataToUpdate = {
+      id,
+      user_id,
+      issued_date,
+      sub_total,
+      vat,
+      link_of_pdf,
+      status,
+    };
+  
+    try {
+      const response = await fetch(`https://server.capital-trust.eu/api/admin-invoices-update`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToUpdate),
+      });
+  
+      if (response.ok) {
+        // Update the invoice in the state
+        const updatedUsers = users.map((user) => {
+          if (user.id === selectedUser?.id) {
+            user.invoices = user.invoices.map((invoice) =>
+              invoice.id === id ? { ...invoice, ...dataToUpdate } : invoice
+            );
+          }
+          return user;
+        });
+  
+        setUsers(updatedUsers);
+        setIsEditModalOpen(false); // Close the modal after update
+      } else {
+        console.error("Failed to update invoice.");
+      }
+    } catch (error) {
+      console.error("Error updating invoice:", error);
+    }
+  };
+  
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
@@ -437,7 +516,7 @@ const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
                                     Delete Invoice
                                 </button>
                         <button
-                          onClick={handleEditInvoice}
+                          onClick={() => handleClickEditInvoice(selectedInvoice)}
                           className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-medium text-white rounded-lg bg-blue-500 shadow-theme-xs hover:bg-blue-600"
                         >
                           Edit Invoice
@@ -586,7 +665,14 @@ const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
                     </form>
                 </div>
             </Modal>
-            
+            {selectedInvoice && (
+        <EditModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          selectedInvoice={selectedInvoice}
+          onSubmit={handleSubmitUpdatedInvoice}
+        />
+      )}
     </div>
   );
 };
