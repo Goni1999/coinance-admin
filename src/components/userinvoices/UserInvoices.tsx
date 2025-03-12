@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useTranslations } from 'next-intl';
-import Link from 'next/link';
+
 
 type User = {
   id: string;
@@ -28,7 +27,6 @@ const Invoices = () => {
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const t = useTranslations();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -229,6 +227,12 @@ const Invoices = () => {
                         >
                           Delete Invoice
                         </button>
+                        <button
+                      className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+                      onClick={() => window.open(selectedInvoice.link_of_pdf, '_blank')}
+                             >
+                            Download        
+                    </button>
                       </div>
                     </div>
                   </div>
