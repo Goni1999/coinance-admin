@@ -39,7 +39,6 @@ const ReportsHistory = () => {
 
       const data: Report[] = await response.json();
 
-      // Store the fetched data in sessionStorage
       sessionStorage.setItem("reports", JSON.stringify(data));
 
       setReports(data);
