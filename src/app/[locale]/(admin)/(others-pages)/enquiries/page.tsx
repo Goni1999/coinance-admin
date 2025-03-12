@@ -1,18 +1,18 @@
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import { Metadata } from "next";
 import React from "react";
-import InvestmentsHistory from "@/components/investments/InvestmentList";
+import EnquiriesHistory from "@/components/enquiries/EnquiriesList";
 export const metadata: Metadata = {
-  title: "Investments",
+  title: "Enquiries",
   description:
-    "Investments ",
+    "Enquiries ",
   // other metadata
 };
 export default function page() {
   return (
     <div>
-      <PageBreadcrumb pageTitle="Investments" />
-      <InvestmentsHistory />
+      <PageBreadcrumb pageTitle="Enquiries" />
+      <EnquiriesHistory />
     </div>
   );
 }
