@@ -91,7 +91,7 @@ const Invoices = () => {
 
   const getInvoiceStatusClass = (status: string) => {
     if (status === 'paid') return 'bg-green-50 dark:green-500/15 text-green-500 pr-2 pl-2';
-    if (status === 'unpaid') return 'bg-red-50 dark:bg-red-500/15 text-red-500 p2-2 pl-2';
+    if (status === 'unpaid') return 'bg-red-50 dark:bg-red-500/15 text-red-500 pr-2 pl-2';
     return '';
   };
 
