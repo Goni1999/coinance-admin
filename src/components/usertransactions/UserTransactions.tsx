@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Modal } from "../ui/modal";
 import Input from "../form/input/InputField";
+import Alert from "../ui/alert/Alert";
 
 interface Transaction {
   transaction_id?: number;
@@ -36,7 +37,19 @@ const TransactionsHistory = () => {
   const token = sessionStorage.getItem("auth-token");
   const [searchTerm, setSearchTerm] = useState("");
 const [isExpanded, setIsExpanded] = useState<boolean | number>(-1); // Track which address is expanded
-
+const [transactionToDelete, setTransactionToDelete] = useState<Transaction | null>(null); // The transaction to delete
+const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false); // For the delete confirmation modal
+  const [alert, setAlert] = useState<{
+    variant: "success" | "error" | "warning" | "info";
+    title: string;
+    message: string;
+    show: boolean;
+  }>({
+    variant: "success",
+    title: "",
+    message: "",
+    show: false,
+  });
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -112,49 +125,81 @@ const [isExpanded, setIsExpanded] = useState<boolean | number>(-1); // Track whi
     setIsAddTransactionModalOpen(true);
   };
 
-  const handleDeleteTransaction = async (transactionId: number | undefined) => {
-    // Check if transactionId is undefined or not a valid number
-    if (transactionId === undefined) {
-      alert('Transaction ID is missing.');
+  const openDeleteModal = (transaction: Transaction) => {
+    setTransactionToDelete(transaction); // Store the full transaction object
+    setIsDeleteModalOpen(true); // Open the confirmation modal
+  };
+  
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false); // Close confirmation modal
+    setTransactionToDelete(null); // Reset the transaction
+  };
+  const handleDeleteTransaction = async () => {
+    if (!transactionToDelete?.transaction_id) {
+      setAlert({
+        variant: "success",
+        title: "User Balance Updated Successfully",
+        message: "You can check now!",
+        show: true,
+
+      });
       return;
     }
   
-    if (window.confirm('Are you sure you want to delete this transaction?')) {
-      try {
-        const response = await fetch(`https://server.capital-trust.eu/api/admin-transactions-delete`, {
-          method: "POST", // Keep the DELETE method
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            transaction_id: transactionId, // Send transactionId in the request body
-          }),
+    try {
+      const response = await fetch(`https://server.capital-trust.eu/api/admin-transactions-delete`, {
+        method: "POST", // Keep the DELETE method
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          transaction_id: transactionToDelete.transaction_id, // Send transactionId in the request body
+        }),
+      });
+  
+      if (response.ok) {
+        // Refresh the user data after the transaction is deleted
+        const updatedUsers = users.map(user => {
+          if (user.id === selectedUser?.id) {
+            user.transactions = user.transactions.filter(
+              transaction => transaction.transaction_id !== transactionToDelete?.transaction_id
+            );
+          }
+          return user;
         });
   
-        if (response.ok) {
-          // Refresh the user data after the transaction is deleted
-          const updatedUsers = users.map(user => {
-            if (user.id === selectedUser?.id) {
-              user.transactions = user.transactions.filter(
-                transaction => transaction.transaction_id !== transactionId
-              );
-            }
-            return user;
-          });
-  
-          setUsers(updatedUsers);
-          alert('Transaction deleted successfully!');
-        } else {
-          alert('Failed to delete transaction.');
-        }
-      } catch (error) {
-        console.error('Error deleting transaction:', error);
-        alert('Error deleting transaction.');
+        setUsers(updatedUsers);
+        setAlert({
+          variant: "success",
+          title: "Transaction deleted successfully!",
+          message: "",
+          show: true,
+
+        });
+      } else {
+        setAlert({
+          variant: "error",
+          title: "Failed to delete transaction.",
+          message: "Please try again!",
+          show: true,
+
+        });
       }
+    } catch (error) {
+      console.error('Error deleting transaction:', error);
+      setAlert({
+        variant: "error",
+        title: "Error deleting transaction.",
+        message: "Please try again!",
+        show: true,
+
+      });
     }
-  };
   
+    closeDeleteModal(); // Close the modal after deletion
+  };
   
     // Handle search input
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -221,10 +266,11 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-4 md:gap-6">
               {users.map((user) => (
                 <div key={user.id} className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
+                                      <span className="mt-2 inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-red-50 dark:bg-red-500/15 text-red-500 hover:text-red-700 text-sm">{`${user.email}`}</span>
+
                   <div className="flex items-end justify-between mt-5">
                     <div>
                     <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
-                    <span className="mt-2 inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-red-50 dark:bg-red-500/15 text-red-500 hover:text-red-700 text-sm">{`${user.email}`}</span>
 
                       
                     </div>
@@ -254,6 +300,14 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
      {/* Transaction Modal */}
      <Modal isOpen={isTransactionModalOpen} onClose={closeTransactionModal}>
       <div className="relative w-full p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
+      {alert.show  && (
+            <Alert
+              variant={alert.variant}
+              title={alert.title}
+              message={alert.message}
+              showLink={false} 
+            />
+          )}
         <h3 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
           Transactions for {selectedUser?.first_name} {selectedUser?.last_name}
         </h3>
@@ -392,7 +446,7 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
       </td>
       <td className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">
   <button
-    onClick={() => handleDeleteTransaction(transaction.transaction_id)}
+    onClick={closeDeleteModal}
     className="inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-red-50 text-red-500 hover:text-red-700 text-sm"
   >
     Delete
@@ -469,6 +523,30 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
           </div>
 
           <button onClick={() => console.log("Transaction added!")}>Add Transaction</button>
+        </div>
+      </Modal>
+
+
+      {/* Delete Confirmation Modal */}
+      <Modal isOpen={isDeleteModalOpen} onClose={closeDeleteModal}>
+        <div className="relative w-full p-4 pt-16 overflow-y-auto bg-white rounded-3xl dark:bg-gray-900 lg:p-11">
+          <h3 className="text-2xl font-semibold text-gray-800 dark:text-white/90">
+            Are you sure you want to delete this transaction?
+          </h3>
+          <div className="flex justify-end mt-4">
+            <button
+              onClick={closeDeleteModal}
+              className="mr-4 inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white dark:border-gray-700"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleDeleteTransaction}              
+              className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700"
+                      >
+              Yes, Delete
+            </button>
+          </div>
         </div>
       </Modal>
     </div>

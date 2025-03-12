@@ -321,14 +321,14 @@ export const Balance = () => {
       
       {users.map((user) => (
         <div key={user.id} className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-         {alert.show && alert.userId === user.id && (
-          <Alert
-            variant={alert.variant}
-            title={alert.title}
-            message={alert.message}
-            showLink={false} 
-          />
-        )}
+          {alert.show && alert.userId === user.id && (
+            <Alert
+              variant={alert.variant}
+              title={alert.title}
+              message={alert.message}
+              showLink={false} 
+            />
+          )}
           <div className="flex items-end justify-between mt-5">
             <div >
               <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name} ${user.last_name}`}</span>
