@@ -332,7 +332,7 @@ const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
            <button
                 onClick={() => setIsModalOpen(true)}
 
-                  className="self-centermb-4 ml-1  px-4 py-2 bg-blue-500 text-white rounded"
+                  className="self-center mb-4   px-4 py-2 bg-blue-500 text-white rounded"
                 >
                   Add Invoice
                 </button>
