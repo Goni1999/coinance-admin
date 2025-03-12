@@ -5,9 +5,9 @@ import React from "react";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 
 export const metadata: Metadata = {
-  title: "Spot Order",
+  title: "Transactions",
   description:
-    "Spot Order",
+    "Transactions",
 };
 
 export default function Transactions() {
