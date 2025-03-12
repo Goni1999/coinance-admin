@@ -112,6 +112,8 @@ export default function SignUpForm() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
+        credentials: 'include', // This will ensure cookies are sent
+
       });
       
       if (response.ok) {
