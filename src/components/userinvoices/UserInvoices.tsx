@@ -156,11 +156,7 @@ const [formData, setFormData] = useState({
 
 
 
-const calculateTotal = () => {
-    const subTotal = parseFloat(formData.sub_total || '0');
-    const vat = parseFloat(formData.vat || '0');
-    return (subTotal + subTotal * (vat / 100)).toFixed(2);
-};
+
 const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -180,7 +176,6 @@ const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
         issued_date: new Date().toISOString().split('T')[0],
         sub_total: parseFloat(formData.sub_total),
         vat: parseFloat(formData.vat),
-        total: parseFloat(calculateTotal()),
         link_of_pdf: formData.link_of_pdf || '',
         status: formData.status,
     };
