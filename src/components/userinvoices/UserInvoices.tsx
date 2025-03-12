@@ -594,8 +594,8 @@ const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
                             </Label>
                             <Input
                                 type="date"
-                                id="issued_Date"
-                                name="issued_Date"
+                                id="issued_date"
+                                name="issued_date"
                                 value={formData.issued_date}
                                 onChange={handleChange}
                             />

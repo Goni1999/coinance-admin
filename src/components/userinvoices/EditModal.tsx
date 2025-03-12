@@ -89,9 +89,9 @@
                             Issued Date<span className="text-red-500">*</span>
                             </Label>
                             <Input
-                                type="date"
-                                id="issued_Date"
-                                name="issued_Date"
+                                type="text"
+                                id="issued_date"
+                                name="issued_date"
                                 value={updateData.issued_date}
                                 onChange={handleEdit}
                             />
