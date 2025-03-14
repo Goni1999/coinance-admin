@@ -322,7 +322,7 @@ const token = sessionStorage.getItem("auth-token");
     ? "Pending"
     : user.role === "unverified"
     ? "Unverified"
-    : "Unknown"} {/* Default label if no condition matches */}
+    : "User"} {/* Default label if no condition matches */}
 </Badge>
 
                   </TableCell>
