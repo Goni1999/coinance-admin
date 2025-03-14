@@ -68,29 +68,41 @@ const [formData, setFormData] = useState({
 });
 const token = sessionStorage.getItem("auth-token");
 
+useEffect(() => {
+  if (!token) {
+    // Redirect to sign-in page if token is not present
+    router.push("/signin");
+    return;
+  }
 
-  useEffect(() => {
-    if (!token) {
-      router.push("/signin");
-      return;
-    }
-    fetch(`https://server.capital-trust.eu/api/users-admin`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },    })
-    
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setUsers(data); // Ensure that data is an array before updating the state
-        } else {
-          console.error("Expected an array, but got:", data);
-        }
-      })
-      .catch((error) => console.error("Error fetching users:", error));
-  }, []);
+  // Fetch the data from the API
+  fetch("https://server.capital-trust.eu/api/users-admin", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  })
+    .then((res) => {
+      if (res.status === 401) {
+        // If status is 401, redirect to sign-in page because the token is invalid or expired
+        console.log("Token is invalid or expired.");
+        router.push("/signin");
+        return; // Exit the function if token is invalid
+      }
+      return res.json();
+    })
+    .then((data) => {
+      if (Array.isArray(data)) {
+        setUsers(data); // Ensure the response data is an array before setting the state
+      } else {
+        console.error("Expected an array, but got:", data);
+      }
+    })
+    .catch((error) => console.error("Error fetching users:", error));
+}, [token, router]); // Add token and router as dependencies
+
+
 
   const openModal = (user: User) => {
     setSelectedUser(user);
@@ -127,25 +139,43 @@ const token = sessionStorage.getItem("auth-token");
       setEditedUser({ ...editedUser, [name]: newValue });
     }
   };
-
   const handleSave = () => {
     if (!editedUser) return;
+  
+    // Check if token exists, else redirect to signin
+    if (!token) {
+      router.push("/signin");
+      return;
+    }
   
     // Prepare the body with the email as part of the data
     const requestBody = {
       ...editedUser,
-      email: editedUser.email,  // Add email explicitly in the request body
+      email: editedUser.email, // Add email explicitly in the request body
     };
   
     fetch(`https://server.capital-trust.eu/api/users-admin`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Include the token in the headers for authorization
+      },
       body: JSON.stringify(requestBody),
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (res.status === 401) {
+          // If token is invalid, redirect to sign-in
+          console.log("Token is invalid or expired.");
+          router.push("/signin");
+          return; // Exit function if token is invalid
+        }
+        return res.json();
+      })
       .then((updatedUser) => {
-        setUsers(users.map((user) => (user.email === updatedUser.email ? updatedUser : user)));
-        closeModal();
+        if (updatedUser) {
+          setUsers(users.map((user) => (user.email === updatedUser.email ? updatedUser : user)));
+          closeModal();
+        }
       })
       .catch((error) => console.error("Error updating user:", error));
   };
@@ -197,46 +227,54 @@ const token = sessionStorage.getItem("auth-token");
     };
     
     
-  
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
-  
+    
+      // Check if token exists, else redirect to signin
+      if (!token) {
+        router.push("/signin");
+        return;
+      }
+    
+      // Form validation - check if any field is empty
       for (const key in formData) {
         if (formData[key as keyof typeof formData].trim() === "") {
           setAlert({
             variant: "error",
             title: "Fields empty",
             message: "Please fill all fields!",
-            show: true
+            show: true,
           });
           return;
         }
       }
-  
+    
+      // Check if password and confirmPassword match
       if (formData.password !== formData.confirmPassword) {
-         setAlert({
-        variant: "error",
-        title: "Password Mismatch",
-        message: "Passwords do not match. Please try again.",
-        show: true
-      });
+        setAlert({
+          variant: "error",
+          title: "Password Mismatch",
+          message: "Passwords do not match. Please try again.",
+          show: true,
+        });
         return;
       }
-  
+    
+      // Try submitting the form data
       try {
-        const response = await fetch('https://server.capital-trust.eu/auth/register-admin', {
-          method: 'POST',
+        const response = await fetch("https://server.capital-trust.eu/auth/register-admin", {
+          method: "POST",
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`, // Send token in the Authorization header
             "Content-Type": "application/json",
           },
           body: JSON.stringify(formData),
         });
-        
+    
         if (response.ok) {
           setAlert({
             variant: "success",
-            title: "Registred successfully",
+            title: "Registered successfully",
             message: "You can login now!",
             show: true,
           });
@@ -251,19 +289,20 @@ const token = sessionStorage.getItem("auth-token");
             variant: "error",
             title: "Error registering.",
             message: "Please try again.",
-            show: true
+            show: true,
           });
         }
       } catch (error) {
-        console.error('Error submitting form:', error);
+        console.error("Error submitting form:", error);
         setAlert({
           variant: "error",
           title: "Network error.",
           message: "Please try again later.",
-          show: true
+          show: true,
         });
       }
     };
+    
 
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
