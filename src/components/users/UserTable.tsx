@@ -299,7 +299,32 @@ const token = sessionStorage.getItem("auth-token");
                   <TableCell className="px-4 py-4 text-gray-700 text-theme-sm dark:text-gray-400">{user.address}, {user.city}, {user.zip_code}, {user.state}</TableCell>
 
                   <TableCell>
-                    <Badge color={user.role === "admin" ? "success" : "warning"}>{user.role}</Badge>
+                  <Badge
+  color={
+    user.role === "admin"
+      ? "success" // Admins get the success badge color
+      : user.role === "user"
+      ? "primary" // Regular users get the primary badge color
+      : user.role === "pending"
+      ? "warning" // Pending users get the warning badge color
+      : user.role === "emailverified"
+      ? "warning" // Email verified users get the warning badge color (same as pending in your logic)
+      : user.role === "unverified"
+      ? "error" // Unverified users get the error badge color
+      : "error" // Default color if no condition matches
+  }
+>
+  {user.role === "admin"
+    ? "Admin"
+    : user.role === "emailverified"
+    ? "Email Verified"
+    : user.role === "pending"
+    ? "Pending"
+    : user.role === "unverified"
+    ? "Unverified"
+    : "Unknown"} {/* Default label if no condition matches */}
+</Badge>
+
                   </TableCell>
                   <TableCell>
                     <Button size="sm" onClick={() => openModal(user)}>
