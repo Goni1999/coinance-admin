@@ -1,5 +1,5 @@
 export const metadata = {
-    title: "Capital Trust",
+    title: "Coinance",
     description: "",
   };
   

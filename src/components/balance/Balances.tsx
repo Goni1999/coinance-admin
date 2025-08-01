@@ -107,7 +107,7 @@ export const Balance = () => {
   
     try {
       // Fetch all users at once
-      const usersResponse = await fetch("https://server.capital-trust.eu/api/users-admin", {
+      const usersResponse = await fetch("https://server.coinance.co/api/users-admin", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -119,7 +119,7 @@ export const Balance = () => {
       const usersData = await usersResponse.json();
   
       // Fetch all balances at once
-      const balanceResponse = await fetch("https://server.capital-trust.eu/api/balance-admin", {
+      const balanceResponse = await fetch("https://server.coinance.co/api/balance-admin", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -269,7 +269,7 @@ export const Balance = () => {
   
     try {
       // Send the request to the backend with user_id in the body
-      const response = await fetch("https://server.capital-trust.eu/api/update-balance-admin", {
+      const response = await fetch("https://server.coinance.co/api/update-balance-admin", {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -67,7 +67,7 @@ const [formData, setFormData] = useState({
       }
 
       try {
-        const usersResponse = await fetch('https://server.capital-trust.eu/api/users-admin', {
+        const usersResponse = await fetch('https://server.coinance.co/api/users-admin', {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -78,7 +78,7 @@ const [formData, setFormData] = useState({
         if (!usersResponse.ok) throw new Error('Failed to fetch users');
         const usersData: User[] = await usersResponse.json();
 
-        const invoicesResponse = await fetch('https://server.capital-trust.eu/api/admin-invoices', {
+        const invoicesResponse = await fetch('https://server.coinance.co/api/admin-invoices', {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -193,7 +193,7 @@ const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
             return;
         }
 
-        const response = await fetch('https://server.capital-trust.eu/api/admin-invoices-create', {
+        const response = await fetch('https://server.coinance.co/api/admin-invoices-create', {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -258,7 +258,7 @@ const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
     }
   
     try {
-      const response = await fetch(`https://server.capital-trust.eu/api/admin-invoices-delete`, {
+      const response = await fetch(`https://server.coinance.co/api/admin-invoices-delete`, {
         method: "POST", // Keep the DELETE method
         headers: {
           Authorization: `Bearer ${token}`,
@@ -368,7 +368,7 @@ const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
     };
   
     try {
-      const response = await fetch(`https://server.capital-trust.eu/api/admin-invoices-update`, {
+      const response = await fetch(`https://server.coinance.co/api/admin-invoices-update`, {
         method: 'PUT',
         headers: {
           Authorization: `Bearer ${token}`,

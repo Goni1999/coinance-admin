@@ -76,7 +76,7 @@ useEffect(() => {
   }
 
   // Fetch the data from the API
-  fetch("https://server.capital-trust.eu/api/users-admin", {
+  fetch("https://server.coinance.co/api/users-admin", {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -154,7 +154,7 @@ useEffect(() => {
       email: editedUser.email, // Add email explicitly in the request body
     };
   
-    fetch(`https://server.capital-trust.eu/api/users-admin`, {
+    fetch(`https://server.coinance.co/api/users-admin`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -262,7 +262,7 @@ useEffect(() => {
     
       // Try submitting the form data
       try {
-        const response = await fetch("https://server.capital-trust.eu/auth/register-admin", {
+        const response = await fetch("https://server.coinance.co/auth/register-admin", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`, // Send token in the Authorization header

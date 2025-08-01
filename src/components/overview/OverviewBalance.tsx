@@ -88,7 +88,7 @@ export const OverviewBalance = () => {
     }
 
     try {
-      const response = await fetch("https://server.capital-trust.eu/api/balance-admin", {
+      const response = await fetch("https://server.coinance.co/api/balance-admin", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

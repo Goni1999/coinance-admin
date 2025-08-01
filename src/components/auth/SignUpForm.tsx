@@ -108,7 +108,7 @@ export default function SignUpForm() {
     }
 
     try {
-      const response = await fetch('https://server.capital-trust.eu/auth/register-admin', {
+      const response = await fetch('https://server.coinance.co/auth/register-admin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

@@ -31,7 +31,7 @@ const EnquiriesHistory = () => {
     }
 
     try {
-      const response = await fetch("https://server.capital-trust.eu/api/get-enquiries-admin", {
+      const response = await fetch("https://server.coinance.co/api/get-enquiries-admin", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -35,7 +35,7 @@ const Calendar: React.FC = () => {
   const token = sessionStorage.getItem("auth-token");
   const fetchEvents = async () => {
     try {
-      const response = await fetch("https://server.capital-trust.eu/api/events-admin", {
+      const response = await fetch("https://server.coinance.co/api/events-admin", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -94,7 +94,7 @@ const Calendar: React.FC = () => {
     if (selectedEvent) {
       // Update existing event
       try {
-        const response = await fetch(`https://server.capital-trust.eu/api/events-admin`, {
+        const response = await fetch(`https://server.coinance.co/api/events-admin`, {
           method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -125,7 +125,7 @@ const Calendar: React.FC = () => {
     } else {
       // Add new event
       try {
-        const response = await fetch("https://server.capital-trust.eu/api/events-admin", {
+        const response = await fetch("https://server.coinance.co/api/events-admin", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -160,7 +160,7 @@ const Calendar: React.FC = () => {
   const handleDeleteEvent = async () => {
     if (selectedEvent) {
       try {
-        const response = await fetch("https://server.capital-trust.eu/api/events-admin", {
+        const response = await fetch("https://server.coinance.co/api/events-admin", {
           method: "DELETE", // Still using DELETE method
           headers: {
             Authorization: `Bearer ${token}`,

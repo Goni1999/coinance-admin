@@ -77,7 +77,7 @@ const [, setLoading] = useState(true);
 
       try {
         // Fetch users
-        const usersResponse = await fetch("https://server.capital-trust.eu/api/users-admin", {
+        const usersResponse = await fetch("https://server.coinance.co/api/users-admin", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -93,7 +93,7 @@ const [, setLoading] = useState(true);
         const usersData = await usersResponse.json();
 
         // Fetch transactions
-        const transactionsResponse = await fetch("https://server.capital-trust.eu/api/admin-transactions", {
+        const transactionsResponse = await fetch("https://server.coinance.co/api/admin-transactions", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -175,7 +175,7 @@ const [, setLoading] = useState(true);
     }
   
     try {
-      const response = await fetch(`https://server.capital-trust.eu/api/admin-transactions-delete`, {
+      const response = await fetch(`https://server.coinance.co/api/admin-transactions-delete`, {
         method: "POST", // Keep the DELETE method
         headers: {
           Authorization: `Bearer ${token}`,
@@ -251,7 +251,7 @@ const [, setLoading] = useState(true);
       };
     
       try {
-        const response = await fetch("https://server.capital-trust.eu/api/admin-transactions-add", {
+        const response = await fetch("https://server.coinance.co/api/admin-transactions-add", {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,

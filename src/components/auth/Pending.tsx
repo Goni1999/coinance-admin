@@ -19,7 +19,7 @@ const t = useTranslations();
 
     const checkUserRole = async () => {
       try {
-        const { data } = await axios.get("https://server.capital-trust.eu/api/check-user-role-admin", {
+        const { data } = await axios.get("https://server.coinance.co/api/check-user-role-admin", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -111,7 +111,7 @@ const t = useTranslations();
         <div className="mt-5 text-center">
           <p className="text-sm font-normal text-gray-700 dark:text-gray-400">
           {t("needhelp")}{" "}
-            <Link className="text-brand-500 hover:text-brand-600 dark:text-brand-400" href="https://www.capital-trust.eu/support">
+            <Link className="text-brand-500 hover:text-brand-600 dark:text-brand-400" href="https://www.coinance.co/support">
             {t("contactsupport")}
             </Link>
           </p>

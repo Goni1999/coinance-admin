@@ -30,7 +30,7 @@ const Referral = () => {
         }
 
         // If no user data found, fetch from API
-        const response = await fetch("https://server.capital-trust.eu/api/get-user-data-admin", {
+        const response = await fetch("https://server.coinance.co/api/get-user-data-admin", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -73,7 +73,7 @@ const Referral = () => {
 
   // Function to copy the referral link to clipboard
   const copyToClipboard = () => {
-    const referralLink = `https://www.dashboar.capital-trust.eu/CPA_${user?.id}001QNLQ8NZ`;
+    const referralLink = `https://www.dashboar.coinance.co/CPA_${user?.id}001QNLQ8NZ`;
     navigator.clipboard.writeText(referralLink)
       .then(() => {
         setCopied(true);
@@ -111,7 +111,7 @@ const Referral = () => {
           <div className="font-bold text-gray-500 dark:text-gray-400 text-lg mb-2">{t("ref4")}</div>
           <input
             type="text"
-            value={`https://www.dashboard.capital-trust.eu/CPA_${user?.id}001QNLQ8NZ`}
+            value={`https://www.dashboard.coinance.co/CPA_${user?.id}001QNLQ8NZ`}
             className="w-full p-3 border border-gray-300 rounded-md"
             readOnly
           />

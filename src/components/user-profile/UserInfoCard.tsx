@@ -32,7 +32,7 @@ export default function UserInfoCard() {
             return;
           }
   
-          const response = await fetch("https://server.capital-trust.eu/api/get-user-data-admin", {
+          const response = await fetch("https://server.coinance.co/api/get-user-data-admin", {
             method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,

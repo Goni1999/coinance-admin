@@ -24,7 +24,7 @@ const t = useTranslations();
     const EmailVerify = async () => {
       try {
         // Send token to the backend for verification
-        const response = await axios.post("https://server.capital-trust.eu/auth/verify-email-admin", { token });
+        const response = await axios.post("https://server.coinance.co/auth/verify-email-admin", { token });
 
         if (response.data.success) {
           setMessage("Your email has been successfully verified!");

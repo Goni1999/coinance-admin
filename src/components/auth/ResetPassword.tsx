@@ -42,7 +42,7 @@ const ResetPassword = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("https://server.capital-trust.eu/api/reset-password-admin", {
+      const response = await fetch("https://server.coinance.co/api/reset-password-admin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

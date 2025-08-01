@@ -32,7 +32,7 @@ const TransactionsHistory = () => {
     }
   
     try {
-      const response = await fetch("https://server.capital-trust.eu/api/transactions-admin", {
+      const response = await fetch("https://server.coinance.co/api/transactions-admin", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

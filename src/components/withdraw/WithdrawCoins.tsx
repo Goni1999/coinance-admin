@@ -55,7 +55,7 @@ const CryptoWithdraw: React.FC = () => {
           return;
         }
 
-        const response = await fetch("https://server.capital-trust.eu/api/coins-admin", {
+        const response = await fetch("https://server.coinance.co/api/coins-admin", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -142,7 +142,7 @@ const CryptoWithdraw: React.FC = () => {
       }
 
       // Update the balances in the database
-      const response = await fetch("https://server.capital-trust.eu/api/update-coins-admin", {
+      const response = await fetch("https://server.coinance.co/api/update-coins-admin", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

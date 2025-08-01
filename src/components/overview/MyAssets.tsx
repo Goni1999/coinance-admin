@@ -53,7 +53,7 @@ export default function StatisticsChart() {
         if (!token) throw new Error("No token found. Please log in.");
 
         // Fetch user balance from the database API
-        const balanceResponse = await fetch("https://server.capital-trust.eu/api/balance-admin", {
+        const balanceResponse = await fetch("https://server.coinance.co/api/balance-admin", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,

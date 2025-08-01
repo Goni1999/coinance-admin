@@ -33,7 +33,7 @@ export default function UserDropdown() {
           return;
         }
 
-        const response = await fetch("https://server.capital-trust.eu/api/get-user-data-admin", {
+        const response = await fetch("https://server.coinance.co/api/get-user-data-admin", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -78,7 +78,7 @@ export default function UserDropdown() {
     try {
       const token = sessionStorage.getItem("auth-token");
 
-      const response = await fetch("https://server.capital-trust.eu/api/logout-admin", {
+      const response = await fetch("https://server.coinance.co/api/logout-admin", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

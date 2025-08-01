@@ -28,7 +28,7 @@ const t = useTranslations();
         const token = sessionStorage.getItem("auth-token");
         if (!token) throw new Error("No token found. Please log in.");
 
-        const response = await fetch("https://server.capital-trust.eu/api/invoices-admin", {
+        const response = await fetch("https://server.coinance.co/api/invoices-admin", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,

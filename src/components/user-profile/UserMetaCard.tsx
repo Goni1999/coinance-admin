@@ -66,7 +66,7 @@ const t = useTranslations();
           return;
         }
 
-        const response = await fetch("https://server.capital-trust.eu/api/get-user-data-admin", {
+        const response = await fetch("https://server.coinance.co/api/get-user-data-admin", {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -123,7 +123,7 @@ const t = useTranslations();
         xcom: formData.xcom || null,
       };
 
-      const response = await fetch("https://server.capital-trust.eu/api/update-user-data-admin", {
+      const response = await fetch("https://server.coinance.co/api/update-user-data-admin", {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
