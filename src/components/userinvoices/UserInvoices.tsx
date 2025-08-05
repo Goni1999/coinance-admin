@@ -63,10 +63,13 @@ const [formData, setFormData] = useState({
       const token = sessionStorage.getItem('auth-token');
       if (!token) {
         console.error('No token found. Please log in.');
+        setError('Authentication required. Please log in.');
+        setLoading(false);
         return;
       }
 
       try {
+        // Fetch users first
         const usersResponse = await fetch('https://server.coinance.co/api/users-admin', {
           method: 'GET',
           headers: {
@@ -75,30 +78,52 @@ const [formData, setFormData] = useState({
           },
         });
 
-        if (!usersResponse.ok) throw new Error('Failed to fetch users');
+        if (!usersResponse.ok) {
+          throw new Error(`Failed to fetch users: ${usersResponse.status}`);
+        }
         const usersData: User[] = await usersResponse.json();
+        console.log('Fetched users:', usersData); // Debug log
 
-        const invoicesResponse = await fetch('https://server.coinance.co/api/admin-invoices', {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
+        let invoicesData: Invoice[] = [];
+        
+        try {
+          // Fetch invoices (continue even if this fails)
+          const invoicesResponse = await fetch('https://server.coinance.co/api/invoices-admin', {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          });
 
-        if (!invoicesResponse.ok) throw new Error('Failed to fetch invoices');
-        const invoicesData: Invoice[] = await invoicesResponse.json();
+          if (invoicesResponse.ok) {
+            invoicesData = await invoicesResponse.json();
+            console.log('Fetched invoices:', invoicesData); // Debug log
+          } else {
+            console.error('Failed to fetch invoices, but will still show users');
+          }
+        } catch (invoiceError) {
+          console.error('Error fetching invoices:', invoiceError);
+          // Continue without invoices
+        }
 
+        // Associate invoices with users (even if invoices array is empty)
         const usersWithInvoices = usersData.map((user) => {
-          user.invoices = invoicesData.filter((invoice) => invoice.user_id === user.id);
-          return user;
+          const userInvoices = invoicesData.filter((invoice) => invoice.user_id === user.id);
+          return {
+            ...user,
+            invoices: userInvoices // This will be an empty array if no invoices found
+          };
         });
+
+        console.log('Users with invoices:', usersWithInvoices); // Debug log
 
         setUsers(usersWithInvoices);
         setLoading(false);
       } catch (error) {
         setError('Failed to fetch data');
         console.error('Error fetching data:', error);
+        setLoading(false);
       }
     };
 
@@ -425,19 +450,30 @@ const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
         {/* Left Panel: User List */}
         <div className="rounded-2xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.03] xl:w-1/5">
           <div className="space-y-1">
-            {users.map((user) => (
-              <div
-                key={user.id}
-                className={`flex cursor-pointer items-center gap-3 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-white/[0.03] ${getSelectedUserClass(user)}`}
-                onClick={() => handleUserClick(user)}
-              >
-                <div>
-                  <span className="mb-0.5 block text-sm font-medium text-gray-800 dark:text-white/90">
-                    {user.first_name} {user.last_name}
-                  </span>
+            {users.length === 0 ? (
+              <div className="text-center py-8">
+                <div className="text-gray-500 dark:text-gray-400">
+                  No users found. Please check your connection or try again later.
                 </div>
               </div>
-            ))}
+            ) : (
+              users.map((user) => (
+                <div
+                  key={user.id}
+                  className={`flex cursor-pointer items-center gap-3 rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-white/[0.03] ${getSelectedUserClass(user)}`}
+                  onClick={() => handleUserClick(user)}
+                >
+                  <div>
+                    <span className="mb-0.5 block text-sm font-medium text-gray-800 dark:text-white/90">
+                      {user.first_name} {user.last_name}
+                    </span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      {user.invoices?.length || 0} invoice{(user.invoices?.length || 0) !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
 
@@ -462,8 +498,13 @@ const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
                 {/* Left Column: Invoices List */}
                 <div className="flex flex-col w-1/3 space-y-3">
                   {selectedUser.invoices.length === 0 ? (
-                    <div className="text-gray-500 dark:text-gray-400">
-                      No invoices for {selectedUser.first_name} {selectedUser.last_name}.
+                    <div className="text-center py-8">
+                      <div className="text-gray-500 dark:text-gray-400 mb-4">
+                        No invoices for {selectedUser.first_name} {selectedUser.last_name}.
+                      </div>
+                      <div className="text-sm text-gray-400 dark:text-gray-500">
+                        Click "Add Invoice" above to create the first invoice for this user.
+                      </div>
                     </div>
                   ) : (
                     selectedUser.invoices.map((invoice) => (
