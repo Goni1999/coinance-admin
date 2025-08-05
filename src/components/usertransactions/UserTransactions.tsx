@@ -87,37 +87,48 @@ const [, setLoading] = useState(true);
 
         if (!usersResponse.ok) {
           console.error("Failed to fetch users");
+          setError("Failed to fetch users");
           return;
         }
 
         const usersData = await usersResponse.json();
+        console.log("Fetched users:", usersData); // Debug log
 
-        // Fetch transactions
-        const transactionsResponse = await fetch("https://server.coinance.co/api/admin-transactions", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        });
+        let transactionsData = [];
+        
+        try {
+          // Fetch transactions
+          const transactionsResponse = await fetch("https://server.coinance.co/api/admin-transactions", {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
 
-        if (!transactionsResponse.ok) {
-          console.error("Failed to fetch transactions");
-          return;
+          if (transactionsResponse.ok) {
+            transactionsData = await transactionsResponse.json();
+            console.log("Fetched transactions:", transactionsData); // Debug log
+          } else {
+            console.error("Failed to fetch transactions, but will still show users");
+          }
+        } catch (transactionError) {
+          console.error("Error fetching transactions:", transactionError);
+          // Continue without transactions
         }
 
-        const transactionsData = await transactionsResponse.json();
-
-        // Associate transactions with users
+        // Associate transactions with users (even if transactions array is empty)
         const usersWithTransactions = usersData.map((user: User) => {
           const userTransactions = transactionsData.filter(
             (transaction: Transaction) => transaction.user_id === user.id
           );
           return {
             ...user,
-            transactions: userTransactions, // Add transactions to user object
+            transactions: userTransactions, // Add transactions to user object (empty array if no transactions)
           };
         });
+
+        console.log("Users with transactions:", usersWithTransactions); // Debug log
 
         // Set the users with their associated transactions
         setUsers(usersWithTransactions);
@@ -346,6 +357,20 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
 
   return (
     <div className="col-span-12">
+      {/* Loading State */}
+      {/* {loading && (
+        <div className="flex justify-center items-center py-8">
+          <div className="text-gray-500 dark:text-gray-400">Loading users...</div>
+        </div>
+      )} */}
+
+      {/* Error State */}
+      {/* {error && (
+        <div className="rounded-2xl border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-500/10">
+          <div className="text-red-600 dark:text-red-400">{error}</div>
+        </div>
+      )} */}
+
       <div className="rounded-2xl border border-gray-200 bg-white pt-4 dark:border-gray-800 dark:bg-white/[0.03]">
         <div className="flex flex-col gap-2 px-5 mb-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div>
@@ -355,45 +380,53 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
 
         <div className="overflow-hidden">
           <div className="max-w-full px-5 overflow-x-auto sm:px-6">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-4 md:gap-6">
-              {users.map((user) => (
-                <div key={user.id} className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
-                   {alert.show   && alert.userId === user.id && (
-            <Alert
-              variant={alert.variant}
-              title={alert.title}
-              message={alert.message}
-              showLink={false} 
-            />
-          )}
-                                      <span className="mt-2 w-full inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-red-50 dark:bg-red-500/15 text-red-500 hover:text-red-700 text-sm">{`${user.email}`}</span>
+            {users.length === 0 ? (
+              <div className="text-center py-8">
+                <div className="text-gray-500 dark:text-gray-400">
+                  No users found. Please check your connection or try again later.
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-4 md:gap-6">
+                {users.map((user) => (
+                  <div key={user.id} className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] md:p-6">
+                     {alert.show   && alert.userId === user.id && (
+              <Alert
+                variant={alert.variant}
+                title={alert.title}
+                message={alert.message}
+                showLink={false} 
+              />
+            )}
+                                        <span className="mt-2 w-full inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-red-50 dark:bg-red-500/15 text-red-500 hover:text-red-700 text-sm">{`${user.email}`}</span>
 
-                  <div className="flex items-end justify-between mt-5">
-                    <div className="flex flex-col items-start gap-1  font-medium text-gray-500 dark:text-gray-400 text-sm">
-                    <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name}`}</span>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.last_name}`}</span>
+                    <div className="flex items-end justify-between mt-5">
+                      <div className="flex flex-col items-start gap-1  font-medium text-gray-500 dark:text-gray-400 text-sm">
+                      <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.first_name}`}</span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">{`${user.last_name}`}</span>
 
-                      
-                    </div>
-                    <div className="flex flex-col items-end">
-                    <button
-                        onClick={() => openAddTransactionModal(user)}
-                        className="mt-2 inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-green-50 dark:bg-green-500/15 text-green-500 hover:text-green-700 text-sm"
-                      >
-                        Add Transaction
-                      </button>
+                        
+                      </div>
+                      <div className="flex flex-col items-end">
                       <button
-                        onClick={() => openTransactionModal(user)}
-                        className="mt-2 inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-blue-50 dark:bg-blue-500/15 text-blue-500 hover:text-blue-700 text-sm"
-                      >
-                        Show All
-                      </button>
-                      
+                          onClick={() => openAddTransactionModal(user)}
+                          className="mt-2 inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-green-50 dark:bg-green-500/15 text-green-500 hover:text-green-700 text-sm"
+                        >
+                          Add Transaction
+                        </button>
+                        <button
+                          onClick={() => openTransactionModal(user)}
+                          className="mt-2 inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium bg-blue-50 dark:bg-blue-500/15 text-blue-500 hover:text-blue-700 text-sm"
+                        >
+                          Show All
+                        </button>
+                        
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -491,7 +524,8 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
-  {filteredTransactions.map((transaction, index) => (
+  {filteredTransactions.length > 0 ? (
+    filteredTransactions.map((transaction, index) => (
     <tr key={index}>
       <td className="px-4 py-4 text-blue-700 text-theme-sm dark:text-blue-400 dark:border-gray-800">
         {formatDate(transaction.time)}
@@ -555,7 +589,17 @@ const filteredTransactions = selectedUser?.transactions?.filter((transaction) =>
   </button>
 </td>
     </tr>
-  ))}
+  ))
+  ) : (
+    <tr>
+      <td colSpan={10} className="px-4 py-8 text-center text-gray-500 dark:text-gray-400">
+        {selectedUser?.transactions?.length === 0 
+          ? "This user has no transactions yet. Click 'Add Transaction' to create the first one."
+          : "No transactions found matching your search criteria."
+        }
+      </td>
+    </tr>
+  )}
 </tbody>
 
                   </table>
