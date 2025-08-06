@@ -139,7 +139,7 @@ useEffect(() => {
       setEditedUser({ ...editedUser, [name]: newValue });
     }
   };
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!editedUser) return;
   
     // Check if token exists, else redirect to signin
@@ -154,30 +154,64 @@ useEffect(() => {
       email: editedUser.email, // Add email explicitly in the request body
     };
   
-    fetch(`https://server.coinance.co/api/users-admin`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Include the token in the headers for authorization
-      },
-      body: JSON.stringify(requestBody),
-    })
-      .then((res) => {
-        if (res.status === 401) {
-          // If token is invalid, redirect to sign-in
-          console.log("Token is invalid or expired.");
-          router.push("/signin");
-          return; // Exit function if token is invalid
-        }
-        return res.json();
-      })
-      .then((updatedUser) => {
-        if (updatedUser) {
-          setUsers(users.map((user) => (user.email === updatedUser.email ? updatedUser : user)));
-          closeModal();
-        }
-      })
-      .catch((error) => console.error("Error updating user:", error));
+    try {
+      const response = await fetch(`https://server.coinance.co/api/users-admin`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Include the token in the headers for authorization
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (response.status === 401) {
+        // If token is invalid, redirect to sign-in
+        console.log("Token is invalid or expired.");
+        setAlert({
+          variant: "error",
+          title: "Authentication Error",
+          message: "Your session has expired. Please log in again.",
+          show: true,
+        });
+        router.push("/signin");
+        return;
+      }
+
+      if (!response.ok) {
+        // Handle other HTTP errors
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `Server returned ${response.status}: ${response.statusText}`);
+      }
+
+      const updatedUser = await response.json();
+      
+      if (updatedUser) {
+        // Update the users list with the updated user data
+        setUsers(users.map((user) => (user.email === updatedUser.email ? updatedUser : user)));
+        
+        // Show success alert
+        setAlert({
+          variant: "success",
+          title: "User Updated Successfully",
+          message: `${updatedUser.first_name} ${updatedUser.last_name}'s information has been updated.`,
+          show: true,
+        });
+        
+        closeModal();
+      } else {
+        throw new Error("No user data returned from server");
+      }
+    } catch (error) {
+      console.error("Error updating user:", error);
+      
+      // Show error alert
+      setAlert({
+        variant: "error",
+        title: "Update Failed",
+        message: error instanceof Error ? error.message : "Failed to update user. Please try again.",
+        show: true,
+      });
+    }
   };
   
   
