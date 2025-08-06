@@ -503,7 +503,7 @@ const handleAddInvoiceSubmit = async (e: React.FormEvent) => {
                         No invoices for {selectedUser.first_name} {selectedUser.last_name}.
                       </div>
                       <div className="text-sm text-gray-400 dark:text-gray-500">
-                        Click "Add Invoice" above to create the first invoice for this user.
+                        Click &quot;Add Invoice&quot; above to create the first invoice for this user.
                       </div>
                     </div>
                   ) : (
